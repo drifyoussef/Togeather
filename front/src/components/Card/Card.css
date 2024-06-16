@@ -1,0 +1,42 @@
+.card {
+    outline: 2px solid #FF0077;
+    border-radius: 15px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    width: 163px;
+    height: 283px;
+    overflow: hidden;
+    margin: 16px;
+}
+  
+.card-image {
+    width: 100%;
+    height: auto;
+}
+  
+.card-content {
+    padding: 8px;
+}
+  
+.card-title {
+    font-size: 20px;
+}
+  
+.card-text {
+    font-size: 20px;
+    text-align: center;
+}
+
+.circle-card { 
+    width: 48px;
+    height: 48px;
+    background: #bbb;
+    -moz-border-radius: 70px; 
+    -webkit-border-radius: 70px; 
+    border-radius: 70px;
+}
+
+.header-card{
+    display: flex;
+    gap: 8px;
+}
+  

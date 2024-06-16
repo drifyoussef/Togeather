@@ -1,0 +1,59 @@
+.parent {
+    display: flex;
+    place-content: space-evenly;
+    flex-wrap: wrap;
+}
+
+.circle { 
+    width: 100px;
+    height: 100px;
+    background: #bbb;
+    -moz-border-radius: 70px; 
+    -webkit-border-radius: 70px; 
+    border-radius: 70px;
+}
+
+.div-card {
+    display: flex;
+    place-content: space-evenly;
+    flex-wrap: wrap;
+}
+
+.p1-home{
+    font-family: "Lobster", sans-serif;
+    font-weight: 400;
+    font-style: normal;
+    font-size: 32px;
+    color: #FF0077;
+    margin-top: 32px;
+    margin-left: 64px;
+}
+
+.p2-home{
+    font-family: "Lobster", sans-serif;
+    font-weight: 400;
+    font-style: normal;
+    font-size: 16px;
+    color: #FF0077;
+    margin-left: 64px;
+    margin-top: 16px;
+}
+
+.p3-home, .p-match {
+    color: #FF0077;
+    margin-left: 96px;  /* change this css */
+    margin-bottom: 16px;
+    font-size: 32px;
+}
+
+.category{
+    margin-top: 24px;
+}
+
+.p-category{
+    text-align: center;
+}
+
+.div-match{
+    margin-top: 24px;
+}
