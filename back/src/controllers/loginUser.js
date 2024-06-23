@@ -7,11 +7,13 @@ module.exports = async (req, res) => {
     if (userFind) {
         const same = await bcrypt.compare(password, userFind.password);
         if (same) {
-            res.status(200).json({ message: 'Login successful' });
+            req.session.userId = userFind._id
+            console.dir(req.session);
+            res.status(200).json({ message: 'Connexion réussie' });
         } else {
-            res.status(401).json({ message: 'Invalid email or password' });
+            res.status(401).json({ message: 'Email ou mot de passe invalide' });
         }
     } else {
-        res.status(401).json({ message: 'Invalid email or password' });
+        res.status(401).json({ message: 'Email ou mot de passe invalide' });
     }
 };

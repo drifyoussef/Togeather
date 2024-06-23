@@ -11,7 +11,7 @@ const Navbar: React.FC = () => {
   };
 
   // Check if the current path is the connection page
-  const isConnectionPage = ['/connection', '/login', '/auth/register'].includes(location.pathname);
+  const isConnectionPage = ['/connection', '/auth/login', '/auth/register'].includes(location.pathname);
 
   return (
     <nav className={`navbar ${isConnectionPage ? 'navbar-connection' : ''}`}>
@@ -46,6 +46,14 @@ const Navbar: React.FC = () => {
                 className={({ isActive }) => (isActive ? "active" : "")}
               >
                 Parcourir
+              </NavLink>
+            </li>
+            <li>
+              <NavLink
+                to="/auth/logout"
+                className={({ isActive }) => (isActive ? "active" : "")}
+              >
+                Se déconnecter
               </NavLink>
             </li>
           </>

@@ -6,6 +6,9 @@ const newUserController = require('./src/controllers/newUser');
 const storeUserController = require('./src/controllers/storeUser');
 const loginController = require('./src/controllers/login');
 const loginUserController = require('./src/controllers/loginUser');
+const authmiddleware = require('./src/middlewares/authMiddleware');
+const redirectIfAuthenticatedMiddleware = require('./src/middlewares/redirectIfAuthenticatedMiddleware')
+
 
 const app = express();
 
@@ -18,11 +21,17 @@ app.use(expressSession({
     saveUninitialized: false,
 }))
 
-app.get('/auth/register', newUserController);
-app.get('/auth/login', loginController);
+global.loggedIn = null;
+app.use('*', (req, res, next) => {
+    loggedIn = req.session.userId;
+    next()
+})
 
-app.post('/users/register', storeUserController);
-app.post('/users/login', loginUserController);
+app.get('/auth/register', redirectIfAuthenticatedMiddleware, newUserController);
+app.get('/auth/login', redirectIfAuthenticatedMiddleware, loginController);
+
+app.post('/users/register', redirectIfAuthenticatedMiddleware, storeUserController);
+app.post('/users/login', redirectIfAuthenticatedMiddleware, loginUserController);
 
 async function main() {
     try {
