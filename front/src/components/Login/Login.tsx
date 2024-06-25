@@ -8,8 +8,10 @@ const Login: React.FC = () => {
   const [error, setError] = useState('');
   const navigate = useNavigate();
 
-  const handleSubmit = async (event:any) => {
+  const handleSubmit = async (event: any) => {
     event.preventDefault();
+    setError(''); // Clear previous errors
+
     try {
       const response = await fetch('http://localhost:4000/users/login', {
         method: 'POST',
@@ -22,13 +24,14 @@ const Login: React.FC = () => {
       if (!response.ok) {
         const errorData = await response.json();
         setError(errorData.message);
+        console.error('Login failed:', errorData);
       } else {
         const successData = await response.json();
-        console.log(successData.message);
-        // Redirect to another page or show success message
+        console.log('Login successful:', successData.message);
         navigate('/');
       }
     } catch (error) {
+      console.error('Error:', error);
       setError('Something went wrong. Please try again.');
     }
   };

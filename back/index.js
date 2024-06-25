@@ -8,6 +8,7 @@ const loginController = require('./src/controllers/login');
 const loginUserController = require('./src/controllers/loginUser');
 const authmiddleware = require('./src/middlewares/authMiddleware');
 const redirectIfAuthenticatedMiddleware = require('./src/middlewares/redirectIfAuthenticatedMiddleware')
+const logoutController = require('./src/controllers/logout');
 
 
 const app = express();
@@ -29,6 +30,7 @@ app.use('*', (req, res, next) => {
 
 app.get('/auth/register', redirectIfAuthenticatedMiddleware, newUserController);
 app.get('/auth/login', redirectIfAuthenticatedMiddleware, loginController);
+app.get('/auth/logout', logoutController);
 
 app.post('/users/register', redirectIfAuthenticatedMiddleware, storeUserController);
 app.post('/users/login', redirectIfAuthenticatedMiddleware, loginUserController);
