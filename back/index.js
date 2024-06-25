@@ -37,7 +37,7 @@ app.post('/users/login', redirectIfAuthenticatedMiddleware, loginUserController)
 
 async function main() {
     try {
-        await mongoose.connect('mongodb://127.0.0.1:27017/togeatherDb');
+        await mongoose.connect('mongodb+srv://youssefdrif1:dDrZdxQ519mc4zMM@togeathercluster.h2rtsua.mongodb.net/?retryWrites=true&w=majority&appName=TogeatherCluster');
         console.log('Connected to MongoDB togeatherDb');
     } catch (error) {
         console.error('Connection error to MongoDB togeatherDb', error);
