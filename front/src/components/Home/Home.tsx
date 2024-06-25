@@ -51,31 +51,31 @@ export default function Home() {
           <Card
             category="Asiatique"
             subcategory="Test"
-            image="https://via.placeholder.com/300"
+            image="https://architecture.ou.edu/wp-content/uploads/2018/07/ANGELAPERSON-1447-300x300.jpg"
             text="Emily, 25 ans"
           />
           <Card
             category="Asiatique"
             subcategory="Test"
-            image="https://via.placeholder.com/300"
+            image="https://architecture.ou.edu/wp-content/uploads/2018/07/ANGELAPERSON-1447-300x300.jpg"
             text="Emily, 25 ans"
           />
           <Card
             category="Asiatique"
             subcategory="Test"
-            image="https://via.placeholder.com/300"
+            image="https://architecture.ou.edu/wp-content/uploads/2018/07/ANGELAPERSON-1447-300x300.jpg"
             text="Emily, 25 ans"
           />
           <Card
             category="Asiatique"
             subcategory="Test"
-            image="https://via.placeholder.com/300"
+            image="https://architecture.ou.edu/wp-content/uploads/2018/07/ANGELAPERSON-1447-300x300.jpg"
             text="Emily, 25 ans"
           />
           <Card
             category="Asiatique"
             subcategory="Test"
-            image="https://via.placeholder.com/300"
+            image="https://architecture.ou.edu/wp-content/uploads/2018/07/ANGELAPERSON-1447-300x300.jpg"
             text="Emily, 25 ans"
           />
         </div>
