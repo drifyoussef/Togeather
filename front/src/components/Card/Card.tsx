@@ -1,6 +1,7 @@
 import React from "react";
 import "./Card.css";
 import { useNavigate } from "react-router-dom";
+import { BiSolidSushi } from "react-icons/bi";
 
 interface CardProps {
   category: string;
@@ -26,7 +27,7 @@ export default function Card({
       <img src={image} alt="person" className="card-image" />
       <div className="card-content">
         <div className="header-card">
-          <div className="circle-card"></div>
+          <div className="circle-card"><BiSolidSushi className="icon-category-card" /></div>
           <div className="header-card-text">
             <p className="card-title">{category}</p>
             <p className="card-subtitle">{subcategory}</p>
