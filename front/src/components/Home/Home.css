@@ -7,6 +7,9 @@
 .circle { 
     width: 100px;
     height: 100px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
     background: #bbb;
     -moz-border-radius: 70px; 
     -webkit-border-radius: 70px; 
@@ -56,4 +59,14 @@
 
 .div-match{
     margin-top: 24px;
+}
+
+.image-match{
+    width: 100%;
+    border-radius: 70px;
+}
+
+.icon-category{
+    font-size: 48px;
+    color: #fff;
 }
