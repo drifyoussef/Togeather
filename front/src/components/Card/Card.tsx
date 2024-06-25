@@ -1,5 +1,6 @@
 import React from "react";
 import "./Card.css";
+import { useNavigate } from "react-router-dom";
 
 interface CardProps {
   category: string;
@@ -14,8 +15,14 @@ export default function Card({
   image,
   text,
 }: CardProps) {
+  const navigate = useNavigate();
+  const handleClick = () => {
+    //créer une page pour les profile (changer le nom car profile existe déjà)
+    navigate("/profile/:id");
+    console.log("redirect to route /")
+  };
   return (
-    <div className="card">
+    <div className="card" onClick={handleClick}>
       <img src={image} alt="person" className="card-image" />
       <div className="card-content">
         <div className="header-card">

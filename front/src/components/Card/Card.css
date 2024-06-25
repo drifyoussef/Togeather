@@ -6,7 +6,14 @@
     height: 283px;
     overflow: hidden;
     margin: 16px;
+    transition: transform 0.3s ease;
 }
+
+.card:hover {
+    transform: scale(1.07);
+    cursor: pointer;
+    outline: 3px solid #FF0077;
+}  
   
 .card-image {
     width: 100%;
