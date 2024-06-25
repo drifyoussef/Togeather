@@ -1,15 +1,18 @@
-// src/controllers/storeUser.js
-const User = require('../models/User');
+const User = require('../models/User')
 
 module.exports = async (req, res) => {
     try {
-        const user = await User.create(req.body);
-        res.status(201).json(user);
+        const user = await User.create(req.body)
+        console.log(`success User created ${user}`)
+        res.redirect('/')
     } catch (error) {
-        if (error.name === 'ValidationError') {
-            res.status(400).json({ errors: error.errors });
-        } else {
-            res.status(500).json({ message: 'Internal Server Error' });
-        }
+        console.log(JSON.stringify(error));
+        const validationErrors = Object.keys(error.errors).map(key => error.errors[key].message)
+        //req.flash.valdationErrors = validationErrors
+        req.flash('validationErrors', validationErrors)
+        //req.session.validationErrors = validationErrors;
+        res.redirect('/auth/register');
+        console.log(`Create User error ${error}`);
     }
-};
+
+}

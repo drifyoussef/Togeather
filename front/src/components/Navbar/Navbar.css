@@ -40,6 +40,27 @@
   .navbar-links a:hover {
     text-decoration: underline;
   }
+
+  .navbar-links .logout-button {
+    background: none;
+    border: none;
+    color: inherit;
+    cursor: pointer;
+    font: inherit;
+    outline: inherit;
+    padding: 0;
+    margin: 0;
+    display: inline-block;
+    text-decoration: none;
+    color: #fff;
+  }
+  
+  .navbar-links .logout-button:hover,
+  .navbar-links .logout-button:focus,
+  .navbar-links .logout-button.active {
+    text-decoration: underline;
+  }
+  
   
   @media (max-width: 768px) {
     .menu-icon {
