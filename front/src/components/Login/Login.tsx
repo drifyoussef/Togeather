@@ -27,6 +27,7 @@ const Login: React.FC = () => {
         console.error('Login failed:', errorData);
       } else {
         const successData = await response.json();
+        localStorage.setItem("token", successData.token);
         console.log('Login successful:', successData.message);
         navigate('/');
       }

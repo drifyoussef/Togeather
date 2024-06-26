@@ -1,8 +1,12 @@
 const bcrypt = require('bcrypt');
 const User = require('../models/User');
+const jwt = require("jsonwebtoken")
+const path = require("path");
+const fs = require("fs")
 
 module.exports = async (req, res) => {
     const { email, password } = req.body;
+    console.log(req.body);
 
     try {
         const userFind = await User.findOne({ email: email });
@@ -12,8 +16,10 @@ module.exports = async (req, res) => {
 
             if (same) {
                 req.session.userId = userFind._id;
-                console.dir(req.session);
-                res.status(200).json({ message: 'Connexion réussie' });
+                console.log(process.cwd());
+                const privateKey = fs.readFileSync(path.join(process.cwd(), "private.key"));
+                const token = jwt.sign({ _id: userFind._id }, privateKey, { algorithm: 'RS256' });
+                res.status(200).json({ message: 'Connexion réussie',token:token });
             } else {
                 console.error('Invalid password');
                 res.status(401).json({ message: 'Email ou mot de passe invalide' });

@@ -6,10 +6,11 @@ const newUserController = require('./src/controllers/newUser');
 const storeUserController = require('./src/controllers/storeUser');
 const loginController = require('./src/controllers/login');
 const loginUserController = require('./src/controllers/loginUser');
-const authmiddleware = require('./src/middlewares/authMiddleware');
+const authMiddleware = require('./src/middlewares/authMiddleware');
 const redirectIfAuthenticatedMiddleware = require('./src/middlewares/redirectIfAuthenticatedMiddleware')
 const logoutController = require('./src/controllers/logout');
-
+const getUserController = require('./src/controllers/getUser');
+require('dotenv').config();
 
 const app = express();
 
@@ -28,9 +29,22 @@ app.use('*', (req, res, next) => {
     next()
 })
 
+//Définition des CORS Middleware 
+app.use(function(req, res, next) {
+    res.setHeader("Access-Control-Allow-Headers", "X-Requested-With,content-type, Accept,Authorization,Origin");
+    res.setHeader("Access-Control-Allow-Origin", "http://localhost:3000");
+    res.setHeader("Access-Control-Allow-Methods", "GET, POST, OPTIONS, PUT, PATCH, DELETE");
+    res.setHeader("Access-Control-Allow-Credentials", true);
+    next();
+  });
+
 app.get('/auth/register', redirectIfAuthenticatedMiddleware, newUserController);
-app.get('/auth/login', redirectIfAuthenticatedMiddleware, loginController);
 app.get('/auth/logout', logoutController);
+app.get('/auth/user', authMiddleware, getUserController);
+
+app.get('/', function (req, res) {
+    res.send("Hello-world");
+})
 
 app.post('/users/register', redirectIfAuthenticatedMiddleware, storeUserController);
 app.post('/users/login', redirectIfAuthenticatedMiddleware, loginUserController);
