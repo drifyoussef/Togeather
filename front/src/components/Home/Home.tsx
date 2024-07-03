@@ -19,35 +19,51 @@ export default function Home() {
           <p className="p3-home">Catégories de restaurant</p>
           <div className="parent">
             <div className="div1">
-              <div className="circle"><BiSolidSushi className="icon-category" /></div>
+              <div className="circle">
+                <BiSolidSushi className="icon-category" />
+              </div>
               <p className="p-category">Asiatique</p>
             </div>
             <div className="div2">
-              <div className="circle"><FaPizzaSlice className="icon-category" /></div>
+              <div className="circle">
+                <FaPizzaSlice className="icon-category" />
+              </div>
               <p className="p-category">Pizza</p>
             </div>
             <div className="div3">
-              <div className="circle"><GiChickenOven className="icon-category" /></div>
+              <div className="circle">
+                <GiChickenOven className="icon-category" />
+              </div>
               <p className="p-category">Poulet</p>
             </div>
             <div className="div4">
-              <div className="circle"><LuSandwich className="icon-category" /></div>
+              <div className="circle">
+                <LuSandwich className="icon-category" />
+              </div>
               <p className="p-category">Sandwich</p>
             </div>
             <div className="div5">
-              <div className="circle"><GiTacos className="icon-category" /></div>
+              <div className="circle">
+                <GiTacos className="icon-category" />
+              </div>
               <p className="p-category">Mexicain</p>
             </div>
             <div className="div6">
-              <div className="circle"><FaHamburger className="icon-category" /></div>
+              <div className="circle">
+                <FaHamburger className="icon-category" />
+              </div>
               <p className="p-category">Burger</p>
             </div>
             <div className="div7">
-              <div className="circle"><FaIceCream className="icon-category" /></div>
+              <div className="circle">
+                <FaIceCream className="icon-category" />
+              </div>
               <p className="p-category">Glaces</p>
             </div>
             <div className="div8">
-              <div className="circle"><RiDrinks2Fill className="icon-category" /></div>
+              <div className="circle">
+                <RiDrinks2Fill className="icon-category" />
+              </div>
               <p className="p-category">Boissons</p>
             </div>
           </div>
