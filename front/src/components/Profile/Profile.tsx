@@ -7,7 +7,7 @@ const Profile: React.FC = () => {
 
   useEffect(() => {
     const token = localStorage.getItem('token');
-    fetch("http://localhost:4000/auth/user", {
+    fetch(`${process.env.REACT_APP_API_URL}/auth/user`, {
       headers: {
         "Authorization":`Bearer ${token}`
       },
