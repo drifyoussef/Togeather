@@ -8,15 +8,6 @@ services:
       - "4000:4000"
     environment:
       - NODE_ENV=production
-    develop:
-      watch:
-        - action: sync
-          path: ./back/
-          target: /usr/src/app/
-          ignore:
-            - node_modules/
-        - action: rebuild
-          path: ./back/package.json
 
 
   frontend:
@@ -30,12 +21,3 @@ services:
       - NODE_ENV=production
     depends_on:
       - backend
-    develop:
-      watch:
-        - action: sync
-          path: ./front/
-          target: /usr/src/app/
-          ignore:
-            - node_modules/
-        - action: rebuild
-          path: ./front/package.json
