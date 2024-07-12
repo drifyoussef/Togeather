@@ -1,4 +1,7 @@
-launch project : docker-compose up --watch
+Launch the project in development:
+docker compose up -d
+You can add the flag --build if you need to rebuild the images.
 
-launch back-end : nodemon index.js
-launch front-end : npm start
+Launch the project in production:
+docker-compose -f docker-compose.yml -f docker-compose.prod.yml up -d
+You can add the flag --build if you need to rebuild the images.
