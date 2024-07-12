@@ -7,7 +7,7 @@ services:
     ports:
       - "4000:4000"
     environment:
-      - NODE_ENV=development
+      - NODE_ENV=production
     develop:
       watch:
         - action: sync
@@ -26,6 +26,8 @@ services:
     container_name: frontend
     ports:
       - "3000:3000"
+    environment:
+    - NODE_ENV=production
     depends_on:
       - backend
     develop:

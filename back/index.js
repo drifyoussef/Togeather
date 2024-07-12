@@ -10,7 +10,7 @@ const authMiddleware = require('./src/middlewares/authMiddleware');
 const redirectIfAuthenticatedMiddleware = require('./src/middlewares/redirectIfAuthenticatedMiddleware')
 const logoutController = require('./src/controllers/logout');
 const getUserController = require('./src/controllers/getUser');
-require('dotenv').config();
+const dotenv = require('dotenv');
 
 const app = express();
 
@@ -32,7 +32,7 @@ app.use('*', (req, res, next) => {
 //Définition des CORS Middleware 
 app.use(function(req, res, next) {
     res.setHeader("Access-Control-Allow-Headers", "X-Requested-With,content-type, Accept,Authorization,Origin");
-    res.setHeader("Access-Control-Allow-Origin", "http://localhost:3000");
+    res.setHeader("Access-Control-Allow-Origin", process.env.ALLOWED_ORIGIN);
     res.setHeader("Access-Control-Allow-Methods", "GET, POST, OPTIONS, PUT, PATCH, DELETE");
     res.setHeader("Access-Control-Allow-Credentials", true);
     next();
