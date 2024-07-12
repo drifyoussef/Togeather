@@ -1,0 +1,8 @@
+services:
+  backend:
+    environment:
+      - ALLOWED_ORIGIN=http://142.93.100.162:3000
+
+  frontend:
+    environment:
+      - REACT_APP_API_URL=http://142.93.100.162:4000
