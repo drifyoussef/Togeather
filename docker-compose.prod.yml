@@ -1,7 +1,7 @@
 services:
   backend:
     environment:
-      - ALLOWED_ORIGIN=http://142.93.100.162:3000
+      - ORIGIN=http://142.93.100.162:3000
 
   frontend:
     environment:
