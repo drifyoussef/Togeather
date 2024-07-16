@@ -10,7 +10,7 @@ const authMiddleware = require('./src/middlewares/authMiddleware');
 const redirectIfAuthenticatedMiddleware = require('./src/middlewares/redirectIfAuthenticatedMiddleware')
 const logoutController = require('./src/controllers/logout');
 const getUserController = require('./src/controllers/getUser');
-const dotenv = require('dotenv');
+const fetch = require('node-fetch');
 
 const app = express();
 
@@ -45,6 +45,17 @@ app.get('/auth/user', authMiddleware, getUserController);
 app.get('/', function (req, res) {
     res.send("Hello-world");
 })
+
+app.get('/api/restaurants', async (req, res) => {
+    try {
+        const { location, radius } = req.query;
+        const response = await fetch(`https://maps.googleapis.com/maps/api/place/nearbysearch/json?location=${location}&radius=${radius}&type=restaurant&key=AIzaSyA8YrxzYR9Gix93tZ-x4aVIekH4EGoQhx4`);
+        const data = await response.json();
+        res.json(data);
+    } catch (error) {
+        res.status(500).json({ error: error.message });
+    }
+});
 
 app.post('/users/register', redirectIfAuthenticatedMiddleware, storeUserController);
 app.post('/users/login', redirectIfAuthenticatedMiddleware, loginUserController);

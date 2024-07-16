@@ -1,5 +1,6 @@
 .div-profile {
     display: flex;
+    flex-flow: column;
     justify-content: center;
     align-items: center;
     height: calc(100vh - 64px);
@@ -16,19 +17,6 @@
     padding: 20px;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
     margin: 20px;
-}
-
-.profileImage {
-    align-self: center;
-    width: 100px;
-    height: 100px;
-    border-radius: 50%;
-    object-fit: cover;
-    border: 2px solid #FF0077;
-}
-
-.profileInfo {
-    margin-top: 10px;
 }
 
 .profileInfo h2 {
@@ -54,4 +42,19 @@
 
 .profileInfo button:hover {
     background-color: #e6006c;
+}
+
+.change-settings{
+    width: 16%;
+    margin: 16px;
+}
+
+.profileImageIcon{
+    font-size: 104px;
+    color: #FF0077;
+}
+
+.profileImageIcon:hover{
+    cursor: pointer;
+    color: #ffa9a9ed;
 }

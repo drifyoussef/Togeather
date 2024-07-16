@@ -1,15 +1,17 @@
 import React, { useEffect, useState } from "react";
 import "./Profile.css";
 import { UserModel } from "../../models/User.model";
+import { PiUserCirclePlusFill } from "react-icons/pi";
 
 const Profile: React.FC = () => {
   const [user, setUser] = useState<UserModel>();
+  const [inputValue, setInputValue] = useState("");
 
   useEffect(() => {
-    const token = localStorage.getItem('token');
+    const token = localStorage.getItem("token");
     fetch(`${process.env.REACT_APP_API_URL}/auth/user`, {
       headers: {
-        "Authorization":`Bearer ${token}`
+        Authorization: `Bearer ${token}`,
       },
       method: "GET",
     })
@@ -30,22 +32,51 @@ const Profile: React.FC = () => {
     alert("Change settings clicked");
   };
 
+  const handleChange = (event: any) => {
+    setInputValue(event.target.value);
+  };
+
   return (
     <div className="div-profile">
       <div className="profileCard">
-        <div className="profileImage"></div>
+        <div className="profileImage"><PiUserCirclePlusFill className="profileImageIcon"/></div>
         <div className="profileInfo">
           {user ? (
-            <h1>
-              {user.firstname} {user.name}
-            </h1>
+            <div>
+              <p className="profile">
+                {user.firstname} {user.name}
+              </p>
+              <p>
+                {user.email}
+              </p>
+            </div>
           ) : (
             <h1>Loading...</h1>
           )}
           <p>Web Developer</p>
-          <button onClick={changeSettings}>Change Settings</button>
         </div>
       </div>
+      <div className="profileInfosModification">
+        <p>Modifiez votre mail</p>
+        <input
+          type="text"
+          placeholder={"Modifiez votre mail ici..."}
+          value={inputValue}
+          onChange={handleChange}
+        />
+      </div>
+      <div className="profileInfosModification">
+        <p>Modifiez votre métier</p>
+        <input
+          type="text"
+          placeholder={"Modifiez votre métier ici..."}
+          value={inputValue}
+          onChange={handleChange}
+        />
+      </div>
+      <button className="change-settings" onClick={changeSettings}>
+        Modifier les informations
+      </button>
     </div>
   );
 };

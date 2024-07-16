@@ -168,9 +168,7 @@ export default function Messages() {
           </div>
         </div>
         <div className="bubble-type-div">
-          <div className="bubble-type">
-            <p>I'm good, thanks! How about you?</p>
-          </div>
+          <input className="input-send-message" type="text" placeholder="Ecrivez votre message ici..." />
           <button className="send-message">Envoyer</button>
         </div>
       </div>

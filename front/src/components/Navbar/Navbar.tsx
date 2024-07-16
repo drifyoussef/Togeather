@@ -45,12 +45,12 @@ const Navbar: React.FC = () => {
       <ul className={isOpen ? "navbar-links active" : "navbar-links"}>
         {!isConnectionPage ? (
           <>
-            <li>
+          <li>
               <NavLink
-                to="/profile"
+                to="/browse"
                 className={({ isActive }) => (isActive ? "active" : "")}
               >
-                Mon profil
+                Parcourir
               </NavLink>
             </li>
             <li>
@@ -63,10 +63,10 @@ const Navbar: React.FC = () => {
             </li>
             <li>
               <NavLink
-                to="/browse"
+                to="/profile"
                 className={({ isActive }) => (isActive ? "active" : "")}
               >
-                Parcourir
+                Mon profil
               </NavLink>
             </li>
             <li>
