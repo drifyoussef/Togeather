@@ -1,73 +1,119 @@
 .browse-container {
-    border-radius: 8px;
-    padding: 16px;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-  }
-  
-  .browse-image {
-    width: 288px;
-    height: 130px;
-    border-radius: 8px;
-    object-fit: cover;
-  }
-  
-  .browse-name {
-    font-size: 20px;
-    margin: 0;
-  }
-  
-  .browse-restaurant-review {
-    font-size: 14px;
-    padding: 8px;
-    background: #bbb;
-    border-radius: 50px;
-  }
-  
-  .view-details {
-    display: block;
-    margin-top: 8px;
-    text-decoration: none;
-    color: #007bff;
-    font-weight: bold;
-  }
+  border-radius: 8px;
+  padding: 16px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
 
-  .browse-card{
-    max-width: min-content;
-    cursor: pointer;
-    margin: 16px;
-    gap: 4px;
-    display: flex;
-    flex-flow: column;
-  }
+.browse-image {
+  width: 288px;
+  height: 130px;
+  border-radius: 8px;
+  object-fit: cover;
+}
 
-  .browse-h2{
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-  }
+.browse-name {
+  font-size: 20px;
+  margin: 0;
+}
 
-  .header-container-title{
-    margin-left: 32px;
-  }
+.browse-restaurant-review {
+  font-size: 14px;
+  padding: 8px;
+  background: #bbb;
+  border-radius: 50px;
+}
 
-  .icon-title{
-    color: #ff8f00;
-    place-self: center;
-    font-size: 32px;
-  }
+.view-details {
+  display: block;
+  margin-top: 8px;
+  text-decoration: none;
+  color: #007bff;
+  font-weight: bold;
+}
 
-  .header-container{
-    display: flex;
-    gap: 4px;
-  }
+.browse-card {
+  max-width: min-content;
+  cursor: pointer;
+  margin: 16px;
+  gap: 4px;
+  display: flex;
+  flex-flow: column;
+}
 
-  .icon-heart{
-    color: #ff0077;
-  }
+.browse-h2 {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
 
-  .icon-category:active{
-    background-color: #ff0077;
-  }
-  
+.header-container-title {
+  margin-left: 32px;
+}
+
+.icon-title {
+  color: #ff8f00;
+  place-self: center;
+  font-size: 32px;
+}
+
+.header-container {
+  display: flex;
+  gap: 4px;
+}
+
+.icon-heart {
+  color: #ff0077;
+}
+
+.icon-category {
+  transition: background-color 0.3s, color 0.3s;
+}
+
+.circle { 
+  width: 100px;
+  height: 100px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #ffa9a9;
+  -moz-border-radius: 70px; 
+  -webkit-border-radius: 70px; 
+  border-radius: 70px;
+  transition: transform 0.3s ease;
+}
+
+.div1.active .circle,
+.div2.active .circle,
+.div3.active .circle,
+.div4.active .circle,
+.div5.active .circle,
+.div6.active .circle,
+.div7.active .circle,
+.div8.active .circle {
+  background-color: #ff0077;
+}
+
+.div1.active .icon-category,
+.div2.active .icon-category,
+.div3.active .icon-category,
+.div4.active .icon-category,
+.div5.active .icon-category,
+.div6.active .icon-category,
+.div7.active .icon-category,
+.div8.active .icon-category {
+  color: #fff;
+}
+
+.div1.active .p-category,
+.div2.active .p-category,
+.div3.active .p-category,
+.div4.active .p-category,
+.div5.active .p-category,
+.div6.active .p-category,
+.div7.active .p-category,
+.div8.active .p-category {
+  font-weight: bold;
+  color: #ff0077;
+}

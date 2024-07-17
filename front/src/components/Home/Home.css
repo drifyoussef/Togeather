@@ -91,3 +91,37 @@
         transform: rotate(360deg);
     }
 }
+
+.div1.active .circle,
+.div2.active .circle,
+.div3.active .circle,
+.div4.active .circle,
+.div5.active .circle,
+.div6.active .circle,
+.div7.active .circle,
+.div8.active .circle {
+  background-color: #ff0077;
+}
+
+.div1.active .icon-category,
+.div2.active .icon-category,
+.div3.active .icon-category,
+.div4.active .icon-category,
+.div5.active .icon-category,
+.div6.active .icon-category,
+.div7.active .icon-category,
+.div8.active .icon-category {
+  color: #fff;
+}
+
+.div1.active .p-category,
+.div2.active .p-category,
+.div3.active .p-category,
+.div4.active .p-category,
+.div5.active .p-category,
+.div6.active .p-category,
+.div7.active .p-category,
+.div8.active .p-category {
+  font-weight: bold;
+  color: #ff0077;
+}
