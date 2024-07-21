@@ -27,6 +27,12 @@ const UserSchema = new Schema({
         type: String,
         required: [true, 'Veuillez rentrer un mot de passe'],
     },
+    job:{
+        type: String,
+    },
+    passions:{
+        type: String,
+    }
 });
 
 UserSchema.plugin(uniqueValidator);
