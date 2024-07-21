@@ -1,8 +1,9 @@
 import React, { useState, useEffect } from "react";
+import { useParams, useNavigate } from "react-router-dom";
 import "./Browse.css";
 import { BiSolidSushi } from "react-icons/bi";
 import { FaPizzaSlice, FaHamburger, FaIceCream, FaHeart } from "react-icons/fa";
-import { GiChickenOven, GiTacos } from "react-icons/gi";
+import { GiChickenOven, GiFrenchFries } from "react-icons/gi";
 import { LuSandwich } from "react-icons/lu";
 import { RiDrinks2Fill } from "react-icons/ri";
 import { PiStarFill } from "react-icons/pi";
@@ -14,14 +15,22 @@ interface Restaurant {
   name: string;
   rating: number;
   photos?: { photo_reference: string }[];
-  opening_hours: {
+  opening_hours?: {
     open_now: boolean;
   };
 }
 
 const Browse = () => {
+  const { category } = useParams<{ category: string }>();
+  const navigate = useNavigate();
   const [restaurants, setRestaurants] = useState<Restaurant[]>([]);
-  const [activeCategory, setActiveCategory] = useState<string | null>(null);
+  const [activeCategory, setActiveCategory] = useState<string | null>(category || null);
+
+  useEffect(() => {
+    if (category) {
+      setActiveCategory(category);
+    }
+  }, [category]);
 
   useEffect(() => {
     const location = "44.12977637655348,4.107153080220958"; // Coordonnées de burger king d'ales
@@ -29,9 +38,21 @@ const Browse = () => {
 
     const fetchRestaurants = async () => {
       try {
-        const response = await fetch(
-          `${process.env.REACT_APP_API_URL}/api/restaurants?location=${location}&radius=${radius}`
-        );
+        let url = `${process.env.REACT_APP_API_URL}/api/restaurants?location=${location}&radius=${radius}`;
+        if (activeCategory) {
+          const keywordMap: { [key: string]: string } = {
+            'Asiatique': 'chinese',
+            'Pizza': 'pizza',
+            'Poulet': 'chicken',
+            'Sandwich': 'sandwich',
+            'Burger': 'burger',
+            'Glaces': 'ice cream',
+            'Boissons': 'cafe',
+            'Fast Food': 'fast food',
+          };
+          url += `&keyword=${keywordMap[activeCategory]}`;
+        }
+        const response = await fetch(url);
         if (!response.ok) {
           throw new Error(`HTTP error! status: ${response.status}`);
         }
@@ -44,13 +65,18 @@ const Browse = () => {
     };
 
     fetchRestaurants();
-  }, []);
+  }, [activeCategory]);
 
   const sortedRestaurants = [...restaurants].sort(
     (a, b) => b.rating - a.rating
   );
 
   const displayRestaurants = sortedRestaurants.slice(0, 4);
+
+  const handleCategoryClick = (category: string) => {
+    setActiveCategory(category);
+    navigate(`/browse/${category}`);
+  };
 
   return (
     <div>
@@ -61,78 +87,25 @@ const Browse = () => {
       <div className="category">
         <p className="p3-home">Catégories de restaurant</p>
         <div className="parent">
-          <div
-            className={`div1 ${activeCategory === 'Asiatique' ? 'active' : ''}`}
-            onClick={() => setActiveCategory('Asiatique')}
-          >
-            <div className="circle">
-              <BiSolidSushi className="icon-category" />
+          {['Asiatique', 'Pizza', 'Poulet', 'Sandwich', 'Burger', 'Glaces', 'Boissons', 'Fast Food'].map(category => (
+            <div
+              key={category}
+              className={`div${category} ${activeCategory === category ? 'active' : ''}`}
+              onClick={() => handleCategoryClick(category)}
+            >
+              <div className="circle">
+                {category === 'Asiatique' && <BiSolidSushi className="icon-category" />}
+                {category === 'Pizza' && <FaPizzaSlice className="icon-category" />}
+                {category === 'Poulet' && <GiChickenOven className="icon-category" />}
+                {category === 'Sandwich' && <LuSandwich className="icon-category" />}
+                {category === 'Burger' && <FaHamburger className="icon-category" />}
+                {category === 'Glaces' && <FaIceCream className="icon-category" />}
+                {category === 'Boissons' && <RiDrinks2Fill className="icon-category" />}
+                {category === 'Fast Food' && <GiFrenchFries className="icon-category" />}
+              </div>
+              <p className={`p-category ${activeCategory === category ? 'active' : ''}`}>{category}</p>
             </div>
-            <p className={`p-category ${activeCategory === 'Asiatique' ? 'active' : ''}`}>Asiatique</p>
-          </div>
-          <div
-            className={`div2 ${activeCategory === 'Pizza' ? 'active' : ''}`}
-            onClick={() => setActiveCategory('Pizza')}
-          >
-            <div className="circle">
-              <FaPizzaSlice className="icon-category" />
-            </div>
-            <p className={`p-category ${activeCategory === 'Pizza' ? 'active' : ''}`}>Pizza</p>
-          </div>
-          <div
-            className={`div3 ${activeCategory === 'Poulet' ? 'active' : ''}`}
-            onClick={() => setActiveCategory('Poulet')}
-          >
-            <div className="circle">
-              <GiChickenOven className="icon-category" />
-            </div>
-            <p className={`p-category ${activeCategory === 'Poulet' ? 'active' : ''}`}>Poulet</p>
-          </div>
-          <div
-            className={`div4 ${activeCategory === 'Sandwich' ? 'active' : ''}`}
-            onClick={() => setActiveCategory('Sandwich')}
-          >
-            <div className="circle">
-              <LuSandwich className="icon-category" />
-            </div>
-            <p className={`p-category ${activeCategory === 'Sandwich' ? 'active' : ''}`}>Sandwich</p>
-          </div>
-          <div
-            className={`div5 ${activeCategory === 'Mexicain' ? 'active' : ''}`}
-            onClick={() => setActiveCategory('Mexicain')}
-          >
-            <div className="circle">
-              <GiTacos className="icon-category" />
-            </div>
-            <p className={`p-category ${activeCategory === 'Mexicain' ? 'active' : ''}`}>Mexicain</p>
-          </div>
-          <div
-            className={`div6 ${activeCategory === 'Burger' ? 'active' : ''}`}
-            onClick={() => setActiveCategory('Burger')}
-          >
-            <div className="circle">
-              <FaHamburger className="icon-category" />
-            </div>
-            <p className={`p-category ${activeCategory === 'Burger' ? 'active' : ''}`}>Burger</p>
-          </div>
-          <div
-            className={`div7 ${activeCategory === 'Glaces' ? 'active' : ''}`}
-            onClick={() => setActiveCategory('Glaces')}
-          >
-            <div className="circle">
-              <FaIceCream className="icon-category" />
-            </div>
-            <p className={`p-category ${activeCategory === 'Glaces' ? 'active' : ''}`}>Glaces</p>
-          </div>
-          <div
-            className={`div8 ${activeCategory === 'Boissons' ? 'active' : ''}`}
-            onClick={() => setActiveCategory('Boissons')}
-          >
-            <div className="circle">
-              <RiDrinks2Fill className="icon-category" />
-            </div>
-            <p className={`p-category ${activeCategory === 'Boissons' ? 'active' : ''}`}>Boissons</p>
-          </div>
+          ))}
         </div>
       </div>
       <div>
@@ -159,7 +132,7 @@ const Browse = () => {
                   <div>
                     <h2 className="browse-name">{restaurant.name}</h2>
                     <p className="open-status">
-                      {restaurant.opening_hours.open_now ? "Ouvert" : "Fermé"}
+                      {restaurant.opening_hours?.open_now ? "Ouvert" : "Fermé"}
                     </p>
                   </div>
                   <p className="browse-restaurant-review">

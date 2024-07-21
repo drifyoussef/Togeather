@@ -20,7 +20,6 @@ export default function Card({
   const handleClick = () => {
     //créer une page pour les profile (changer le nom car profile existe déjà)
     navigate("/profile/:id");
-    console.log("redirect to route /")
   };
   return (
     <div className="card" onClick={handleClick}>

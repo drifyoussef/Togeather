@@ -48,8 +48,35 @@ app.get('/', function (req, res) {
 
 app.get('/api/restaurants', async (req, res) => {
     try {
+        const { location, radius, keyword } = req.query;
+        let url = `https://maps.googleapis.com/maps/api/place/nearbysearch/json?location=${location}&radius=${radius}&type=restaurant`;
+        if (keyword) {
+            url += `&keyword=${keyword}`;
+        }
+        url += `&key=AIzaSyA8YrxzYR9Gix93tZ-x4aVIekH4EGoQhx4`;
+        const response = await fetch(url);
+        const data = await response.json();
+        res.json(data);
+    } catch (error) {
+        res.status(500).json({ error: error.message });
+    }
+});
+
+app.get('/api/restaurants/asian', async (req, res) => {
+    try {
         const { location, radius } = req.query;
-        const response = await fetch(`https://maps.googleapis.com/maps/api/place/nearbysearch/json?location=${location}&radius=${radius}&type=restaurant&key=AIzaSyA8YrxzYR9Gix93tZ-x4aVIekH4EGoQhx4`);
+        const response = await fetch(`https://maps.googleapis.com/maps/api/place/nearbysearch/json?location=${location}&radius=${radius}&type=restaurant&keyword=chinese&key=AIzaSyA8YrxzYR9Gix93tZ-x4aVIekH4EGoQhx4`);
+        const data = await response.json();
+        res.json(data);
+    } catch (error) {
+        res.status(500).json({ error: error.message });
+    }
+});
+
+app.get('/api/restaurants/italian', async (req, res) => {
+    try {
+        const { location, radius } = req.query;
+        const response = await fetch(`https://maps.googleapis.com/maps/api/place/nearbysearch/json?location=${location}&radius=${radius}&type=restaurant&keyword=italian&key=AIzaSyA8YrxzYR9Gix93tZ-x4aVIekH4EGoQhx4`);
         const data = await response.json();
         res.json(data);
     } catch (error) {

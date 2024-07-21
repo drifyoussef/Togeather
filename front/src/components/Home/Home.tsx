@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { useNavigate } from 'react-router-dom';
 import "./Home.css";
 import Card from "../Card/Card";
 import { BiSolidSushi } from "react-icons/bi";
@@ -9,6 +10,13 @@ import { RiDrinks2Fill } from "react-icons/ri";
 
 export default function Home() {
   const [activeCategory, setActiveCategory] = useState<string | null>(null);
+  const navigate = useNavigate();
+
+  const handleCategoryClick = (category: string) => {
+    setActiveCategory(category);
+    navigate(`/browse/${category}`);
+  };
+
   return (
     <div className="div">
       <div>
@@ -21,7 +29,7 @@ export default function Home() {
           <div className="parent">
           <div
             className={`div1 ${activeCategory === 'Asiatique' ? 'active' : ''}`}
-            onClick={() => setActiveCategory('Asiatique')}
+            onClick={() => handleCategoryClick('Asiatique')}
           >
             <div className="circle">
               <BiSolidSushi className="icon-category" />
@@ -30,7 +38,7 @@ export default function Home() {
           </div>
           <div
             className={`div2 ${activeCategory === 'Pizza' ? 'active' : ''}`}
-            onClick={() => setActiveCategory('Pizza')}
+            onClick={() => handleCategoryClick('Pizza')}
           >
             <div className="circle">
               <FaPizzaSlice className="icon-category" />
@@ -39,7 +47,7 @@ export default function Home() {
           </div>
           <div
             className={`div3 ${activeCategory === 'Poulet' ? 'active' : ''}`}
-            onClick={() => setActiveCategory('Poulet')}
+            onClick={() => handleCategoryClick('Poulet')}
           >
             <div className="circle">
               <GiChickenOven className="icon-category" />
@@ -48,7 +56,7 @@ export default function Home() {
           </div>
           <div
             className={`div4 ${activeCategory === 'Sandwich' ? 'active' : ''}`}
-            onClick={() => setActiveCategory('Sandwich')}
+            onClick={() => handleCategoryClick('Sandwich')}
           >
             <div className="circle">
               <LuSandwich className="icon-category" />
@@ -57,7 +65,7 @@ export default function Home() {
           </div>
           <div
             className={`div5 ${activeCategory === 'Mexicain' ? 'active' : ''}`}
-            onClick={() => setActiveCategory('Mexicain')}
+            onClick={() => handleCategoryClick('Mexicain')}
           >
             <div className="circle">
               <GiTacos className="icon-category" />
@@ -66,7 +74,7 @@ export default function Home() {
           </div>
           <div
             className={`div6 ${activeCategory === 'Burger' ? 'active' : ''}`}
-            onClick={() => setActiveCategory('Burger')}
+            onClick={() => handleCategoryClick('Burger')}
           >
             <div className="circle">
               <FaHamburger className="icon-category" />
@@ -75,7 +83,7 @@ export default function Home() {
           </div>
           <div
             className={`div7 ${activeCategory === 'Glaces' ? 'active' : ''}`}
-            onClick={() => setActiveCategory('Glaces')}
+            onClick={() => handleCategoryClick('Glaces')}
           >
             <div className="circle">
               <FaIceCream className="icon-category" />
@@ -84,7 +92,7 @@ export default function Home() {
           </div>
           <div
             className={`div8 ${activeCategory === 'Boissons' ? 'active' : ''}`}
-            onClick={() => setActiveCategory('Boissons')}
+            onClick={() => handleCategoryClick('Boissons')}
           >
             <div className="circle">
               <RiDrinks2Fill className="icon-category" />
