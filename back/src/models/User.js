@@ -23,6 +23,10 @@ const UserSchema = new Schema({
             message: 'Veuillez rentrer une adresse mail valide'
         }
     },
+    age: {
+        type: Number,
+        required: [true, 'Veuillez indiquer votre age'],
+    },
     password:{
         type: String,
         required: [true, 'Veuillez rentrer un mot de passe'],

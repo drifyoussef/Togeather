@@ -43,8 +43,8 @@ app.get('/auth/logout', logoutController);
 app.get('/auth/user', authMiddleware, getUserController);
 
 app.get('/', function (req, res) {
-    res.send("Hello-world");
-})
+    res.json({ message: "Hello-world" });
+});
 
 app.get('/api/restaurants', async (req, res) => {
     try {

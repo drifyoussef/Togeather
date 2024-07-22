@@ -39,8 +39,10 @@ const Profile: React.FC = () => {
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>, field: string) => {
     setInputValue(event.target.value);
     if (field === "job") {
+      console.log(isJobEditing);
       setIsJobEditing(true);
     } else if (field === "passions") {
+      console.log(isPassionsEditing);
       setIsPassionsEditing(true);
     }
   };
@@ -57,6 +59,7 @@ const Profile: React.FC = () => {
               <p className="profile">{user.firstname}</p>
               <p>{user.name}</p>
               <p>{user.email}</p>
+              <p>{user.age} ans</p>
               <p>{user.job || "Veuillez indiquer votre métier"}</p>
               <p>{user.passions || "Veuillez indiquer vos passions"}</p>
             </div>

@@ -7,19 +7,35 @@ const Register: React.FC = () => {
   const [name, setName] = useState("");
   const [firstname, setFirstname] = useState("");
   const [email, setEmail] = useState("");
+  const [birthdate, setBirthdate] = useState("");
   const [password, setPassword] = useState("");
-  const [error] = useState("");
+  const [error, setError] = useState("");
   const navigate = useNavigate();
+
+  const calcAge = (birthdate: string) => {
+    const today = new Date();
+    const birthDate = new Date(birthdate);
+    let age = today.getFullYear() - birthDate.getFullYear();
+    const monthDiff = today.getMonth() - birthDate.getMonth();
+
+    if (monthDiff < 0 || (monthDiff === 0 && today.getDate() < birthDate.getDate())) {
+      age--;
+    }
+    return age;
+  };
 
   const handleSubmit = async (event: any) => {
     event.preventDefault();
-    const userData = { name, firstname, email, password };
+    const age = calcAge(birthdate);
+    const userData = { name, firstname, email, age, password };
+
     try {
       const response = await registerUser(userData);
       console.log("Utilisateur enregistré avec succès:", response);
       navigate('/');
     } catch (error) {
       console.log(error);
+      setError("Erreur lors de l'enregistrement de l'utilisateur.");
     }
   };
 
@@ -53,6 +69,16 @@ const Register: React.FC = () => {
             name="email"
             value={email}
             onChange={(e) => setEmail(e.target.value)}
+            required
+          />
+        </label>
+        <label>
+          Date de naissance:
+          <input
+            type="date"
+            name="age"
+            value={birthdate}
+            onChange={(e) => setBirthdate(e.target.value)}
             required
           />
         </label>
