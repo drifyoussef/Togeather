@@ -6,4 +6,7 @@ export interface UserModel {
     password: string,
     job: string,
     passions: string,
+    userGender: string,
+    preferredGender: string,
+    favoriteCategory: string,
 }

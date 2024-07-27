@@ -104,3 +104,11 @@
   font-weight: bold;
   color: #ff0077;
 }
+
+.icon-heart-home{
+    border-radius: 50px;
+    background-color: #FF0077;
+    font-size: 16px!important;
+    color: #fff!important;
+    padding: 4PX;
+}

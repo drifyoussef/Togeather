@@ -36,7 +36,10 @@ const Profile: React.FC = () => {
     alert("Change settings clicked");
   };
 
-  const handleChange = (event: React.ChangeEvent<HTMLInputElement>, field: string) => {
+  const handleChange = (
+    event: React.ChangeEvent<HTMLInputElement>,
+    field: string
+  ) => {
     setInputValue(event.target.value);
     if (field === "job") {
       console.log(isJobEditing);
@@ -51,20 +54,50 @@ const Profile: React.FC = () => {
     <div className="div-profile">
       <div className="profileCard">
         <div className="profileImage">
-          <PiUserCirclePlusFill className="profileImageIcon"/>
+          <PiUserCirclePlusFill className="profileImageIcon" />
         </div>
         <div className="profileInfo">
           {user ? (
             <div>
-              <p className="profile">{user.firstname}</p>
-              <p>{user.name}</p>
-              <p>{user.email}</p>
-              <p>{user.age} ans</p>
-              <p>{user.job || "Veuillez indiquer votre métier"}</p>
-              <p>{user.passions || "Veuillez indiquer vos passions"}</p>
+              <div className="divFirstname">
+                <label>Prénom :</label>
+                <p className="profile">{user.firstname}</p>
+              </div>
+              <div className="divName">
+                <label>Nom :</label>
+                <p>{user.name}</p>
+              </div>
+              <div className="divMail">
+                <label>Adresse mail :</label>
+                <p>{user.email}</p>
+              </div>
+              <div className="divGender">
+                <label>Votre genre :</label>
+                <p>{user.userGender}</p>
+              </div>
+              <div className="divFavGender">
+                <label>Vous preferez les :</label>
+                <p>{user.preferredGender}</p>
+              </div>
+              <div className="divFavFood">
+                <label>Votre nourriture favorite :</label>
+                <p>{user.favoriteCategory}</p>
+              </div>
+              <div className="divAge">
+                <label>Votre age :</label>
+                <p>{user.age} ans</p>
+              </div>
+              <div className="divJob">
+                <label>Votre mêtier :</label>
+                <p>{user.job || "Veuillez indiquer votre métier"}</p>
+              </div>
+              <div className="divPassions">
+                <label>Vos passions :</label>
+                <p>{user.passions || "Veuillez indiquer vos passions"}</p>
+              </div>
             </div>
           ) : (
-            <h1>Loading...</h1>
+            <h1>Chargement...</h1>
           )}
         </div>
       </div>

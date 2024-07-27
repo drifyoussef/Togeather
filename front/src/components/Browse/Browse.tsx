@@ -8,6 +8,7 @@ import { LuSandwich } from "react-icons/lu";
 import { RiDrinks2Fill } from "react-icons/ri";
 import { PiStarFill } from "react-icons/pi";
 import Tacos from "../../../src/images/restaurants/tacos_avenue.jpeg";
+import defaultimage from "../../images/restaurants/default-image.jpg"
 
 // Define the interface for the restaurant data
 interface Restaurant {
@@ -122,7 +123,7 @@ const Browse = () => {
                 src={
                   restaurant.photos
                     ? `https://maps.googleapis.com/maps/api/place/photo?maxwidth=400&photoreference=${restaurant.photos[0].photo_reference}&key=AIzaSyA8YrxzYR9Gix93tZ-x4aVIekH4EGoQhx4`
-                    : "default-image.jpg"
+                    : defaultimage
                 }
                 alt={restaurant.name}
                 className="browse-image"

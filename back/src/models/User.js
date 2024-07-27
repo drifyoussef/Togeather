@@ -35,7 +35,20 @@ const UserSchema = new Schema({
         type: String,
     },
     passions:{
+        type: [String],
+        required: [false],
+    },
+    userGender:{
         type: String,
+        required: [true],
+    },
+    preferredGender:{
+        type: String,
+        required: [true],
+    },
+    favoriteCategory:{
+        type: String,
+        required: [true],
     }
 });
 

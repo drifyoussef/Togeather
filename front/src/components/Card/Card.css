@@ -28,7 +28,7 @@
 }
   
 .card-text {
-    margin-top: 16px;
+    margin-top: 12px;
     font-size: 20px;
     text-align: center;
 }
@@ -53,4 +53,9 @@
 .icon-category-card{
     font-size: 24px;
     color: #fff;
+}
+
+.card-subtitle{
+    display: flex;
+    gap: 4px;
 }

@@ -56,4 +56,65 @@
   button:hover {
     background-color: #a5004d;
   }
+
+  .labelInputs, .labelInputsSeen{
+    display: flex;
+    place-content: space-evenly;
+  }
   
+  .genderLabel{
+    margin-top: 8px;
+    margin-bottom: 8px;
+    font-weight: bold;
+  }
+
+  input[type="radio"] {
+    margin-top: 8px;
+    appearance: none;
+    width: 20px;
+    height: 20px;
+    border: 2px solid #FF0077;
+    border-radius: 50%;
+    outline: none;
+    cursor: pointer;
+    position: relative;
+    align-self: center;
+  }
+  
+  input[type="radio"]:checked::before {
+    content: '';
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    background-color: #FF0077;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+  }
+  
+  input[type="radio"]:hover {
+    border-color: #FF0077;
+  }
+
+  .favoriteCategory{
+    margin-top: 8px;
+  }
+
+  .passionTag{
+    background-color: #FF0077;
+    color: #fff;
+    width: fit-content;
+    padding: 8px;
+    margin-top: 8px;
+    border-radius: 50px;
+  }
+
+  .remove:hover{
+    cursor: pointer;
+  }
+
+  .passionContainer{
+    display: flex;
+    gap: 8px;
+  }
