@@ -30,7 +30,6 @@
   
 .card-text {
     font-size: 20px;
-    text-align: center;
 }
 
 .circle-card { 
@@ -45,10 +44,11 @@
     border-radius: 70px;
 }
 
-.header-card{
+.card-subcontainer{
     display: flex;
     gap: 8px;
     margin-top: 6px;
+    align-items: center;
 }
 
 .icon-category-card{
@@ -59,6 +59,7 @@
 .card-subtitle{
     display: flex;
     gap: 4px;
+    align-items: center;
 }
 
 .card-job{

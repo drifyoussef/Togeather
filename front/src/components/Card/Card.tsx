@@ -28,11 +28,11 @@ export default function Card({
     <div className="card" onClick={handleClick}>
       <img src={image} alt="person" className="card-image" />
       <div className="card-content">
-        <div>
+        <div className="card-container">
           <p className="card-text">{text}</p>
           <p className="card-job">{job}</p>
         </div>
-        <div className="header-card">
+        <div className="card-subcontainer">
           <div className="circle-card">
             <BiSolidSushi className="icon-category-card" />
           </div>

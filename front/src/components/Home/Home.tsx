@@ -19,6 +19,31 @@ export default function Home() {
     navigate(`/browse/${category}`);
   };
 
+  const getGenderSubcategory = (preferredGender: string) => {
+    switch (preferredGender) {
+      case "both":
+        return (
+          <>
+            H & F
+          </>
+        );
+      case "homme":
+        return (
+          <>
+            Hommes
+          </>
+        );
+      case "femme":
+        return (
+          <>
+            Femmes
+          </>
+        );
+      default:
+        return null; // Handle default case if needed
+    }
+  };
+
   useEffect(() => {
     const token = localStorage.getItem("token");
     fetch(`${process.env.REACT_APP_API_URL}/auth/users`, { // Ensure the endpoint is correct
@@ -105,7 +130,7 @@ export default function Home() {
             <Card
               key={user._id} // Ensure this matches the `id` property in UserModel
               category={user.favoriteCategory}
-              subcategory={<><FaHeart className="icon-title icon-heart-home" /> {user.preferredGender}</>}
+              subcategory={<><FaHeart className="icon-title icon-heart-home" /> {getGenderSubcategory(user.preferredGender)}</>}
               image={user.image || "https://architecture.ou.edu/wp-content/uploads/2018/07/ANGELAPERSON-1447-300x300.jpg"} // Default image if not available
               text={`${user.firstname}, ${user.age} ans`}
               job={user.job}
