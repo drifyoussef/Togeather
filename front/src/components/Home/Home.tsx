@@ -12,7 +12,7 @@ import { UserModel } from "../../models/User.model";
 export default function Home() {
   const [activeCategory, setActiveCategory] = useState<string | null>(null);
   const navigate = useNavigate();
-  const [user, setUser] = useState<UserModel | null>(null);
+  const [users, setUsers] = useState<UserModel[]>([]);
 
   const handleCategoryClick = (category: string) => {
     setActiveCategory(category);
@@ -21,7 +21,7 @@ export default function Home() {
 
   useEffect(() => {
     const token = localStorage.getItem("token");
-    fetch(`${process.env.REACT_APP_API_URL}/auth/user`, {
+    fetch(`${process.env.REACT_APP_API_URL}/auth/users`, { // Ensure the endpoint is correct
       headers: {
         Authorization: `Bearer ${token}`,
       },
@@ -32,11 +32,11 @@ export default function Home() {
         if (data.message) {
           console.error(data.message);
         } else {
-          setUser(data);
+          setUsers(data); // Set the users array
         }
       })
       .catch((error) => {
-        console.error("Error fetching user:", error);
+        console.error("Error fetching users:", error);
       });
   }, []);
 
@@ -101,45 +101,22 @@ export default function Home() {
           </div>
         </div>
         <div className="div-card">
-          {user && (
-            <>
-              <Card
-                category={user.favoriteCategory}
-                subcategory={<><FaHeart className="icon-title icon-heart-home" /> {user.preferredGender}</>} // Add icon and text
-                image="https://architecture.ou.edu/wp-content/uploads/2018/07/ANGELAPERSON-1447-300x300.jpg"
-                text={`${user.firstname}, ${user.age} ans`}
-              />
-              <Card
-                category={user.favoriteCategory}
-                subcategory={<><FaHeart className="icon-title icon-heart-home" /> {user.preferredGender}</>} // Add icon and text
-                image="https://architecture.ou.edu/wp-content/uploads/2018/07/ANGELAPERSON-1447-300x300.jpg"
-                text={`${user.firstname}, ${user.age} ans`}
-              />
-              <Card
-                category={user.favoriteCategory}
-                subcategory={<><FaHeart className="icon-title icon-heart-home" /> {user.preferredGender}</>} // Add icon and text
-                image="https://architecture.ou.edu/wp-content/uploads/2018/07/ANGELAPERSON-1447-300x300.jpg"
-                text={`${user.firstname}, ${user.age} ans`}
-              />
-              <Card
-                category={user.favoriteCategory}
-                subcategory={<><FaHeart className="icon-title icon-heart-home" /> {user.preferredGender}</>} // Add icon and text
-                image="https://architecture.ou.edu/wp-content/uploads/2018/07/ANGELAPERSON-1447-300x300.jpg"
-                text={`${user.firstname}, ${user.age} ans`}
-              />
-              <Card
-                category={user.favoriteCategory}
-                subcategory={<><FaHeart className="icon-title icon-heart-home" /> {user.preferredGender}</>} // Add icon and text
-                image="https://architecture.ou.edu/wp-content/uploads/2018/07/ANGELAPERSON-1447-300x300.jpg"
-                text={`${user.firstname}, ${user.age} ans`}
-              />
-            </>
-          )}
+          {users.map((user) => (
+            <Card
+              key={user._id} // Ensure this matches the `id` property in UserModel
+              category={user.favoriteCategory}
+              subcategory={<><FaHeart className="icon-title icon-heart-home" /> {user.preferredGender}</>}
+              image={user.image || "https://architecture.ou.edu/wp-content/uploads/2018/07/ANGELAPERSON-1447-300x300.jpg"} // Default image if not available
+              text={`${user.firstname}, ${user.age} ans`}
+              job={user.job}
+            />
+          ))}
         </div>
       </div>
       <div className="div-match">
         <p className="p-match">Mes matchs</p>
         <div className="parent">
+          {/* Match images */}
           <div className="div1">
             <div className="circle">
               <img

@@ -1,4 +1,5 @@
 export interface UserModel {
+    _id: string,
     firstname: string,
     name: string,
     age: number,
@@ -9,4 +10,5 @@ export interface UserModel {
     userGender: string,
     preferredGender: string,
     favoriteCategory: string,
+    image?: string;
 }

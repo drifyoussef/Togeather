@@ -10,6 +10,7 @@ const authMiddleware = require('./src/middlewares/authMiddleware');
 const redirectIfAuthenticatedMiddleware = require('./src/middlewares/redirectIfAuthenticatedMiddleware')
 const logoutController = require('./src/controllers/logout');
 const getUserController = require('./src/controllers/getUser');
+const getUsersController = require('./src/controllers/getUsers');
 const fetch = require('node-fetch');
 
 const app = express();
@@ -41,6 +42,7 @@ app.use(function(req, res, next) {
 app.get('/auth/register', redirectIfAuthenticatedMiddleware, newUserController);
 app.get('/auth/logout', logoutController);
 app.get('/auth/user', authMiddleware, getUserController);
+app.get('/auth/users', authMiddleware, getUsersController);
 
 app.get('/', function (req, res) {
     res.json({ message: "Hello-world" });
