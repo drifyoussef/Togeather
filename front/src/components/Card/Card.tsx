@@ -2,14 +2,32 @@ import React from "react";
 import "./Card.css";
 import { useNavigate } from "react-router-dom";
 import { BiSolidSushi } from "react-icons/bi";
+import { FaPizzaSlice, FaHamburger, FaIceCream } from "react-icons/fa";
+import { GiChickenOven, GiTacos } from "react-icons/gi";
+import { LuSandwich } from "react-icons/lu";
+import { RiDrinks2Fill } from "react-icons/ri";
+
+type Category = 'Asiatique' | 'Pizza' | 'Poulet' | 'Sandwich' | 'Mexicain' | 'Burger' | 'Glaces' | 'Boissons';
 
 interface CardProps {
-  category: string;
+  category: Category;
   subcategory: React.ReactNode;
   image: string;
   text: string;
   job: string;
 }
+
+const categoryIcons: Record<Category, React.ReactElement> = {
+  Asiatique: <BiSolidSushi className="icon-category-card" />,
+  Pizza: <FaPizzaSlice className="icon-category-card" />,
+  Poulet: <GiChickenOven className="icon-category-card" />,
+  Sandwich: <LuSandwich className="icon-category-card" />,
+  Mexicain: <GiTacos className="icon-category-card" />,
+  Burger: <FaHamburger className="icon-category-card" />,
+  Glaces: <FaIceCream className="icon-category-card" />,
+  Boissons: <RiDrinks2Fill className="icon-category-card" />
+};
+
 
 export default function Card({
   category,
@@ -34,7 +52,7 @@ export default function Card({
         </div>
         <div className="card-subcontainer">
           <div className="circle-card">
-            <BiSolidSushi className="icon-category-card" />
+            {categoryIcons[category]}
           </div>
           <div className="header-card-text">
             <p className="card-title">{category}</p>

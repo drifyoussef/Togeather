@@ -9,12 +9,14 @@ import { LuSandwich } from "react-icons/lu";
 import { RiDrinks2Fill } from "react-icons/ri";
 import { UserModel } from "../../models/User.model";
 
+type Category = 'Asiatique' | 'Pizza' | 'Poulet' | 'Sandwich' | 'Mexicain' | 'Burger' | 'Glaces' | 'Boissons';
+
 export default function Home() {
-  const [activeCategory, setActiveCategory] = useState<string | null>(null);
+  const [activeCategory, setActiveCategory] = useState<Category | null>(null); // Update to Category type
   const navigate = useNavigate();
   const [users, setUsers] = useState<UserModel[]>([]);
 
-  const handleCategoryClick = (category: string) => {
+  const handleCategoryClick = (category: Category) => {
     setActiveCategory(category);
     navigate(`/browse/${category}`);
   };
@@ -128,8 +130,8 @@ export default function Home() {
         <div className="div-card">
           {users.map((user) => (
             <Card
-              key={user._id} // Ensure this matches the `id` property in UserModel
-              category={user.favoriteCategory}
+              key={user._id}
+              category={user.favoriteCategory as Category}
               subcategory={<><FaHeart className="icon-title icon-heart-home" /> {getGenderSubcategory(user.preferredGender)}</>}
               image={user.image || "https://architecture.ou.edu/wp-content/uploads/2018/07/ANGELAPERSON-1447-300x300.jpg"} // Default image if not available
               text={`${user.firstname}, ${user.age} ans`}
