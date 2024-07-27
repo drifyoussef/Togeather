@@ -15,10 +15,10 @@ const Navbar: React.FC = () => {
     try {
       const response = await fetch("/auth/logout", {
         method: "GET",
-        credentials: "include", // Ensure cookies are included
+        credentials: "include",
       });
       if (response.ok) {
-        navigate("/connection"); // Redirect to connection page after logout
+        navigate("/connection");
       } else {
         console.error("Failed to log out");
       }
@@ -27,7 +27,6 @@ const Navbar: React.FC = () => {
     }
   };
 
-  // Check if the current path is the connection page
   const isConnectionPage = [
     "/connection",
     "/auth/login",

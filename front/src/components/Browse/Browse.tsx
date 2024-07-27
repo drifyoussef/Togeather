@@ -10,7 +10,6 @@ import { PiStarFill } from "react-icons/pi";
 import Tacos from "../../../src/images/restaurants/tacos_avenue.jpeg";
 import defaultimage from "../../images/restaurants/default-image.jpg"
 
-// Define the interface for the restaurant data
 interface Restaurant {
   place_id: string;
   name: string;

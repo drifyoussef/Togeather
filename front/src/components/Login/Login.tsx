@@ -10,7 +10,7 @@ const Login: React.FC = () => {
 
   const handleSubmit = async (event: any) => {
     event.preventDefault();
-    setError(''); // Clear previous errors
+    setError('');
 
     try {
       const response = await fetch(`${process.env.REACT_APP_API_URL}/users/login`, {

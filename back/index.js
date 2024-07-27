@@ -15,7 +15,6 @@ const fetch = require('node-fetch');
 
 const app = express();
 
-// Middleware to parse JSON
 app.use(express.json());
 app.use(cors());
 app.use(expressSession({

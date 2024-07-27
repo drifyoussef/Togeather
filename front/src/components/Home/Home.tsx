@@ -42,13 +42,13 @@ export default function Home() {
           </>
         );
       default:
-        return null; // Handle default case if needed
+        return null;
     }
   };
 
   useEffect(() => {
     const token = localStorage.getItem("token");
-    fetch(`${process.env.REACT_APP_API_URL}/auth/users`, { // Ensure the endpoint is correct
+    fetch(`${process.env.REACT_APP_API_URL}/auth/users`, {
       headers: {
         Authorization: `Bearer ${token}`,
       },
@@ -59,7 +59,7 @@ export default function Home() {
         if (data.message) {
           console.error(data.message);
         } else {
-          setUsers(data); // Set the users array
+          setUsers(data);
         }
       })
       .catch((error) => {

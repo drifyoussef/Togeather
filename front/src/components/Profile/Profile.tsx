@@ -5,9 +5,9 @@ import { PiUserCirclePlusFill } from "react-icons/pi";
 
 const Profile: React.FC = () => {
   const [user, setUser] = useState<UserModel>();
-  const [inputValue, setInputValue] = useState("");
+/*   const [inputValue, setInputValue] = useState("");
   const [isJobEditing, setIsJobEditing] = useState(false);
-  const [isPassionsEditing, setIsPassionsEditing] = useState(false);
+  const [isPassionsEditing, setIsPassionsEditing] = useState(false); */
 
   //A FAIRE L'EDIT D'INFORMATIONS NON RENTREES
 
@@ -36,7 +36,7 @@ const Profile: React.FC = () => {
     alert("Change settings clicked");
   };
 
-  const handleChange = (
+/*   const handleChange = (
     event: React.ChangeEvent<HTMLInputElement>,
     field: string
   ) => {
@@ -48,7 +48,7 @@ const Profile: React.FC = () => {
       console.log(isPassionsEditing);
       setIsPassionsEditing(true);
     }
-  };
+  }; */
 
   return (
     <div className="div-profile">
@@ -72,27 +72,27 @@ const Profile: React.FC = () => {
                 <p>{user.email}</p>
               </div>
               <div className="divGender">
-                <label>Votre genre :</label>
+                <label>Genre :</label>
                 <p>{user.userGender}</p>
               </div>
               <div className="divFavGender">
-                <label>Vous preferez les :</label>
+                <label>Préférence :</label>
                 <p>{user.preferredGender}</p>
               </div>
               <div className="divFavFood">
-                <label>Votre nourriture favorite :</label>
+                <label>Nourriture favorite :</label>
                 <p>{user.favoriteCategory}</p>
               </div>
               <div className="divAge">
-                <label>Votre age :</label>
+                <label>Age :</label>
                 <p>{user.age} ans</p>
               </div>
               <div className="divJob">
-                <label>Votre mêtier :</label>
+                <label>Mêtier :</label>
                 <p>{user.job || "Veuillez indiquer votre métier"}</p>
               </div>
               <div className="divPassions">
-                <label>Vos passions :</label>
+                <label>Passions :</label>
                 <p>{user.passions || "Veuillez indiquer vos passions"}</p>
               </div>
             </div>
@@ -100,33 +100,6 @@ const Profile: React.FC = () => {
             <h1>Chargement...</h1>
           )}
         </div>
-      </div>
-      <div className="profileInfosModification">
-        <p>Modifiez votre mail</p>
-        <input
-          type="text"
-          placeholder="Modifiez votre mail ici..."
-          value={inputValue}
-          onChange={(e) => handleChange(e, "email")}
-        />
-      </div>
-      <div className="profileInfosModification">
-        <p>Modifiez votre métier</p>
-        <input
-          type="text"
-          placeholder="Modifiez votre métier ici..."
-          value={inputValue}
-          onChange={(e) => handleChange(e, "job")}
-        />
-      </div>
-      <div className="profileInfosModification">
-        <p>Modifiez vos passions</p>
-        <input
-          type="text"
-          placeholder="Modifiez vos passions ici..."
-          value={inputValue}
-          onChange={(e) => handleChange(e, "passions")}
-        />
       </div>
       <button className="change-settings" onClick={changeSettings}>
         Modifier les informations
