@@ -15,6 +15,7 @@ interface CardProps {
   image: string;
   text: string;
   job: string;
+  id: string;
 }
 
 const categoryIcons: Record<Category, React.ReactElement> = {
@@ -28,18 +29,18 @@ const categoryIcons: Record<Category, React.ReactElement> = {
   Boissons: <RiDrinks2Fill className="icon-category-card" />
 };
 
-
 export default function Card({
   category,
   subcategory,
   image,
   text,
   job,
+  id,
 }: CardProps) {
   const navigate = useNavigate();
 
   const handleClick = () => {
-    navigate("/profile/:id");
+    navigate(`/profile/${id}`);
   };
 
   return (

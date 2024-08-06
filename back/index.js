@@ -1,107 +1,113 @@
 const express = require('express');
 const mongoose = require('mongoose');
 const cors = require('cors');
-const expressSession = require('express-session')
+const expressSession = require('express-session');
 const newUserController = require('./src/controllers/newUser');
 const storeUserController = require('./src/controllers/storeUser');
 const loginController = require('./src/controllers/login');
 const loginUserController = require('./src/controllers/loginUser');
 const authMiddleware = require('./src/middlewares/authMiddleware');
-const redirectIfAuthenticatedMiddleware = require('./src/middlewares/redirectIfAuthenticatedMiddleware')
+const redirectIfAuthenticatedMiddleware = require('./src/middlewares/redirectIfAuthenticatedMiddleware');
 const logoutController = require('./src/controllers/logout');
 const getUserController = require('./src/controllers/getUser');
 const getUsersController = require('./src/controllers/getUsers');
-const fetch = require('node-fetch');
+const getUserByIdController = require('./src/controllers/getUserById');
 
-const app = express();
+let fetch;
 
-app.use(express.json());
-app.use(cors());
-app.use(expressSession({
-    secret: 'fe148abed5bbff4b5ac65ca7fa298bd12f0ef6a82d0546b5cd4f05427aa2037d',
-    resave: false,
-    saveUninitialized: false,
-}))
+(async () => {
+    fetch = (await import('node-fetch')).default;
 
-global.loggedIn = null;
-app.use('*', (req, res, next) => {
-    loggedIn = req.session.userId;
-    next()
-})
+    const app = express();
 
+    app.use(express.json());
+    app.use(cors());
+    app.use(expressSession({
+        secret: 'fe148abed5bbff4b5ac65ca7fa298bd12f0ef6a82d0546b5cd4f05427aa2037d',
+        resave: false,
+        saveUninitialized: false,
+    }));
+
+    global.loggedIn = null;
+    app.use('*', (req, res, next) => {
+        loggedIn = req.session.userId;
+        next();
+    });
 //Définition des CORS Middleware 
-app.use(function(req, res, next) {
-    res.setHeader("Access-Control-Allow-Headers", "X-Requested-With,content-type, Accept,Authorization,Origin");
-    res.setHeader("Access-Control-Allow-Origin", process.env.ORIGIN);
-    res.setHeader("Access-Control-Allow-Methods", "GET, POST, OPTIONS, PUT, PATCH, DELETE");
-    res.setHeader("Access-Control-Allow-Credentials", true);
-    next();
-  });
+    app.use(function(req, res, next) {
+        res.setHeader("Access-Control-Allow-Headers", "X-Requested-With,content-type, Accept,Authorization,Origin");
+        res.setHeader("Access-Control-Allow-Origin", process.env.ORIGIN);
+        res.setHeader("Access-Control-Allow-Methods", "GET, POST, OPTIONS, PUT, PATCH, DELETE");
+        res.setHeader("Access-Control-Allow-Credentials", true);
+        next();
+    });
 
-app.get('/auth/register', redirectIfAuthenticatedMiddleware, newUserController);
-app.get('/auth/logout', logoutController);
-app.get('/auth/user', authMiddleware, getUserController);
-app.get('/auth/users', authMiddleware, getUsersController);
+    app.get('/auth/register', redirectIfAuthenticatedMiddleware, newUserController);
+    app.get('/auth/logout', logoutController);
+    app.get('/auth/user', authMiddleware, getUserController);
+    app.get('/auth/users', authMiddleware, getUsersController);
+    app.get('/auth/users/:id', authMiddleware, getUserByIdController);
 
-app.get('/', function (req, res) {
-    res.json({ message: "Hello-world" });
-});
+    app.get('/', function (req, res) {
+        res.json({ message: "Hello-world" });
+    });
 
-app.get('/api/restaurants', async (req, res) => {
-    try {
-        const { location, radius, keyword } = req.query;
-        let url = `https://maps.googleapis.com/maps/api/place/nearbysearch/json?location=${location}&radius=${radius}&type=restaurant`;
-        if (keyword) {
-            url += `&keyword=${keyword}`;
+    app.get('/api/restaurants', async (req, res) => {
+        try {
+            const { location, radius, keyword } = req.query;
+            let url = `https://maps.googleapis.com/maps/api/place/nearbysearch/json?location=${location}&radius=${radius}&type=restaurant`;
+            if (keyword) {
+                url += `&keyword=${keyword}`;
+            }
+            url += `&key=AIzaSyA8YrxzYR9Gix93tZ-x4aVIekH4EGoQhx4`;
+            const response = await fetch(url);
+            const data = await response.json();
+            res.json(data);
+        } catch (error) {
+            res.status(500).json({ error: error.message });
         }
-        url += `&key=AIzaSyA8YrxzYR9Gix93tZ-x4aVIekH4EGoQhx4`;
-        const response = await fetch(url);
-        const data = await response.json();
-        res.json(data);
-    } catch (error) {
-        res.status(500).json({ error: error.message });
+    });
+
+    app.get('/api/restaurants/asian', async (req, res) => {
+        try {
+            const { location, radius } = req.query;
+            const response = await fetch(`https://maps.googleapis.com/maps/api/place/nearbysearch/json?location=${location}&radius=${radius}&type=restaurant&keyword=chinese&key=AIzaSyA8YrxzYR9Gix93tZ-x4aVIekH4EGoQhx4`);
+            const data = await response.json();
+            res.json(data);
+        } catch (error) {
+            res.status(500).json({ error: error.message });
+        }
+    });
+
+    app.get('/api/restaurants/italian', async (req, res) => {
+        try {
+            const { location, radius } = req.query;
+            const response = await fetch(`https://maps.googleapis.com/maps/api/place/nearbysearch/json?location=${location}&radius=${radius}&type=restaurant&keyword=italian&key=AIzaSyA8YrxzYR9Gix93tZ-x4aVIekH4EGoQhx4`);
+            const data = await response.json();
+            res.json(data);
+        } catch (error) {
+            res.status(500).json({ error: error.message });
+        }
+    });
+
+    app.post('/users/register', redirectIfAuthenticatedMiddleware, storeUserController);
+    app.post('/users/login', redirectIfAuthenticatedMiddleware, loginUserController);
+
+    async function main() {
+        try {
+            await mongoose.connect('mongodb+srv://youssefdrif1:dDrZdxQ519mc4zMM@togeathercluster.h2rtsua.mongodb.net/?retryWrites=true&w=majority&appName=TogeatherCluster');
+            console.log('Connected to MongoDB togeatherDb');
+        } catch (error) {
+            console.error('Connection error to MongoDB togeatherDb', error);
+        }
     }
-});
 
-app.get('/api/restaurants/asian', async (req, res) => {
-    try {
-        const { location, radius } = req.query;
-        const response = await fetch(`https://maps.googleapis.com/maps/api/place/nearbysearch/json?location=${location}&radius=${radius}&type=restaurant&keyword=chinese&key=AIzaSyA8YrxzYR9Gix93tZ-x4aVIekH4EGoQhx4`);
-        const data = await response.json();
-        res.json(data);
-    } catch (error) {
-        res.status(500).json({ error: error.message });
-    }
-});
+    main()
+        .then(() => console.log('Database connection established'))
+        .catch(console.error);
 
-app.get('/api/restaurants/italian', async (req, res) => {
-    try {
-        const { location, radius } = req.query;
-        const response = await fetch(`https://maps.googleapis.com/maps/api/place/nearbysearch/json?location=${location}&radius=${radius}&type=restaurant&keyword=italian&key=AIzaSyA8YrxzYR9Gix93tZ-x4aVIekH4EGoQhx4`);
-        const data = await response.json();
-        res.json(data);
-    } catch (error) {
-        res.status(500).json({ error: error.message });
-    }
-});
-
-app.post('/users/register', redirectIfAuthenticatedMiddleware, storeUserController);
-app.post('/users/login', redirectIfAuthenticatedMiddleware, loginUserController);
-
-async function main() {
-    try {
-        await mongoose.connect('mongodb+srv://youssefdrif1:dDrZdxQ519mc4zMM@togeathercluster.h2rtsua.mongodb.net/?retryWrites=true&w=majority&appName=TogeatherCluster');
-        console.log('Connected to MongoDB togeatherDb');
-    } catch (error) {
-        console.error('Connection error to MongoDB togeatherDb', error);
-    }
-}
-
-main()
-    .then(() => console.log('Database connection established'))
-    .catch(console.error);
-
-const PORT = process.env.PORT || 4000;
-app.listen(PORT, () => {
-    console.log(`Server is running on port ${PORT}`);
-});
+    const PORT = process.env.PORT || 4000;
+    app.listen(PORT, () => {
+        console.log(`Server is running on port ${PORT}`);
+    });
+})();

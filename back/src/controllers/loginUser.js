@@ -30,6 +30,6 @@ module.exports = async (req, res) => {
         }
     } catch (error) {
         console.error('Error during login:', error);
-        res.status(500).json({ message: 'Something went wrong. Please try again.' });
+        res.status(500).json({ message: 'Erreur lors du login.' });
     }
 };

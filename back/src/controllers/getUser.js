@@ -10,6 +10,6 @@ module.exports = async (req, res) => {
         res.status(200).json(user);
     } catch (error) {
         console.error('Error fetching user:', error);
-        res.status(500).json({ message: 'Something went wrong. Please try again.' });
+        res.status(500).json({ message: 'Error fetching user.' });
     }
 };

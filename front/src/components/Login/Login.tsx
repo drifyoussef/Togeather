@@ -33,7 +33,7 @@ const Login: React.FC = () => {
       }
     } catch (error) {
       console.error('Error:', error);
-      setError('Something went wrong. Please try again.');
+      setError('Erreur lors du login.');
     }
   };
 

@@ -1,6 +1,6 @@
 .div-container-connection {
     height: calc(100vh - 64px);
-    background: no-repeat url('/public/images/connection_background.jpg');
+    background: no-repeat url('/src/images/connection_background.jpg');
     background-size: cover;
     display: flex;
     flex-direction: column;

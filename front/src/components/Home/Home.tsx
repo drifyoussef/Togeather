@@ -136,6 +136,7 @@ export default function Home() {
               image={user.image || "https://architecture.ou.edu/wp-content/uploads/2018/07/ANGELAPERSON-1447-300x300.jpg"} // Default image if not available
               text={`${user.firstname}, ${user.age} ans`}
               job={user.job}
+              id={user._id}
             />
           ))}
         </div>
