@@ -1,11 +1,10 @@
-// UserProfile.tsx
 import React, { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
 import { UserModel } from '../../models/User.model';
-import './UserProfile.css'; // Create this file for styling if needed
+import './UserProfile.css';
 
 const UserProfile: React.FC = () => {
-  const { id } = useParams<{ id: string }>(); // Get user ID from URL params
+  const { id } = useParams<{ id: string }>();
   const [user, setUser] = useState<UserModel | null>(null);
 
   useEffect(() => {
@@ -44,7 +43,7 @@ const UserProfile: React.FC = () => {
                 <p>{user.userGender}</p>
               </div>
               <div className="divFavGender">
-                <label>Préférence :</label>
+                <label> :</label>
                 <p>{user.preferredGender}</p>
               </div>
               <div className="divFavFood">
