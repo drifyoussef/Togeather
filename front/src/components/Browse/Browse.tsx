@@ -35,6 +35,7 @@ const Browse = () => {
   useEffect(() => {
     const location = "44.12977637655348,4.107153080220958"; // Coordonnées de burger king d'ales
     const radius = 3000; // Radius en metres
+    const API_KEY = process.env.REACT_APP_GOOGLE_API_KEY;
 
     const fetchRestaurants = async () => {
       try {
@@ -52,6 +53,7 @@ const Browse = () => {
           };
           url += `&keyword=${keywordMap[activeCategory]}`;
         }
+        url += `&key=${API_KEY}`;
         const response = await fetch(url);
         if (!response.ok) {
           throw new Error(`HTTP error! status: ${response.status}`);
@@ -121,7 +123,7 @@ const Browse = () => {
               <img
                 src={
                   restaurant.photos
-                    ? `https://maps.googleapis.com/maps/api/place/photo?maxwidth=400&photoreference=${restaurant.photos[0].photo_reference}&key=AIzaSyA8YrxzYR9Gix93tZ-x4aVIekH4EGoQhx4`
+                    ? `https://maps.googleapis.com/maps/api/place/photo?maxwidth=400&photoreference=${restaurant.photos[0].photo_reference}&key=${process.env.REACT_APP_GOOGLE_API_KEY}`
                     : defaultimage
                 }
                 alt={restaurant.name}

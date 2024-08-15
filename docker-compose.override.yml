@@ -2,6 +2,7 @@ services:
   backend:
     environment:
       - PRIVATE_KEY_JWT=6947823eb5deeccc7fcf863fc4dbd4649d8ef60057f482e31bcc241c6e537f98
+      - GOOGLE_API_KEY=AIzaSyA8YrxzYR9Gix93tZ-x4aVIekH4EGoQhx4
       - ORIGIN=http://localhost:3000
       - NODE_ENV=development
     develop:
@@ -16,6 +17,7 @@ services:
   
   frontend:
     environment:
+      - REACT_APP_GOOGLE_API_KEY=AIzaSyA8YrxzYR9Gix93tZ-x4aVIekH4EGoQhx4
       - REACT_APP_API_URL=http://localhost:4000
       - NODE_ENV=development
     develop:

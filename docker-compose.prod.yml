@@ -1,10 +1,12 @@
 services:
   backend:
     environment:
+      - GOOGLE_API_KEY=AIzaSyA8YrxzYR9Gix93tZ-x4aVIekH4EGoQhx4
       - ORIGIN=http://142.93.100.162:3000
       - NODE_ENV=production
 
   frontend:
     environment:
+      - REACT_APP_GOOGLE_API_KEY=AIzaSyA8YrxzYR9Gix93tZ-x4aVIekH4EGoQhx4
       - REACT_APP_API_URL=http://142.93.100.162:4000
       - NODE_ENV=production

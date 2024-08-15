@@ -59,7 +59,7 @@ let fetch;
             if (keyword) {
                 url += `&keyword=${keyword}`;
             }
-            url += `&key=AIzaSyA8YrxzYR9Gix93tZ-x4aVIekH4EGoQhx4`;
+            url += `&key=${process.env.GOOGLE_API_KEY}`;
             const response = await fetch(url);
             const data = await response.json();
             res.json(data);
@@ -71,7 +71,7 @@ let fetch;
     app.get('/api/restaurants/asian', async (req, res) => {
         try {
             const { location, radius } = req.query;
-            const response = await fetch(`https://maps.googleapis.com/maps/api/place/nearbysearch/json?location=${location}&radius=${radius}&type=restaurant&keyword=chinese&key=AIzaSyA8YrxzYR9Gix93tZ-x4aVIekH4EGoQhx4`);
+            const response = await fetch(`https://maps.googleapis.com/maps/api/place/nearbysearch/json?location=${location}&radius=${radius}&type=restaurant&keyword=chinese&key=${process.env.GOOGLE_API_KEY}`);
             const data = await response.json();
             res.json(data);
         } catch (error) {
@@ -82,7 +82,7 @@ let fetch;
     app.get('/api/restaurants/italian', async (req, res) => {
         try {
             const { location, radius } = req.query;
-            const response = await fetch(`https://maps.googleapis.com/maps/api/place/nearbysearch/json?location=${location}&radius=${radius}&type=restaurant&keyword=italian&key=AIzaSyA8YrxzYR9Gix93tZ-x4aVIekH4EGoQhx4`);
+            const response = await fetch(`https://maps.googleapis.com/maps/api/place/nearbysearch/json?location=${location}&radius=${radius}&type=restaurant&keyword=italian&key=${process.env.GOOGLE_API_KEY}`);
             const data = await response.json();
             res.json(data);
         } catch (error) {
