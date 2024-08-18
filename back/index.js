@@ -12,6 +12,7 @@ const logoutController = require('./src/controllers/logout');
 const getUserController = require('./src/controllers/getUser');
 const getUsersController = require('./src/controllers/getUsers');
 const getUserByIdController = require('./src/controllers/getUserById');
+const likeUserController = require('./src/controllers/likeUser');
 
 let fetch;
 
@@ -92,6 +93,7 @@ let fetch;
 
     app.post('/users/register', redirectIfAuthenticatedMiddleware, storeUserController);
     app.post('/users/login', redirectIfAuthenticatedMiddleware, loginUserController);
+    app.post('/auth/users/:id/like', authMiddleware, likeUserController);
 
     async function main() {
         try {

@@ -49,7 +49,8 @@ const UserSchema = new Schema({
     favoriteCategory:{
         type: String,
         required: [true],
-    }
+    },
+    likedBy: [{ type: mongoose.Schema.Types.ObjectId, ref: 'User' }],
 });
 
 UserSchema.plugin(uniqueValidator);

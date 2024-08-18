@@ -7,6 +7,7 @@ import './UserProfile.css';
 const UserProfile: React.FC = () => {
   const { id } = useParams<{ id: string }>();
   const [user, setUser] = useState<UserModel | null>(null);
+  const [liked, setLiked] = useState(false);
 
   useEffect(() => {
     const token = localStorage.getItem('token');
@@ -21,9 +22,10 @@ const UserProfile: React.FC = () => {
         .then((response) => response.json())
         .then((data) => {
           if (data.message) {
-            console.error(data.message);
+            console.log(data.message);
           } else {
             setUser(data);
+            setLiked(data.liked || false);
           }
         })
         .catch((error) => {
@@ -31,6 +33,10 @@ const UserProfile: React.FC = () => {
         });
     }
   }, [id]);
+
+  useEffect(() => {
+    console.log('Rendering with liked state:', liked);
+  }, [liked]);
 
   if (!user) return <p>Loading...</p>;
 
@@ -48,14 +54,44 @@ const UserProfile: React.FC = () => {
   };
 
   const handleLike = () => {
-    // Logic to handle liking the profile
-    alert('Profile liked!');
+    const token = localStorage.getItem("token");
+
+    if (user) {
+      fetch(`${process.env.REACT_APP_API_URL}/auth/users/${user._id}/like`, {
+        method: "POST",
+        headers: {
+          Authorization: `Bearer ${token}`,
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ liked: !liked }),
+      })
+        .then((response) => response.json())
+        .then((data) => {
+          if (data.message) {
+            console.log(data.message);
+          } else {
+            console.log("User liked status updated successfully:", data);
+            setLiked(prevLiked => !prevLiked);
+          }
+        })
+        .catch((error) => {
+          console.error("Error liking user:", error);
+        });
+    }
   };
 
   return (
     <div className="user-profile">
-      <h1>{user.firstname} {user.name}</h1>
-      <img src={user.image || "https://architecture.ou.edu/wp-content/uploads/2018/07/ANGELAPERSON-1447-300x300.jpg"} alt="User profile" />
+      <h1>
+        {user.firstname} {user.name}
+      </h1>
+      <img
+        src={
+          user.image ||
+          "https://architecture.ou.edu/wp-content/uploads/2018/07/ANGELAPERSON-1447-300x300.jpg"
+        }
+        alt="User profile"
+      />
       <div>
         <div className="divGender">
           <label>Genre :</label>
@@ -82,7 +118,11 @@ const UserProfile: React.FC = () => {
           <p>{user.passions || "Veuillez indiquer vos passions"}</p>
         </div>
       </div>
-      <button className="like-button" onClick={handleLike}><FaHeart className="icon-heart-profile" /></button>
+      <button className="like-button" onClick={handleLike}>
+      <FaHeart
+          className={`icon-heart-profile ${liked ? 'liked' : 'not-liked'}`}
+        />
+      </button>
     </div>
   );
 };
