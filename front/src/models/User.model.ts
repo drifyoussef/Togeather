@@ -11,4 +11,5 @@ export interface UserModel {
     preferredGender: string,
     favoriteCategory: string,
     image?: string;
+    isMutual?: boolean;
 }
