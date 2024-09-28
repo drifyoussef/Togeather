@@ -1,75 +1,78 @@
 .user-profile {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    text-align: center;
-    justify-content: center;
-    max-width: 600px;
-    margin: auto;
-    height: 100%;
-  }
-  
-  .user-profile img {
-    width: 150px;
-    height: 150px;
-    border-radius: 50%;
-    object-fit: cover;
-    margin-bottom: 20px;
-  }
-  
-  .user-profile h1 {
-    font-size: 24px;
-    margin-bottom: 10px;
-  }
-  
-  .user-profile div {
-    margin-bottom: 10px;
-  }
-  
-  .user-profile label {
-    font-weight: bold;
-  }
-  
-  .user-profile p {
-    margin: 0;
-  }
-  
-  .like-button {
-    background-color: #FF0077;
-    color: white;
-    width: 60px;
-    height: 60px;
-    border: none;
-    border-radius: 50%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 24px;
-    cursor: pointer;
-    transition: background-color 0.3s ease, transform 0.3s ease;
-    margin: 0;
-    padding: 0;
-  }
-
-  .like-button:hover .icon-heart-profile {
-    transform: scale(1.15);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  justify-content: center;
+  max-width: 600px;
+  margin: auto;
+  height: 100%;
 }
-  
-  .like-button:hover {
-    background-color: #a5004d;
-    transform: scale(1.15);
-  }
-  
-  .icon-heart-profile {
-    color: white;
-    transition: transform 0.3s ease;
-  }
 
-  .icon-heart-profile.liked {
-    color: rgb(78, 0, 0);
-  }
-  
-  .icon-heart-profile.not-liked {
-    color: white;
-  }
-  
+.user-profile img {
+  width: 150px;
+  height: 150px;
+  border-radius: 50%;
+  object-fit: cover;
+  margin-bottom: 20px;
+}
+
+.user-profile h1 {
+  font-size: 24px;
+  margin-bottom: 10px;
+}
+
+.user-profile div {
+  margin-bottom: 10px;
+}
+
+.user-profile label {
+  font-weight: bold;
+}
+
+.user-profile p {
+  margin: 0;
+}
+
+.like-button {
+  background-color: #FF0077;
+  color: white;
+  width: 60px;
+  height: 60px;
+  border: none;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 24px;
+  cursor: pointer;
+  transition: background-color 0.3s ease, transform 0.3s ease;
+  margin: 0;
+  padding: 0;
+}
+
+.like-button:hover .icon-heart-profile {
+  transform: scale(1.15);
+}
+
+.like-button:hover {
+  background-color: #a5004d;
+  transform: scale(1.15);
+}
+
+.icon-heart-profile {
+  color: white;
+  transition: transform 0.3s ease;
+}
+
+.icon-heart-profile.liked {
+  color: rgb(78, 0, 0);
+}
+
+.icon-heart-profile.not-liked {
+  color: white;
+}
+
+#root{
+  overflow: hidden;
+}

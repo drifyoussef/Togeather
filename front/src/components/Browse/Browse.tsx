@@ -33,7 +33,7 @@ const Browse = () => {
   }, [category]);
 
   useEffect(() => {
-    const location = "44.12977637655348,4.107153080220958"; // Coordonnées de burger king d'ales
+    const location = "46.5151961,-1.778677"; // Coordonnées de leclerc des sables d'olonne
     const radius = 3000; // Radius en metres
     const API_KEY = process.env.REACT_APP_GOOGLE_API_KEY;
 

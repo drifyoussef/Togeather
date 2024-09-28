@@ -1,6 +1,7 @@
 const User = require('../models/User');
 const jwt = require("jsonwebtoken");
 const path = require("path");
+const appRoot = require('app-root-path');
 const fs = require("fs");
 
 module.exports = async (req, res, next) => {
@@ -11,7 +12,7 @@ module.exports = async (req, res, next) => {
 		const tokenWithoutBearer = token.replace("Bearer ", "");
 		try {
             //Utiliser jwt pour decordér le token
-            const privateKey = fs.readFileSync(path.join(process.cwd(), "private.key"));
+            const privateKey = fs.readFileSync(path.join(appRoot.path, "private.key"));
 			const decoded = jwt.verify(tokenWithoutBearer, privateKey);
             //On pourra utiliser token._id
 			req.user = decoded;
