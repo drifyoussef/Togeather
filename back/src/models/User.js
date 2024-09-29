@@ -51,6 +51,7 @@ const UserSchema = new Schema({
         required: [true],
     },
     likedBy: [{ type: mongoose.Schema.Types.ObjectId, ref: 'User' }],
+    isMutual: { type: Boolean, default: false }
 });
 
 UserSchema.plugin(uniqueValidator);
