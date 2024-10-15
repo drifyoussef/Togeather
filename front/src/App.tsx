@@ -10,6 +10,7 @@ import Connection from "./components/Connection/Connection";
 import Register from "./components/Register/Register";
 import Login from "./components/Login/Login";
 import UserProfile from './components/UserProfile/UserProfile';
+import Restaurant from './components/Restaurant/Restaurant';
 
 
 function App() {
@@ -23,6 +24,7 @@ function App() {
         <Route path="/messages" element={<Messages />} />
         <Route path="/browse" element={<Browse />} />
         <Route path="/browse/:category" element={<Browse />} />
+        <Route path="/browse/:category/:place_id" element={<Restaurant />} />
         <Route path="/connection" element={<Connection />} />
         <Route path="/auth/register" element={<Register />} />
         <Route path="/auth/login" element={<Login /> } />

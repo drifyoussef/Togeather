@@ -8,7 +8,7 @@ import { LuSandwich } from "react-icons/lu";
 import { RiDrinks2Fill } from "react-icons/ri";
 import { PiStarFill } from "react-icons/pi";
 import Tacos from "../../../src/images/restaurants/tacos_avenue.jpeg";
-import defaultimage from "../../images/restaurants/default-image.jpg"
+import defaultimage from "../../images/restaurants/default-image.jpg";
 
 interface Restaurant {
   place_id: string;
@@ -24,7 +24,9 @@ const Browse = () => {
   const { category } = useParams<{ category: string }>();
   const navigate = useNavigate();
   const [restaurants, setRestaurants] = useState<Restaurant[]>([]);
-  const [activeCategory, setActiveCategory] = useState<string | null>(category || null);
+  const [activeCategory, setActiveCategory] = useState<string | null>(
+    category || null
+  );
 
   useEffect(() => {
     if (category) {
@@ -35,25 +37,23 @@ const Browse = () => {
   useEffect(() => {
     const location = "46.5151961,-1.778677"; // Coordonnées de leclerc des sables d'olonne
     const radius = 3000; // Radius en metres
-    const API_KEY = process.env.REACT_APP_GOOGLE_API_KEY;
 
     const fetchRestaurants = async () => {
       try {
         let url = `${process.env.REACT_APP_API_URL}/api/restaurants?location=${location}&radius=${radius}`;
         if (activeCategory) {
           const keywordMap: { [key: string]: string } = {
-            'Asiatique': 'chinese',
-            'Pizza': 'pizza',
-            'Poulet': 'chicken',
-            'Sandwich': 'sandwich',
-            'Burger': 'burger',
-            'Glaces': 'ice cream',
-            'Boissons': 'cafe',
-            'Fast Food': 'fast food',
+            Asiatique: "chinese",
+            Pizza: "pizza",
+            Poulet: "chicken",
+            Sandwich: "sandwich",
+            Burger: "burger",
+            Glaces: "ice cream",
+            Boissons: "cafe",
+            "Fast Food": "fast food",
           };
           url += `&keyword=${keywordMap[activeCategory]}`;
         }
-        url += `&key=${API_KEY}`;
         const response = await fetch(url);
         if (!response.ok) {
           throw new Error(`HTTP error! status: ${response.status}`);
@@ -80,6 +80,10 @@ const Browse = () => {
     navigate(`/browse/${category}`);
   };
 
+  const handlePlaceIDClick = (place_id: string) => {
+    navigate(`/browse/${category}/${place_id}`)
+  }
+
   return (
     <div>
       <div>
@@ -89,23 +93,56 @@ const Browse = () => {
       <div className="category">
         <p className="p3-home">Catégories de restaurant</p>
         <div className="parent">
-          {['Asiatique', 'Pizza', 'Poulet', 'Sandwich', 'Burger', 'Glaces', 'Boissons', 'Fast Food'].map(category => (
+          {[
+            "Asiatique",
+            "Pizza",
+            "Poulet",
+            "Sandwich",
+            "Burger",
+            "Glaces",
+            "Boissons",
+            "Fast Food",
+          ].map((category) => (
             <div
               key={category}
-              className={`div${category} ${activeCategory === category ? 'active' : ''}`}
+              className={`div${category} ${
+                activeCategory === category ? "active" : ""
+              }`}
               onClick={() => handleCategoryClick(category)}
             >
               <div className="circle">
-                {category === 'Asiatique' && <BiSolidSushi className="icon-category" />}
-                {category === 'Pizza' && <FaPizzaSlice className="icon-category" />}
-                {category === 'Poulet' && <GiChickenOven className="icon-category" />}
-                {category === 'Sandwich' && <LuSandwich className="icon-category" />}
-                {category === 'Burger' && <FaHamburger className="icon-category" />}
-                {category === 'Glaces' && <FaIceCream className="icon-category" />}
-                {category === 'Boissons' && <RiDrinks2Fill className="icon-category" />}
-                {category === 'Fast Food' && <GiFrenchFries className="icon-category" />}
+                {category === "Asiatique" && (
+                  <BiSolidSushi className="icon-category" />
+                )}
+                {category === "Pizza" && (
+                  <FaPizzaSlice className="icon-category" />
+                )}
+                {category === "Poulet" && (
+                  <GiChickenOven className="icon-category" />
+                )}
+                {category === "Sandwich" && (
+                  <LuSandwich className="icon-category" />
+                )}
+                {category === "Burger" && (
+                  <FaHamburger className="icon-category" />
+                )}
+                {category === "Glaces" && (
+                  <FaIceCream className="icon-category" />
+                )}
+                {category === "Boissons" && (
+                  <RiDrinks2Fill className="icon-category" />
+                )}
+                {category === "Fast Food" && (
+                  <GiFrenchFries className="icon-category" />
+                )}
               </div>
-              <p className={`p-category ${activeCategory === category ? 'active' : ''}`}>{category}</p>
+              <p
+                className={`p-category ${
+                  activeCategory === category ? "active" : ""
+                }`}
+              >
+                {category}
+              </p>
             </div>
           ))}
         </div>
@@ -118,32 +155,44 @@ const Browse = () => {
           <PiStarFill className="icon-title" />
         </div>
         <div className="browse-container">
-          {displayRestaurants.map((restaurant) => (
-            <div className="browse-card" key={restaurant.place_id}>
-              <img
-                src={
-                  restaurant.photos
-                    ? `https://maps.googleapis.com/maps/api/place/photo?maxwidth=400&photoreference=${restaurant.photos[0].photo_reference}&key=${process.env.REACT_APP_GOOGLE_API_KEY}`
-                    : defaultimage
-                }
-                alt={restaurant.name}
-                className="browse-image"
-              />
-              <div className="browse-details">
-                <div className="browse-h2">
-                  <div>
-                    <h2 className="browse-name">{restaurant.name}</h2>
-                    <p className="open-status">
-                      {restaurant.opening_hours?.open_now ? "Ouvert" : "Fermé"}
+          {displayRestaurants.map((restaurant) => {
+            // console.log(
+            //   "Photo reference: ",
+            //   restaurant.photos
+            //     ? restaurant.photos[0].photo_reference
+            //     : "No photo available"
+            // );
+            //console.log("API Key: ", process.env.GOOGLE_API_KEY);
+
+            return (
+              <div className="browse-card" key={restaurant.place_id} onClick={() => handlePlaceIDClick(restaurant.place_id)}>
+                <img
+                  src={
+                    restaurant.photos
+                      ? `https://maps.googleapis.com/maps/api/place/photo?maxwidth=400&photoreference=${restaurant.photos[0].photo_reference}`
+                      : defaultimage
+                  }
+                  alt={restaurant.name}
+                  className="browse-image"
+                />
+                <div className="browse-details">
+                  <div className="browse-h2">
+                    <div>
+                      <h2 className="browse-name">{restaurant.name}</h2>
+                      <p className="open-status">
+                        {restaurant.opening_hours?.open_now
+                          ? "Ouvert"
+                          : "Fermé"}
+                      </p>
+                    </div>
+                    <p className="browse-restaurant-review">
+                      {restaurant.rating}
                     </p>
                   </div>
-                  <p className="browse-restaurant-review">
-                    {restaurant.rating}
-                  </p>
                 </div>
               </div>
-            </div>
-          ))}
+            );
+          })}
         </div>
       </div>
       <div>

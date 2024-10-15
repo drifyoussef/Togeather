@@ -20,6 +20,7 @@ const UserProfile: React.FC = () => {
       })
         .then((response) => response.json())
         .then((data) => {
+          console.log(data, "DATA USER LOG");
           setUser(data);
             setLiked(data.liked || false);
           if (data.message) {

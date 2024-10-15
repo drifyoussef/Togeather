@@ -10,6 +10,8 @@ module.exports = async (req, res) => {
     console.log(req.body);
 
     try {
+        console.log(email, "APPEL DE L'EMAIL");
+        console.log(password, "APPEL DU MOT DE PASSE");
         const userFind = await User.findOne({ email: email });
 
         if (userFind) {
