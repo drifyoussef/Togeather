@@ -40,7 +40,7 @@ const UserProfile: React.FC = () => {
     console.log('Rendering with liked state:', liked);
   }, [liked]);
 
-  if (!user) return <p>Loading...</p>;
+  if (!user) return <p>Chargement...</p>;
 
   const getGenderSubcategory = (preferredGender: string) => {
     switch (preferredGender) {

@@ -53,6 +53,25 @@ let fetch;
         res.json({ message: "Hello-world" });
     });
 
+    app.get('/api/restaurant/:place_id', async (req, res) => {
+        try {
+            const { place_id } = req.params;
+            const url = `https://maps.googleapis.com/maps/api/place/details/json?place_id=${place_id}&key=${process.env.GOOGLE_API_KEY}`;
+            
+            const response = await fetch(url);
+            if (!response.ok) {
+                throw new Error(`Failed to fetch restaurant details: ${response.statusText}`);
+            }
+            
+            const data = await response.json();
+            res.json(data);
+        } catch (error) {
+            console.error(error);
+            res.status(500).json({ error: error.message });
+        }
+    });
+    
+
     app.get('/api/restaurants', async (req, res) => {
         try {
             const { location, radius, keyword } = req.query;
@@ -68,6 +87,28 @@ let fetch;
             res.status(500).json({ error: error.message });
         }
     });
+
+    app.get('/api/restaurant/photo/:photo_reference', async (req, res) => {
+        try {
+            const { photo_reference } = req.params;
+            const url = `https://maps.googleapis.com/maps/api/place/photo?maxwidth=400&photoreference=${photo_reference}&key=${process.env.GOOGLE_API_KEY}`;
+    
+            const response = await fetch(url);
+            if (!response.ok) {
+                throw new Error(`Failed to fetch photo: ${response.statusText}`);
+            }
+    
+            const buffer = await response.buffer(); // Get the image as a buffer
+            const base64Image = buffer.toString('base64'); // Convert to base64 string
+    
+            // Send back the base64 string
+            res.json({ base64Image });
+        } catch (error) {
+            console.error('Error fetching photo:', error);
+            res.status(500).json({ error: error.message });
+        }
+    });
+    
 
     app.get('/api/restaurants/asian', async (req, res) => {
         try {

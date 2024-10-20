@@ -49,6 +49,11 @@ export default function Home() {
   useEffect(() => {
     const token = localStorage.getItem("token");
 
+    if (!token) {
+      console.error("Token not found");
+      return;
+    }
+
     // Fetch current user details to get preferred gender
     fetch(`${process.env.REACT_APP_API_URL}/auth/user`, {
       headers: {

@@ -20,13 +20,12 @@ interface Restaurant {
   };
 }
 
-const Browse = () => {
+const Browse: React.FC = () => {
   const { category } = useParams<{ category: string }>();
   const navigate = useNavigate();
   const [restaurants, setRestaurants] = useState<Restaurant[]>([]);
-  const [activeCategory, setActiveCategory] = useState<string | null>(
-    category || null
-  );
+  const [activeCategory, setActiveCategory] = useState<string | null>(category || null);
+  const [imageSrcs, setImageSrcs] = useState<{ [key: string]: string }>({});
 
   useEffect(() => {
     if (category) {
@@ -35,8 +34,9 @@ const Browse = () => {
   }, [category]);
 
   useEffect(() => {
-    const location = "46.5151961,-1.778677"; // Coordonnées de leclerc des sables d'olonne
-    const radius = 3000; // Radius en metres
+    const token = localStorage.getItem("token");
+    const location = "46.5151961,-1.778677"; // Coordinates of Leclerc des Sables d'Olonne
+    const radius = 3000; // Radius in meters
 
     const fetchRestaurants = async () => {
       try {
@@ -54,15 +54,59 @@ const Browse = () => {
           };
           url += `&keyword=${keywordMap[activeCategory]}`;
         }
-        const response = await fetch(url);
+
+        const response = await fetch(url, {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+          method: "GET",
+        });
+
         if (!response.ok) {
           throw new Error(`HTTP error! status: ${response.status}`);
         }
+
         const data = await response.json();
-        console.log("Fetched data: ", data); // Log de data
         setRestaurants(data.results);
+
+        // Cache images for each restaurant
+        data.results.forEach((restaurant: Restaurant) => {
+          if (restaurant.photos && restaurant.photos.length > 0) {
+            const photoRef = restaurant.photos[0].photo_reference;
+            const cachedImage = localStorage.getItem(photoRef);
+
+            if (cachedImage) {
+              setImageSrcs((prev) => ({ ...prev, [restaurant.place_id]: cachedImage }));
+            } else {
+              fetchImage(photoRef, restaurant.place_id);
+            }
+          }
+        });
       } catch (error) {
         console.error("Error fetching restaurants: ", error);
+      }
+    };
+
+    const fetchImage = async (photoRef: string, placeId: string) => {
+      try {
+        const photoResponse = await fetch(
+          `${process.env.REACT_APP_API_URL}/api/restaurant/photo/${photoRef}`
+        );
+        const photoData = await photoResponse.json();
+        const imageSrc = `data:image/jpeg;base64,${photoData.base64Image}`;
+
+        // Check storage limits
+        const currentStorageSize = JSON.stringify(localStorage).length;
+        const newItemSize = photoRef.length + imageSrc.length;
+
+        if (currentStorageSize + newItemSize > 5 * 1024 * 1024) { // 5MB limit
+          localStorage.clear(); // Optionally, clear some old items
+        }
+
+        localStorage.setItem(photoRef, imageSrc);
+        setImageSrcs((prev) => ({ ...prev, [placeId]: imageSrc }));
+      } catch (error) {
+        console.error("Error fetching restaurant image: ", error);
       }
     };
 
@@ -81,8 +125,8 @@ const Browse = () => {
   };
 
   const handlePlaceIDClick = (place_id: string) => {
-    navigate(`/browse/${category}/${place_id}`)
-  }
+    navigate(`/browse/${category}/${place_id}`);
+  };
 
   return (
     <div>
@@ -93,54 +137,23 @@ const Browse = () => {
       <div className="category">
         <p className="p3-home">Catégories de restaurant</p>
         <div className="parent">
-          {[
-            "Asiatique",
-            "Pizza",
-            "Poulet",
-            "Sandwich",
-            "Burger",
-            "Glaces",
-            "Boissons",
-            "Fast Food",
-          ].map((category) => (
+          {["Asiatique", "Pizza", "Poulet", "Sandwich", "Burger", "Glaces", "Boissons", "Fast Food"].map((category) => (
             <div
               key={category}
-              className={`div${category} ${
-                activeCategory === category ? "active" : ""
-              }`}
+              className={`div${category} ${activeCategory === category ? "active" : ""}`}
               onClick={() => handleCategoryClick(category)}
             >
               <div className="circle">
-                {category === "Asiatique" && (
-                  <BiSolidSushi className="icon-category" />
-                )}
-                {category === "Pizza" && (
-                  <FaPizzaSlice className="icon-category" />
-                )}
-                {category === "Poulet" && (
-                  <GiChickenOven className="icon-category" />
-                )}
-                {category === "Sandwich" && (
-                  <LuSandwich className="icon-category" />
-                )}
-                {category === "Burger" && (
-                  <FaHamburger className="icon-category" />
-                )}
-                {category === "Glaces" && (
-                  <FaIceCream className="icon-category" />
-                )}
-                {category === "Boissons" && (
-                  <RiDrinks2Fill className="icon-category" />
-                )}
-                {category === "Fast Food" && (
-                  <GiFrenchFries className="icon-category" />
-                )}
+                {category === "Asiatique" && <BiSolidSushi className="icon-category" />}
+                {category === "Pizza" && <FaPizzaSlice className="icon-category" />}
+                {category === "Poulet" && <GiChickenOven className="icon-category" />}
+                {category === "Sandwich" && <LuSandwich className="icon-category" />}
+                {category === "Burger" && <FaHamburger className="icon-category" />}
+                {category === "Glaces" && <FaIceCream className="icon-category" />}
+                {category === "Boissons" && <RiDrinks2Fill className="icon-category" />}
+                {category === "Fast Food" && <GiFrenchFries className="icon-category" />}
               </div>
-              <p
-                className={`p-category ${
-                  activeCategory === category ? "active" : ""
-                }`}
-              >
+              <p className={`p-category ${activeCategory === category ? "active" : ""}`}>
                 {category}
               </p>
             </div>
@@ -149,99 +162,58 @@ const Browse = () => {
       </div>
       <div>
         <div className="header-container">
-          <h1 className="header-container-title">
-            Les plus populaires à proximité
-          </h1>
+          <h1 className="header-container-title">Les plus populaires à proximité</h1>
           <PiStarFill className="icon-title" />
         </div>
         <div className="browse-container">
-          {displayRestaurants.map((restaurant) => {
-            // console.log(
-            //   "Photo reference: ",
-            //   restaurant.photos
-            //     ? restaurant.photos[0].photo_reference
-            //     : "No photo available"
-            // );
-            //console.log("API Key: ", process.env.GOOGLE_API_KEY);
-
-            return (
-              <div className="browse-card" key={restaurant.place_id} onClick={() => handlePlaceIDClick(restaurant.place_id)}>
-                <img
-                  src={
-                    restaurant.photos
-                      ? `https://maps.googleapis.com/maps/api/place/photo?maxwidth=400&photoreference=${restaurant.photos[0].photo_reference}`
-                      : defaultimage
-                  }
-                  alt={restaurant.name}
-                  className="browse-image"
-                />
-                <div className="browse-details">
-                  <div className="browse-h2">
-                    <div>
-                      <h2 className="browse-name">{restaurant.name}</h2>
-                      <p className="open-status">
-                        {restaurant.opening_hours?.open_now
-                          ? "Ouvert"
-                          : "Fermé"}
-                      </p>
-                    </div>
-                    <p className="browse-restaurant-review">
-                      {restaurant.rating}
+          {displayRestaurants.map((restaurant) => (
+            <div
+              className="browse-card"
+              key={restaurant.place_id}
+              onClick={() => handlePlaceIDClick(restaurant.place_id)}
+            >
+              <img
+                src={imageSrcs[restaurant.place_id] || defaultimage}
+                alt={restaurant.name}
+                className="browse-image"
+                onError={(e) => {
+                  e.currentTarget.src = defaultimage; // Fallback to default image
+                }}
+              />
+              <div className="browse-details">
+                <div className="browse-h2">
+                  <div>
+                    <h2 className="browse-name">{restaurant.name}</h2>
+                    <p className="open-status">
+                      {restaurant.opening_hours?.open_now ? "Ouvert" : "Fermé"}
                     </p>
                   </div>
+                  <p className="browse-restaurant-review">{restaurant.rating}</p>
                 </div>
               </div>
-            );
-          })}
+            </div>
+          ))}
         </div>
       </div>
       <div>
         <div className="header-container">
-          <h1 className="header-container-title">
-            Les coups de coeurs de la semaine
-          </h1>
+          <h1 className="header-container-title">Les coups de coeurs de la semaine</h1>
           <FaHeart className="icon-title icon-heart" />
         </div>
         <div className="browse-container">
-          <div className="browse-card">
-            <img src={Tacos} alt="" className="browse-image" />
-            <div className="browse-details">
-              <div className="browse-h2">
-                <h2 className="browse-name">Tacos avenue</h2>
-                <p className="browse-restaurant-review">4.1</p>
+          {[...Array(4)].map((_, index) => (
+            <div className="browse-card" key={index}>
+              <img src={Tacos} alt="" className="browse-image" />
+              <div className="browse-details">
+                <div className="browse-h2">
+                  <h2 className="browse-name">Tacos avenue</h2>
+                  <p className="browse-restaurant-review">4.1</p>
+                </div>
               </div>
             </div>
-          </div>
-          <div className="browse-card">
-            <img src={Tacos} alt="" className="browse-image" />
-            <div className="browse-details">
-              <div className="browse-h2">
-                <h2 className="browse-name">Tacos avenue</h2>
-                <p className="browse-restaurant-review">4.1</p>
-              </div>
-            </div>
-          </div>
-          <div className="browse-card">
-            <img src={Tacos} alt="" className="browse-image" />
-            <div className="browse-details">
-              <div className="browse-h2">
-                <h2 className="browse-name">Tacos avenue</h2>
-                <p className="browse-restaurant-review">4.1</p>
-              </div>
-            </div>
-          </div>
-          <div className="browse-card">
-            <img src={Tacos} alt="" className="browse-image" />
-            <div className="browse-details">
-              <div className="browse-h2">
-                <h2 className="browse-name">Tacos avenue</h2>
-                <p className="browse-restaurant-review">4.1</p>
-              </div>
-            </div>
-          </div>
+          ))}
         </div>
       </div>
-      <div></div>
     </div>
   );
 };

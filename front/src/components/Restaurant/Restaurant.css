@@ -1,0 +1,44 @@
+.div-images-restaurant{
+    display: flex;
+    height: 200px;
+}
+
+.restaurant-name{
+    margin: 16px;
+    margin-bottom: 0px;
+}
+
+.restaurant-rating, .restaurant-address, .restaurant-number{
+    margin: 8px 8px 8px 16px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.restaurant-status{
+    margin-left: 16px;
+    margin-bottom: 16px;
+}
+
+.restaurant-rating-icon, .restaurant-address-icon, .restaurant-number-icon{
+    font-size: 24px;
+}
+
+.visit-website-button{
+    width: fit-content;
+    align-self: center;
+}
+
+.restaurant-informations{
+    place-self: center;
+}
+
+.div-container, .restaurant-informations{
+    display: flex;
+    flex-flow: column;
+}
+
+.weekday-text{
+    list-style: none;
+    margin-left: 16px;
+}
