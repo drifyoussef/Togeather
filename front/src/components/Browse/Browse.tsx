@@ -66,13 +66,16 @@ const Browse: React.FC = () => {
           throw new Error(`HTTP error! status: ${response.status}`);
         }
 
-        const data = await response.json();
+        const data: { results: Restaurant[] } = await response.json(); // Specify the type of `data`
         setRestaurants(data.results);
+
+        const displayedPhotoRefs: string[] = []; // Track displayed photo references
 
         // Cache images for each restaurant
         data.results.forEach((restaurant: Restaurant) => {
           if (restaurant.photos && restaurant.photos.length > 0) {
             const photoRef = restaurant.photos[0].photo_reference;
+            displayedPhotoRefs.push(photoRef); // Add to the array of displayed references
             const cachedImage = localStorage.getItem(photoRef);
 
             if (cachedImage) {
@@ -82,6 +85,9 @@ const Browse: React.FC = () => {
             }
           }
         });
+
+        // Remove unused images from local storage
+        removeUnusedImages(displayedPhotoRefs);
       } catch (error) {
         console.error("Error fetching restaurants: ", error);
       }
@@ -100,7 +106,8 @@ const Browse: React.FC = () => {
         const newItemSize = photoRef.length + imageSrc.length;
 
         if (currentStorageSize + newItemSize > 5 * 1024 * 1024) { // 5MB limit
-          localStorage.clear(); // Optionally, clear some old items
+          // Optionally, clear some old items
+          removeUnusedImages(Object.keys(imageSrcs));
         }
 
         localStorage.setItem(photoRef, imageSrc);
@@ -110,8 +117,17 @@ const Browse: React.FC = () => {
       }
     };
 
+    const removeUnusedImages = (displayedPhotoRefs: string[]) => {
+      Object.keys(localStorage).forEach((key) => {
+        // Remove items that start with "AdCG" and are not displayed
+        if (key.startsWith("AdCG") && !displayedPhotoRefs.includes(key)) {
+          localStorage.removeItem(key);
+        }
+      });
+    };
+
     fetchRestaurants();
-  }, [activeCategory]);
+  }, [activeCategory, imageSrcs]); // Added imageSrcs to the dependency array
 
   const sortedRestaurants = [...restaurants].sort(
     (a, b) => b.rating - a.rating
@@ -206,8 +222,11 @@ const Browse: React.FC = () => {
               <img src={Tacos} alt="" className="browse-image" />
               <div className="browse-details">
                 <div className="browse-h2">
-                  <h2 className="browse-name">Tacos avenue</h2>
-                  <p className="browse-restaurant-review">4.1</p>
+                  <div>
+                    <h2 className="browse-name">Nom de restaurant {index + 1}</h2>
+                    <p className="open-status">Ouvert</p>
+                  </div>
+                  <p className="browse-restaurant-review">5.0</p>
                 </div>
               </div>
             </div>

@@ -22,11 +22,9 @@ const UserProfile: React.FC = () => {
         .then((data) => {
           console.log(data, "DATA USER LOG");
           setUser(data);
-            setLiked(data.liked || false);
+          setLiked(data.liked !== undefined ? data.liked : false);  // Explicitly set liked state
           if (data.message) {
             console.log(data.message);
-          } else {
-            
           }
         })
         .catch((error) => {
@@ -34,7 +32,6 @@ const UserProfile: React.FC = () => {
         });
     }
   }, [id]);
-
 
   useEffect(() => {
     console.log('Rendering with liked state:', liked);
@@ -59,43 +56,38 @@ const UserProfile: React.FC = () => {
     const token = localStorage.getItem("token");
 
     if (user) {
-        fetch(`${process.env.REACT_APP_API_URL}/auth/users/${user._id}/like`, {
-            method: "POST",
-            headers: {
-                Authorization: `Bearer ${token}`,
-                "Content-Type": "application/json",
-            },
-            body: JSON.stringify({ liked: !liked }),
-        })
-            .then((response) => {
-                if (!response.ok) {
-                    return response.json().then((error) => {
-                        throw new Error(error.message || 'Unknown error occurred');
-                    });
-                }
-                return response.json();
-            })
-            .then((data) => {
-                console.log("User liked status updated successfully:", data);
-                setLiked((prevLiked) => !prevLiked);
-            })
-            .catch((error) => {
-                console.error("Error liking user:", error);
-                alert('Failed to update like status. Please try again later.');
+      fetch(`${process.env.REACT_APP_API_URL}/auth/users/${user._id}/like`, {
+        method: "POST",
+        headers: {
+          Authorization: `Bearer ${token}`,
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ liked: !liked }),
+      })
+        .then((response) => {
+          if (!response.ok) {
+            return response.json().then((error) => {
+              throw new Error(error.message || 'Unknown error occurred');
             });
+          }
+          return response.json();
+        })
+        .then((data) => {
+          console.log("User liked status updated successfully:", data);
+          setLiked(data.liked);  // Use the updated value from the backend
+        })
+        .catch((error) => {
+          console.error("Error liking user:", error);
+          alert('Failed to update like status. Please try again later.');
+        });
     }
-};
+  };
 
   return (
     <div className="user-profile">
-      <h1>
-        {user.firstname} {user.name}
-      </h1>
+      <h1>{user.firstname} {user.name}</h1>
       <img
-        src={
-          user.image ||
-          "https://architecture.ou.edu/wp-content/uploads/2018/07/ANGELAPERSON-1447-300x300.jpg"
-        }
+        src={user.image || "https://architecture.ou.edu/wp-content/uploads/2018/07/ANGELAPERSON-1447-300x300.jpg"}
         alt="User profile"
       />
       <div>
@@ -125,9 +117,7 @@ const UserProfile: React.FC = () => {
         </div>
       </div>
       <button className="like-button" onClick={handleLike}>
-        <FaHeart
-          className={`icon-heart-profile ${liked ? 'liked' : 'not-liked'}`}
-        />
+        <FaHeart className={`icon-heart-profile ${liked ? 'liked' : 'not-liked'}`} />
       </button>
     </div>
   );
