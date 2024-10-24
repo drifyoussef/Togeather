@@ -17,6 +17,14 @@
     transition: transform 0.3s ease;
 }
 
+.user-image { 
+    width: 100px;
+    height: 100px;
+    -moz-border-radius: 70px; 
+    -webkit-border-radius: 70px; 
+    border-radius: 70px;
+}
+
 .div-card {
     display: flex;
     place-content: space-evenly;

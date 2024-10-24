@@ -33,6 +33,10 @@ export default function Home() {
     navigate(`/browse/${category}`);
   };
 
+  const handleUserinfosClick = (user: UserModel) => {
+    console.log(user);
+  };
+
   const getGenderSubcategory = (preferredGender: string) => {
     switch (preferredGender) {
       case "both":
@@ -284,7 +288,7 @@ export default function Home() {
               {mutualMatches.length > 0 ? ( // Use mutualMatches here
                 mutualMatches.map((user) => {
                   return (
-                    <div key={user._id} className="user-card">
+                    <div key={user._id} className="user-card" onClick={() => handleUserinfosClick(user)}>
                       <img
                         src={
                           user.image ||
@@ -293,21 +297,6 @@ export default function Home() {
                         alt={`${user.firstname}'s avatar`}
                         className="user-image"
                       />
-                      <div className="user-details">
-                        <h2>{`${user.firstname}, ${user.age} ans`}</h2>
-                        <p>{user.job}</p>
-                        <div className="user-category">
-                          <span>{user.favoriteCategory as Category}</span>
-                          <span>
-                            <FaHeart
-                              className={`icon-title icon-heart-home ${
-                                user.isMutual ? "mutual" : ""
-                              }`}
-                            />
-                            {getGenderSubcategory(user.preferredGender)}
-                          </span>
-                        </div>
-                      </div>
                     </div>
                   );
                 })
