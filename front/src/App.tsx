@@ -11,6 +11,7 @@ import Register from "./components/Register/Register";
 import Login from "./components/Login/Login";
 import UserProfile from './components/UserProfile/UserProfile';
 import Restaurant from './components/Restaurant/Restaurant';
+import UserMessages from './components/UserMessages/UserMessages';
 
 
 function App() {
@@ -22,6 +23,7 @@ function App() {
         <Route path="/profile" element={<Profile />} />
         <Route path="/profile/:id" element={<UserProfile />} />
         <Route path="/messages" element={<Messages />} />
+        <Route path="/messages/:id" element={<UserMessages />} />
         <Route path="/browse" element={<Browse />} />
         <Route path="/browse/:category" element={<Browse />} />
         <Route path="/browse/:category/:place_id" element={<Restaurant />} />

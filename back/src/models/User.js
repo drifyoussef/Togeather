@@ -52,6 +52,8 @@ const UserSchema = new Schema({
   },
   likedBy: [{ type: mongoose.Schema.Types.ObjectId, ref: 'User' }],
   isMutual: { type: Boolean, default: false },
+  previews: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Preview' }],
+  messages: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Message' }],
 });
 
 UserSchema.plugin(uniqueValidator);

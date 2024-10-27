@@ -13,6 +13,7 @@ const getUserController = require('./src/controllers/getUser');
 const getUsersController = require('./src/controllers/getUsers');
 const getUserByIdController = require('./src/controllers/getUserById');
 const likeUserController = require('./src/controllers/likeUser');
+const Message = require('./src/models/Message');
 
 let fetch;
 
@@ -34,8 +35,8 @@ let fetch;
         loggedIn = req.session.userId;
         next();
     });
-//Définition des CORS Middleware 
-    app.use(function(req, res, next) {
+    //Définition des CORS Middleware 
+    app.use(function (req, res, next) {
         res.setHeader("Access-Control-Allow-Headers", "X-Requested-With,content-type, Accept,Authorization,Origin");
         res.setHeader("Access-Control-Allow-Origin", process.env.ORIGIN);
         res.setHeader("Access-Control-Allow-Methods", "GET, POST, OPTIONS, PUT, PATCH, DELETE");
@@ -48,6 +49,14 @@ let fetch;
     app.get('/auth/user', authMiddleware, getUserController);
     app.get('/auth/users', authMiddleware, getUsersController);
     app.get('/auth/users/:id', authMiddleware, getUserByIdController);
+    app.get('/messages', async (req, res) => {
+        try {
+            const messages = await Message.find().populate('sender receiver');
+            res.json(messages);
+        } catch (error) {
+            res.status(500).json({ message: error.message });
+        }
+    });
 
     app.get('/', function (req, res) {
         res.json({ message: "Hello-world" });
@@ -57,12 +66,12 @@ let fetch;
         try {
             const { place_id } = req.params;
             const url = `https://maps.googleapis.com/maps/api/place/details/json?place_id=${place_id}&key=${process.env.GOOGLE_API_KEY}`;
-            
+
             const response = await fetch(url);
             if (!response.ok) {
                 throw new Error(`Failed to fetch restaurant details: ${response.statusText}`);
             }
-            
+
             const data = await response.json();
             res.json(data);
         } catch (error) {
@@ -70,7 +79,7 @@ let fetch;
             res.status(500).json({ error: error.message });
         }
     });
-    
+
 
     app.get('/api/restaurants', async (req, res) => {
         try {
@@ -92,15 +101,15 @@ let fetch;
         try {
             const { photo_reference } = req.params;
             const url = `https://maps.googleapis.com/maps/api/place/photo?maxwidth=400&photoreference=${photo_reference}&key=${process.env.GOOGLE_API_KEY}`;
-    
+
             const response = await fetch(url);
             if (!response.ok) {
                 throw new Error(`Failed to fetch photo: ${response.statusText}`);
             }
-    
+
             const buffer = await response.buffer(); // Get the image as a buffer
             const base64Image = buffer.toString('base64'); // Convert to base64 string
-    
+
             // Send back the base64 string
             res.json({ base64Image });
         } catch (error) {
@@ -108,7 +117,7 @@ let fetch;
             res.status(500).json({ error: error.message });
         }
     });
-    
+
 
     app.get('/api/restaurants/asian', async (req, res) => {
         try {

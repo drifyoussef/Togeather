@@ -1,14 +1,13 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import "./Home.css";
-import Card from "../Card/Card";
 import { BiSolidSushi } from "react-icons/bi";
 import { FaPizzaSlice, FaHamburger, FaIceCream, FaHeart } from "react-icons/fa";
 import { GiChickenOven, GiTacos } from "react-icons/gi";
 import { LuSandwich } from "react-icons/lu";
 import { RiDrinks2Fill } from "react-icons/ri";
-import { UserModel } from "../../models/User.model";
-//import likeUser from "../../../../back/src/controllers/likeUser";
+import Card from "../Card/Card";
+import { useFetchUsers } from "../../hooks/useFetchUsers"; // Import the custom hook
+import "./Home.css";
 
 type Category =
   | "Asiatique"
@@ -22,19 +21,16 @@ type Category =
 
 export default function Home() {
   const [activeCategory, setActiveCategory] = useState<Category | null>(null);
-  const [users, setUsers] = useState<UserModel[]>([]);
-  const [filteredUsers, setFilteredUsers] = useState<UserModel[]>([]);
-  const [mutualMatches, setMutualMatches] = useState<UserModel[]>([]); // Define mutualMatches state
-  const [preferredGender, setPreferredGender] = useState<string | null>(null);
   const navigate = useNavigate();
+  const { users, preferredGender, mutualMatches } = useFetchUsers(); // Use the custom hook
 
   const handleCategoryClick = (category: Category) => {
     setActiveCategory(category);
     navigate(`/browse/${category}`);
   };
 
-  const handleUserinfosClick = (user: UserModel) => {
-    console.log(user);
+  const handleUserinfosClick = (user: any) => {
+    navigate(`/messages/${user._id}`);
   };
 
   const getGenderSubcategory = (preferredGender: string) => {
@@ -50,68 +46,9 @@ export default function Home() {
     }
   };
 
-  useEffect(() => {
-    const token = localStorage.getItem("token");
-
-    if (!token) {
-      console.error("Token not found");
-      return;
-    }
-
-    // Fetch current user details to get preferred gender
-    fetch(`${process.env.REACT_APP_API_URL}/auth/user`, {
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
-      method: "GET",
-    })
-      .then((response) => response.json())
-      .then((data) => {
-        if (data.message) {
-          console.error(data.message);
-        } else {
-          setPreferredGender(data.preferredGender);
-        }
-      })
-      .catch((error) => {
-        console.error("Error fetching user:", error);
-      });
-
-    // Fetch all users
-    fetch(`${process.env.REACT_APP_API_URL}/auth/users`, {
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
-      method: "GET",
-    })
-      .then((response) => response.json())
-      .then((data) => {
-        if (data.message) {
-          console.error(data.message);
-        } else {
-          setUsers(data);
-        }
-      })
-      .catch((error) => {
-        console.error("Error fetching users:", error);
-      });
-  }, []);
-
-  useEffect(() => {
-    if (preferredGender && users.length > 0) {
-      let filtered: UserModel[] = [];
-
-      if (preferredGender === "both") {
-        filtered = users;
-      } else {
-        filtered = users.filter((user) => user.userGender === preferredGender);
-      }
-
-      setFilteredUsers(filtered);
-      const mutualMatches = filtered.filter((user) => user.isMutual); // Assuming isMutual is sent from the backend
-      setMutualMatches(mutualMatches); // Set the mutual matches
-    }
-  }, [preferredGender, users]);
+  const filteredUsersList = users.filter((user) =>
+    preferredGender === "both" ? true : user.userGender === preferredGender
+  );
 
   return (
     <div className="div">
@@ -254,8 +191,8 @@ export default function Home() {
           </div>
         </div>
         <div className="div-card">
-          {filteredUsers.length > 0 ? (
-            filteredUsers.map((user) => (
+          {filteredUsersList.length > 0 ? (
+            filteredUsersList.map((user) => (
               <Card
                 key={user._id}
                 category={user.favoriteCategory as Category}
@@ -282,30 +219,30 @@ export default function Home() {
       <div className="div-match">
         <p className="p-match">Mes matchs</p>
         <div className="parent">
-          {/* Match images */}
           <div className="div1">
             <div className="circle">
-              {mutualMatches.length > 0 ? ( // Use mutualMatches here
-                mutualMatches.map((user) => {
-                  return (
-                    <div key={user._id} className="user-card" onClick={() => handleUserinfosClick(user)}>
-                      <img
-                        src={
-                          user.image ||
-                          "https://architecture.ou.edu/wp-content/uploads/2018/07/ANGELAPERSON-1447-300x300.jpg"
-                        }
-                        alt={`${user.firstname}'s avatar`}
-                        className="user-image"
-                      />
-                    </div>
-                  );
-                })
+              {mutualMatches.length > 0 ? (
+                mutualMatches.map((user) => (
+                  <div
+                    key={user._id}
+                    className="user-card"
+                    onClick={() => handleUserinfosClick(user)}
+                  >
+                    <img
+                      src={
+                        user.image ||
+                        "https://architecture.ou.edu/wp-content/uploads/2018/07/ANGELAPERSON-1447-300x300.jpg"
+                      }
+                      alt={`${user.firstname}'s avatar`}
+                      className="user-image"
+                    />
+                  </div>
+                ))
               ) : (
                 <p>Il n'y a pas d'utilisateur disponible.</p>
               )}
             </div>
           </div>
-          {/* Other match elements */}
         </div>
       </div>
     </div>
