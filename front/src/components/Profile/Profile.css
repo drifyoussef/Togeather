@@ -51,6 +51,7 @@
 .profileImageIcon{
     font-size: 104px;
     color: #FF0077;
+    margin: 16px;
 }
 
 .profileImageIcon:hover{
