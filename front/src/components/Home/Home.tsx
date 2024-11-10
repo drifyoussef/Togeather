@@ -6,7 +6,7 @@ import { GiChickenOven, GiTacos } from "react-icons/gi";
 import { LuSandwich } from "react-icons/lu";
 import { RiDrinks2Fill } from "react-icons/ri";
 import Card from "../Card/Card";
-import { useFetchUsers } from "../../hooks/useFetchUsers"; // Import the custom hook
+import { useFetchUsers } from "../../hooks/useFetchUsers";
 import "./Home.css";
 
 type Category =
@@ -46,7 +46,7 @@ export default function Home() {
     }
   };
 
-  const filteredUsersList = users.filter((user) =>
+  const filteredUsersList = users.filter((user:any) =>
     preferredGender === "both" ? true : user.userGender === preferredGender
   );
 
@@ -192,7 +192,7 @@ export default function Home() {
         </div>
         <div className="div-card">
           {filteredUsersList.length > 0 ? (
-            filteredUsersList.map((user) => (
+            filteredUsersList.map((user:any) => (
               <Card
                 key={user._id}
                 category={user.favoriteCategory as Category}
@@ -222,7 +222,7 @@ export default function Home() {
           <div className="div1">
             <div className="circle">
               {mutualMatches.length > 0 ? (
-                mutualMatches.map((user) => (
+                mutualMatches.map((user:any) => (
                   <div
                     key={user._id}
                     className="user-card"
