@@ -2,9 +2,11 @@ import React, { useEffect, useState } from "react";
 import "./Messages.css";
 import { useFetchUsers } from "../../hooks/useFetchUsers";
 import { UserModel } from "../../models/User.model";
+import { useNavigate } from "react-router-dom";
 
 export default function Messages() {
   const { mutualMatches } = useFetchUsers();
+  const navigate = useNavigate();
   // define console log of mutualMatches _id from the User.model.ts
   console.log(mutualMatches.map((user) => user._id));
   interface Message {
@@ -38,11 +40,15 @@ export default function Messages() {
     fetchMessages();
   }, []);
 
+  const handleUserClick = (userId:any) => {
+    navigate(`/messages/${userId}`);
+  };
+
   return (
     <div className="div-matches">
       <div className="box-match">
         {mutualMatches.map((user) => (
-          <div className="match-box" key={user._id}>
+          <div className="match-box" key={user._id} onClick={() => handleUserClick(user._id)}>
             <div className="header-match-box">
               <div className="circle-match">{user.firstname.charAt(0)}</div>
               <div className="header-text">

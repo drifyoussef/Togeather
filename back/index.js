@@ -13,7 +13,10 @@ const getUserController = require('./src/controllers/getUser');
 const getUsersController = require('./src/controllers/getUsers');
 const getUserByIdController = require('./src/controllers/getUserById');
 const likeUserController = require('./src/controllers/likeUser');
+const messagesRouter = require('./src/routes/messages'); 
 const Message = require('./src/models/Message');
+const http = require('http');
+const socketIo = require('socket.io');
 
 let fetch;
 
@@ -21,6 +24,25 @@ let fetch;
     fetch = (await import('node-fetch')).default;
 
     const app = express();
+    const server = http.createServer(app);
+    const io = socketIo(server, {
+        cors: {
+          origin: "*", // Allow all origins
+          methods: ["GET", "POST"]
+        }
+    });
+
+    io.on('connection', (socket) => {
+        console.log('New client connected');
+      
+        socket.on('sendMessage', (message) => {
+          io.emit('receiveMessage', message);
+        });
+      
+        socket.on('disconnect', () => {
+          console.log('Client disconnected');
+        });
+    });
 
     app.use(express.json());
     app.use(cors());
@@ -43,6 +65,7 @@ let fetch;
         res.setHeader("Access-Control-Allow-Credentials", true);
         next();
     });
+    app.use('/messages', messagesRouter);
 
     app.get('/auth/register', redirectIfAuthenticatedMiddleware, newUserController);
     app.get('/auth/logout', logoutController);
@@ -52,6 +75,16 @@ let fetch;
     app.get('/messages', async (req, res) => {
         try {
             const messages = await Message.find().populate('sender receiver');
+            res.json(messages);
+        } catch (error) {
+            res.status(500).json({ message: error.message });
+        }
+    });
+
+    app.get('/messages/:id', async (req, res) => {
+        try {
+            const { id } = req.params;
+            const messages = await Message.find({ $or: [{ sender: id }, { receiver: id }] }).populate('sender receiver');
             res.json(messages);
         } catch (error) {
             res.status(500).json({ message: error.message });
@@ -144,6 +177,17 @@ let fetch;
     app.post('/users/register', redirectIfAuthenticatedMiddleware, storeUserController);
     app.post('/users/login', redirectIfAuthenticatedMiddleware, loginUserController);
     app.post('/auth/users/:id/like', authMiddleware, likeUserController);
+    app.post('/messages', async (req, res) => {
+        try {
+            const { sender, receiver, text } = req.body;
+            const message = new Message({ sender, receiver, text });
+            await message.save();
+            io.emit('receiveMessage', message);
+            res.json(message);
+        } catch (error) {
+            res.status(500).json({ message: error.message });
+        }
+    });
 
     async function main() {
         try {
@@ -159,7 +203,7 @@ let fetch;
         .catch(console.error);
 
     const PORT = process.env.PORT || 4000;
-    app.listen(PORT, () => {
+    server.listen(PORT, () => {
         console.log(`Server is running on port ${PORT}`);
     });
 })();
