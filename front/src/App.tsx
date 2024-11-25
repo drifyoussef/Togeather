@@ -12,6 +12,9 @@ import Login from "./components/Login/Login";
 import UserProfile from './components/UserProfile/UserProfile';
 import Restaurant from './components/Restaurant/Restaurant';
 import UserMessages from './components/UserMessages/UserMessages';
+import Premium from './components/Premium/Premium';
+import Success from "./components/Success/Success";
+import Cancel from "./components/Cancel/Cancel";
 
 
 function App() {
@@ -30,6 +33,9 @@ function App() {
         <Route path="/connection" element={<Connection />} />
         <Route path="/auth/register" element={<Register />} />
         <Route path="/auth/login" element={<Login /> } />
+        <Route path="/premium" element={<Premium />} />
+        <Route path="/success" element={<Success />} />
+        <Route path="/cancel" element={<Cancel />} />
       </Routes>
     </Router>
   );

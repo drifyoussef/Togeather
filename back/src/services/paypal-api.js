@@ -1,0 +1,74 @@
+let fetch;
+
+(async () => {
+  fetch = (await import('node-fetch')).default;
+})();
+
+//const { PAYPAL_CLIENT_ID, PAYPAL_CLIENT_SECRET } = process.env;
+const { CLIENT_ID, APP_SECRET } = process.env;
+const base = "https://api-m.sandbox.paypal.com";
+
+async function createOrder(data) {
+  const accessToken = await getAccessToken();
+  const url = `${base}/v2/checkout/orders`;
+  const response = await fetch(url, {
+    method: "POST",
+    headers: {
+      Authorization: `Bearer ${accessToken}`,
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({
+      intent: "CAPTURE",
+      purchase_units: [
+        {
+          amount: {
+            currency_code: "EUR",
+            value: data.product.cost,
+          },
+        },
+      ],
+    }),
+  });
+
+  return handleResponse(response);
+}
+
+async function capturePayment(orderId) {
+  const accessToken = await getAccessToken();
+  const url = `${base}/v2/checkout/orders/${orderId}/capture`;
+  const response = await fetch(url, {
+    method: "POST",
+    headers: {
+      Authorization: `Bearer ${accessToken}`,
+      "Content-Type": "application/json",
+    },
+  });
+
+  return handleResponse(response);
+}
+
+async function getAccessToken() {
+  const response = await fetch(`${base}/v1/oauth2/token`, {
+    method: "POST",
+    headers: {
+      Authorization: `Basic ${Buffer.from(`${CLIENT_ID}:${APP_SECRET}`).toString('base64')}`,
+      "Content-Type": "application/x-www-form-urlencoded",
+    },
+    body: "grant_type=client_credentials",
+  });
+
+  const data = await response.json();
+  return data.access_token;
+}
+
+function handleResponse(response) {
+  if (!response.ok) {
+    throw new Error(`HTTP error! status: ${response.status}`);
+  }
+  return response.json();
+}
+
+module.exports = {
+  createOrder,
+  capturePayment,
+};

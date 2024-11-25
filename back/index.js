@@ -2,6 +2,7 @@ const express = require('express');
 const mongoose = require('mongoose');
 const cors = require('cors');
 const expressSession = require('express-session');
+const paypal = require('./src/services/paypal-api');
 const newUserController = require('./src/controllers/newUser');
 const storeUserController = require('./src/controllers/storeUser');
 const loginController = require('./src/controllers/login');
@@ -187,6 +188,27 @@ let fetch;
         } catch (error) {
             res.status(500).json({ message: error.message });
         }
+    });
+
+    app.post('/my-server/create-paypal-order', async (req, res) => {
+        try {
+            const order = await paypal.createOrder(req.body);
+            res.json(order);
+        } catch (error) {
+            res.status(500).json({ message: error.message });
+        }
+
+    });
+
+    app.post('/my-server/capture-paypal-order', async (req, res) => {
+        const { orderId } = req.body;
+        try {
+            const captureData = await paypal.capturePayment(orderId);
+            res.json(captureData);
+        } catch (error) {
+            res.status(500).json({ message: error.message });
+        }
+
     });
 
     async function main() {

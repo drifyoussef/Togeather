@@ -44,7 +44,15 @@ const Navbar: React.FC = () => {
       <ul className={isOpen ? "navbar-links active" : "navbar-links"}>
         {!isConnectionPage ? (
           <>
-          <li>
+           <li>
+              <NavLink
+                to="/premium"
+                className={({ isActive }) => (isActive ? "active" : "")}
+              >
+                Premium
+              </NavLink>
+            </li>
+            <li>
               <NavLink
                 to="/browse"
                 className={({ isActive }) => (isActive ? "active" : "")}
@@ -69,10 +77,7 @@ const Navbar: React.FC = () => {
               </NavLink>
             </li>
             <li>
-              <button
-                onClick={handleLogout}
-                className="logout-button"
-              >
+              <button onClick={handleLogout} className="logout-button">
                 Se déconnecter
               </button>
             </li>

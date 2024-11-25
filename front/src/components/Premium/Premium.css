@@ -1,0 +1,65 @@
+.premium-container{
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  justify-content: center;
+  max-width: 600px;
+  margin: auto;
+  height: 100%;
+  background-color: #fff;
+}
+
+.premium-card{
+  border-radius: 10px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  padding: 20px;
+}
+
+.premium-header {
+  text-align: center;
+  margin-bottom: 20px;
+}
+
+.premium-header h1 {
+  font-size: 24px;
+  color: #ff0077;
+}
+
+.premium-header p {
+  font-size: 16px;
+  color: #555;
+}
+
+.premium-features {
+  list-style: none;
+  padding: 0;
+  margin: 0 0 20px 0;
+  width: 100%;
+}
+
+.premium-features li {
+  font-size: 18px;
+  color: #333;
+  padding: 10px 0;
+  border-bottom: 1px solid #eee;
+}
+
+.upgrade-button {
+  background-color: #ff0077;
+  color: #fff;
+  border: none;
+  padding: 10px 20px;
+  font-size: 18px;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.3s, transform 0.3s;
+  margin-bottom: 16px;
+}
+
+.upgrade-button:hover {
+  background-color: #a5004d;
+  font-weight: bold;
+  transform: scale(1.07);
+  animation: 0.5s ease;
+}
