@@ -2,8 +2,9 @@ const express = require('express');
 const mongoose = require('mongoose');
 const cors = require('cors');
 const expressSession = require('express-session');
-const paypal = require('./src/services/paypal-api');
+const { paypalConfig } = require('./src/config/paypalConfig');
 const newUserController = require('./src/controllers/newUser');
+const paypal = require('./src/services/paypal-api');
 const storeUserController = require('./src/controllers/storeUser');
 const loginController = require('./src/controllers/login');
 const loginUserController = require('./src/controllers/loginUser');
@@ -24,6 +25,7 @@ let fetch;
 (async () => {
     fetch = (await import('node-fetch')).default;
 
+    paypalConfig();
     const app = express();
     const server = http.createServer(app);
     const io = socketIo(server, {

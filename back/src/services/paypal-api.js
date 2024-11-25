@@ -1,16 +1,14 @@
+const { clientId, clientSecret, baseUrl } = require('../config/paypalConfig');
+
 let fetch;
 
 (async () => {
   fetch = (await import('node-fetch')).default;
 })();
 
-//const { PAYPAL_CLIENT_ID, PAYPAL_CLIENT_SECRET } = process.env;
-const { CLIENT_ID, APP_SECRET } = process.env;
-const base = "https://api-m.sandbox.paypal.com";
-
 async function createOrder(data) {
   const accessToken = await getAccessToken();
-  const url = `${base}/v2/checkout/orders`;
+  const url = `${baseUrl}/v2/checkout/orders`;
   const response = await fetch(url, {
     method: "POST",
     headers: {
@@ -35,7 +33,7 @@ async function createOrder(data) {
 
 async function capturePayment(orderId) {
   const accessToken = await getAccessToken();
-  const url = `${base}/v2/checkout/orders/${orderId}/capture`;
+  const url = `${baseUrl}/v2/checkout/orders/${orderId}/capture`;
   const response = await fetch(url, {
     method: "POST",
     headers: {
@@ -48,10 +46,10 @@ async function capturePayment(orderId) {
 }
 
 async function getAccessToken() {
-  const response = await fetch(`${base}/v1/oauth2/token`, {
+  const response = await fetch(`${baseUrl}/v1/oauth2/token`, {
     method: "POST",
     headers: {
-      Authorization: `Basic ${Buffer.from(`${CLIENT_ID}:${APP_SECRET}`).toString('base64')}`,
+      Authorization: `Basic ${Buffer.from(`${clientId}:${clientSecret}`).toString('base64')}`,
       "Content-Type": "application/x-www-form-urlencoded",
     },
     body: "grant_type=client_credentials",
