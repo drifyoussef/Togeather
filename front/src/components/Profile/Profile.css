@@ -39,11 +39,27 @@
     font-size: 1em;
 }
 
+.div-informations-container{
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.editDataProfil{
+    color: #FF0077;
+    font-size: 20px;
+}
+
+.edit-data-content{
+    display: flex;
+    gap: 4px;
+}
+
 .profileInfo button:hover {
     background-color: #a5004d;
 }
 
-.change-settings{
+.delete-profil{
     width: 16%;
     margin: 16px;
 }

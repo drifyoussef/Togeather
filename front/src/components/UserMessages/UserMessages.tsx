@@ -12,10 +12,9 @@ export default function UserMessages() {
   const { id } = useParams();
   const { mutualMatches } = useFetchUsers();
   const navigate = useNavigate();
-  console.log(mutualMatches.map((user) => user._id), "ID of current user");
+  //console.log(mutualMatches.map((user) => user), "ID of current user");
   // define console log of mutualMatches _id from the User.model.ts
   const connectedUserId = localStorage.getItem("userId");
-  console.log(mutualMatches.map((user) => user._id));
 
   interface Message {
     _id: string;
@@ -27,6 +26,36 @@ export default function UserMessages() {
 
   const [messages, setMessages] = useState<Message[]>([]);
   const [newMessage, setNewMessage] = useState("");
+  const [reload, setReload] = useState(false);
+
+
+  const fetchMessages = async () => {
+    try {
+      const response = await fetch(
+        `${process.env.REACT_APP_API_URL}/messages`,
+        {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem("token")}`,
+          },
+        }
+      );
+      const data = await response.json();
+      setMessages(data);
+    } catch (error) {
+      console.error("Error fetching messages:", error);
+    }
+  };
+
+  //reload page when new message is sent
+  useEffect(() => {
+    if (reload) {
+      fetchMessages()
+        setReload(false);
+        console.log(fetchMessages, 'fetchMessages');
+
+    }
+  },[reload]);
+
 
   useEffect(() => {
 
@@ -47,24 +76,8 @@ export default function UserMessages() {
       }
     };
 
-    const fetchMessages = async () => {
-      try {
-        const response = await fetch(
-          `${process.env.REACT_APP_API_URL}/messages`,
-          {
-            headers: {
-              Authorization: `Bearer ${localStorage.getItem("token")}`,
-            },
-          }
-        );
-        const data = await response.json();
-        setMessages(data);
-      } catch (error) {
-        console.error("Error fetching messages:", error);
-      }
-    };
+    
     fetchUserMessages();
-    fetchMessages();
 
     socket.on("receiveMessage", (message:any) => {
       setMessages((prevMessages) => [...prevMessages, message]);
@@ -78,18 +91,21 @@ export default function UserMessages() {
   const handleSendMessage = async () => {
     if (newMessage.trim() === "") return;
 
-    console.log(handleSendMessage, 'button clicked handleSendMessage');
-    console.log(newMessage, 'content of newMessage');
+    //console.log(handleSendMessage, 'button clicked handleSendMessage');
+    //console.log(newMessage, 'content of newMessage');
 
     const messageData = {
       content: newMessage,
       senderId: connectedUserId,
+      sender: {_id: connectedUserId},
       receiverId: id,
     };
 
     console.log(messageData, 'content of messageData');
 
-    console.log(connectedUserId, 'connectedUserId');
+    console.log(connectedUserId, 'senderId (connectedUserId)');
+
+    console.log(id, 'recieverId (id)');
 
     try {
       const response = await fetch(`${process.env.REACT_APP_API_URL}/messages`, {
@@ -129,7 +145,7 @@ export default function UserMessages() {
     
     if (messageData.senderId === connectedUserId) {
         messageContainer.classList.add('right');
-    } else {
+    } else if (messageData.senderId === id) {
         messageContainer.classList.add('left');
     }
     
@@ -168,19 +184,23 @@ export default function UserMessages() {
         ))}
         <div className="chat-container">
         {messages
-            .sort((a, b) => new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime())
-            .map((message) => (
+          .sort((a, b) => new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime())
+          .map((message) => {
+            console.log(message, connectedUserId, "nfdjsnfdkjsnjsdnjkfndsj");
+            return (
               <div
-                className={`message ${message.sender._id === connectedUserId ? "right" : "left"}`}
                 key={message._id}
+                className={`message ${message.sender._id === connectedUserId ? "right" : "left"}`}
               >
                 <div className="avatar">{message.sender._id === connectedUserId ? "L" : "Y"}</div>
                 <div className="bubble">
                   <p>{message.content}</p>
-                  <span className="time">{new Date(message.createdAt).toLocaleTimeString()}</span>
+                  <span className="time">{new Date(message.createdAt).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}</span>
+                  <div>{message.sender._id} et {connectedUserId} </div>
                 </div>
               </div>
-            ))}
+            );
+          })}
         </div>
         <div className="bubble-type-div">
           <input
@@ -190,7 +210,7 @@ export default function UserMessages() {
             value={newMessage}
             onChange={(e) => setNewMessage(e.target.value)}
           />
-          <button className="send-message" onClick={handleSendMessage}>Envoyer</button>
+          <button className="send-message" onClick={(e) => {handleSendMessage(); setReload(true)} }>Envoyer</button>
         </div>
       </div>
       {mutualMatches.map((user) => (

@@ -22,7 +22,7 @@ module.exports = async (req, res) => {
                 req.session.userId = userFind._id;
                 const privateKey = fs.readFileSync(path.join(appRoot.path, "private.key"));
                 const token = jwt.sign({ _id: userFind._id }, privateKey, { algorithm: 'RS256' });
-                res.status(200).json({ message: 'Connexion réussie',token:token });
+                res.status(200).json({ message: 'Connexion réussie',token:token, userId: userFind._id });
             } else {
                 console.error('Invalid password');
                 res.status(401).json({ message: 'Email ou mot de passe invalide' });

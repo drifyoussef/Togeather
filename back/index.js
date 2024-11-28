@@ -4,7 +4,7 @@ const cors = require('cors');
 const expressSession = require('express-session');
 const { paypalConfig } = require('./src/config/paypalConfig');
 const newUserController = require('./src/controllers/newUser');
-const paypal = require('./src/services/paypal-api');
+const paypal = require('./src/services/paypal-api.js');
 const storeUserController = require('./src/controllers/storeUser');
 const loginController = require('./src/controllers/login');
 const loginUserController = require('./src/controllers/loginUser');
@@ -15,7 +15,9 @@ const getUserController = require('./src/controllers/getUser');
 const getUsersController = require('./src/controllers/getUsers');
 const getUserByIdController = require('./src/controllers/getUserById');
 const likeUserController = require('./src/controllers/likeUser');
-const messagesRouter = require('./src/routes/messages'); 
+const updateUserController = require('./src/controllers/updateUser');
+const messagesRouter = require('./src/routes/messages');
+const { createOrder, successPayments } = require('./src/services/paypal-api.js');
 const Message = require('./src/models/Message');
 const http = require('http');
 const socketIo = require('socket.io');
@@ -182,35 +184,27 @@ let fetch;
     app.post('/auth/users/:id/like', authMiddleware, likeUserController);
     app.post('/messages', async (req, res) => {
         try {
-            const { sender, receiver, text } = req.body;
-            const message = new Message({ sender, receiver, text });
-            await message.save();
-            io.emit('receiveMessage', message);
-            res.json(message);
+            const { senderId, receiverId, content } = req.body;
+            const message = new Message({ sender: senderId, receiver: receiverId, content });
+            const addMessage = await message.save();
+            const messageBDD = await Message.findById(addMessage._id).populate('sender receiver');
+            io.emit('receiveMessage', messageBDD);
+            console.log(messageBDD, "MESSAGE BDD");
+            res.json(messageBDD);
         } catch (error) {
             res.status(500).json({ message: error.message });
         }
     });
 
-    app.post('/my-server/create-paypal-order', async (req, res) => {
-        try {
-            const order = await paypal.createOrder(req.body);
-            res.json(order);
-        } catch (error) {
-            res.status(500).json({ message: error.message });
-        }
+    app.post('/users/update', authMiddleware, updateUserController);
 
-    });
+    app.post('/create-paypal-order', createOrder);
 
-    app.post('/my-server/capture-paypal-order', async (req, res) => {
-        const { orderId } = req.body;
-        try {
-            const captureData = await paypal.capturePayment(orderId);
-            res.json(captureData);
-        } catch (error) {
-            res.status(500).json({ message: error.message });
-        }
 
+    app.post('/successPayments', successPayments);
+    
+    app.get('/cancelPayments', (req, res) => {
+        res.send('Payment canceled');
     });
 
     async function main() {

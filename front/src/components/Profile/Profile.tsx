@@ -2,12 +2,17 @@ import React, { useEffect, useState } from "react";
 import "./Profile.css";
 import { UserModel } from "../../models/User.model";
 import { PiUserCirclePlusFill } from "react-icons/pi";
+import { MdEdit } from "react-icons/md";
 
 const Profile: React.FC = () => {
   const [user, setUser] = useState<UserModel>();
-/*   const [inputValue, setInputValue] = useState("");
-  const [isJobEditing, setIsJobEditing] = useState(false);
-  const [isPassionsEditing, setIsPassionsEditing] = useState(false); */
+  const [isEditing, setIsEditing] = useState<{ [key: string]: boolean }>({});
+  const [inputValues, setInputValues] = useState<{ [key: string]: string }>({});
+  const [updatedField, setUpdatedField] = useState<string | null>(null);
+
+  const connectedUserId = localStorage.getItem("userId");
+
+  console.log(connectedUserId, "ID of current user");
 
   //A FAIRE L'EDIT D'INFORMATIONS NON RENTREES
 
@@ -32,23 +37,54 @@ const Profile: React.FC = () => {
       });
   }, []);
 
-  const changeSettings = () => {
-    alert("Change settings clicked");
+
+  useEffect(() => {
+    const token = localStorage.getItem("token");
+    if (updatedField && user) {
+      // Send updated data to the backend
+      fetch(`${process.env.REACT_APP_API_URL}/users/update`, {
+        method: 'POST',
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+        body: JSON.stringify({ userId: connectedUserId, [updatedField]: inputValues[updatedField] }),
+      })
+        .then((response) => response.json())
+        .then((data) => {
+          if (data.message) {
+            console.error(data.message);
+          } else {
+            setUser(data);
+          }
+        })
+        .catch((error) => {
+          console.error('Error updating user:', error);
+        })
+        .finally(() => {
+          setUpdatedField(null);
+        });
+    }
+  }, [updatedField, inputValues, user, connectedUserId]);
+
+  const toggleEdit = (field: string) => {
+    if (user) {
+      setIsEditing((prev) => ({ ...prev, [field]: !prev[field] }));
+      if (field in user) {
+        setInputValues((prev) => ({ ...prev, [field]: (user as any)[field] }));
+      }
+    }
   };
 
-/*   const handleChange = (
-    event: React.ChangeEvent<HTMLInputElement>,
-    field: string
-  ) => {
-    setInputValue(event.target.value);
-    if (field === "job") {
-      console.log(isJobEditing);
-      setIsJobEditing(true);
-    } else if (field === "passions") {
-      console.log(isPassionsEditing);
-      setIsPassionsEditing(true);
-    }
-  }; */
+  const handleChange = (event: React.ChangeEvent<HTMLInputElement>, field: string) => {
+    setInputValues((prev) => ({ ...prev, [field]: event.target.value }));
+    console.log(`Donnée ${field} changée en: ${event.target.value}`);
+  };
+
+  const handleSave = (field: string) => {
+    setUpdatedField(field);
+    setIsEditing((prev) => ({ ...prev, [field]: false }));
+    console.log(`Nouvelle Donnée ${field} a la valeur: ${inputValues[field]}`);
+  };
 
   return (
     <div className="div-profile">
@@ -58,10 +94,24 @@ const Profile: React.FC = () => {
         </div>
         <div className="profileInfo">
           {user ? (
-            <div>
+            <div className="div-informations-container">
               <div className="divFirstname">
                 <label>Prénom :</label>
-                <p className="profile">{user.firstname}</p>
+                {isEditing.firstname ? (
+                  <input
+                    type="text"
+                    value={inputValues.firstname}
+                    onChange={(e) => handleChange(e, 'firstname')}
+                    onBlur={() => handleSave('firstname')}
+                  />
+                ) : (
+                  <div className="edit-data-content">
+                  <p className="profile">
+                    {user.firstname}
+                  </p>
+                  <MdEdit className="editDataProfil" onClick={() => toggleEdit('firstname')} />
+                  </div>
+                )}
               </div>
               <div className="divName">
                 <label>Nom :</label>
@@ -101,8 +151,9 @@ const Profile: React.FC = () => {
           )}
         </div>
       </div>
-      <button className="change-settings" onClick={changeSettings}>
-        Modifier les informations
+     { /* Faire fonction pour supprimer le compte (dans controller et front).*/}
+      <button className="delete-profil">
+        Supprimer votre compte
       </button>
     </div>
   );

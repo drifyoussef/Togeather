@@ -131,13 +131,19 @@
 
 .left .bubble {
     background-color: #FF0077;
-    border-bottom-left-radius: 0;
+    text-align: left;
+    padding: 10px;
+    border-radius: 10px;
+    margin: 5px;
     color: #fff;
 }
 
 .right .bubble {
     background-color: #c7e1ff;
-    border-bottom-right-radius: 0;
+    text-align: right;
+    padding: 10px;
+    border-radius: 10px;
+    margin: 5px;
 }
 
 .message {
