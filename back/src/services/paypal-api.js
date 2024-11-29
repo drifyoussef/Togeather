@@ -39,7 +39,8 @@ const createOrder = async (req, res) => {
         console.log("Approval URL:", payment);
         if (approvalUrl) {
             const token = approvalUrl.href.split('token=')[1];
-            return res.json({ token: token });
+            console.log("Generated paymentId:", payment.id); // Log the generated paymentId
+            return res.json({ token: token, paymentId: payment.id }); // Include paymentId in the response
         } else {
             return res.status(500).json({ error: 'Approval URL not found' });
         }
@@ -47,29 +48,36 @@ const createOrder = async (req, res) => {
 };
 
 const successPayments = async (req, res) => {
-    const paymentId = req.query.paymentId;
-    const payerId = { payer_id: req.query.PayerID };
-    const sellerId = req.query.sellerId;
+    const { paymentId, PayerID, sellerId } = req.body;
 
-    try {
-        paypal.payment.execute(paymentId, payerId, async (error, payment) => {
-            if (error) {
-                console.error('Error capturing payment:', error);
-                return res.status(500).json({ message: 'Error capturing payment', error });
-            }
-            if (payment.state === 'approved') {
+    if (!paymentId || !PayerID || !sellerId) {
+        return res.status(400).json({ message: 'Missing paymentId, PayerID, or sellerId' });
+    }
+
+    console.log('Executing Payment with:', { paymentId, PayerID, sellerId });
+
+    paypal.payment.execute(paymentId, { payer_id: PayerID }, async (error, payment) => {
+        if (error) {
+            console.error('Error capturing payment:', error.response || error);
+            return res.status(500).json({ message: 'Error capturing payment', error });
+        }
+
+        console.log('Payment Response:', payment);
+
+        if (payment.state === 'approved') {
+            try {
                 await distributePayments(
                     [{ amount: payment.transactions[0].amount.total, sellerPayPalId: sellerId }],
                     res
                 );
-            } else {
-                res.status(400).json({ status: 203, message: 'Payment not approved' });
+            } catch (distributionError) {
+                console.error('Error distributing payments:', distributionError);
+                return res.status(500).json({ message: 'Error distributing payments', error: distributionError });
             }
-        });
-    } catch (error) {
-        console.error('Error handling successPayments:', error);
-        res.status(500).json({ message: 'Error processing payment', error });
-    }
+        } else {
+            return res.status(400).json({ message: 'Payment not approved', status: 203 });
+        }
+    });
 };
 
 const distributePayments = async (payments, res) => {

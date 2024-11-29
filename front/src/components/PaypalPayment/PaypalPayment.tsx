@@ -30,6 +30,7 @@ export default function PaypalPayment() {
       }
       const order = await response.json();
       console.log(order, 'order from createOrder');
+      localStorage.setItem('paymentId', order.paymentId); // Store paymentId in localStorage
       return order.token; // Return the EC-XXX token
     } catch (error) {
       console.error("Error creating order:", error);
@@ -40,13 +41,14 @@ export default function PaypalPayment() {
   const onApprove = async (data: any, actions: any) => {
     try {
       console.log("onApprove data:", data); // Add logging
+      const paymentId = localStorage.getItem('paymentId'); // Retrieve paymentId from localStorage
       const response = await fetch(`${process.env.REACT_APP_API_URL}/successPayments`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
         body: JSON.stringify({
-          paymentId: data.orderID,
+          paymentId: paymentId, // Use the stored paymentId
           PayerID: data.payerID,
           sellerId: "togeather@gmail.com", // Include sellerId in the request body
         }),
@@ -62,7 +64,7 @@ export default function PaypalPayment() {
       throw error;
     }
   };
-
+  
   return (
     <PayPalButtons
       createOrder={(data: any, actions: any) => createOrder(data, actions)}
