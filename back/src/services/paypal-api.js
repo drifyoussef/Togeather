@@ -46,58 +46,68 @@ const createOrder = async (req, res) => {
     });
 };
 
-const successPayments = (req, res) => {
+const successPayments = async (req, res) => {
     const paymentId = req.query.paymentId;
     const payerId = { payer_id: req.query.PayerID };
     const sellerId = req.query.sellerId;
-    console.log(req, "BONJOUR JE VEUX LE PAYERID");
-    paypal.payment.execute(paymentId, payerId, (error, payment) => {
-        if (error) {
-            console.error('Error capturing payment:', error);
-            return res.status(500).json({ message: 'Error capturing payment', error: error });
-        }
-        if (payment.state === 'approved') {
-            distributePayments([{ amount: payment.transactions[0].amount.total, sellerPayPalId: sellerId }], res);
-            res.json({ message: 'Payment successful and distributed' });
-        } else {
-            res.status(400).json({ status: 203, message: 'Payment not approved' });
-        }
-    });
-};
 
-const distributePayments = (payments, res) => {
-    let errorMessage = '';
-    payments.forEach(paymentDetail => {
-        const sellerPayment = {
-            amount: paymentDetail.amount,
-            sellerPayPalId: paymentDetail.sellerPayPalId,
-        };
-        const payout = {
-            sender_batch_header: {
-                sender_batch_id: Math.random().toString(36).substring(9),
-                email_subject: 'You have a payment!',
-            },
-            items: [{
-                recipient_type: 'EMAIL',
-                amount: {
-                    value: parseFloat(sellerPayment.amount).toFixed(2),
-                    currency: 'EUR',
-                },
-                receiver: sellerPayment.sellerPayPalId,
-                note: 'Congratulations on your sale!',
-                sender_item_id: 'item_1',
-            }],
-        };
-        // Create payment for seller
-        paypal.payout.create(payout, true, (error, payoutResponse) => {
+    try {
+        paypal.payment.execute(paymentId, payerId, async (error, payment) => {
             if (error) {
-                errorMessage = error;
-                return;
+                console.error('Error capturing payment:', error);
+                return res.status(500).json({ message: 'Error capturing payment', error });
+            }
+            if (payment.state === 'approved') {
+                await distributePayments(
+                    [{ amount: payment.transactions[0].amount.total, sellerPayPalId: sellerId }],
+                    res
+                );
+            } else {
+                res.status(400).json({ status: 203, message: 'Payment not approved' });
             }
         });
-    });
-    if (errorMessage) {
-        return res.status(500).json({ message: 'Error distributing payment: ', error: errorMessage });
+    } catch (error) {
+        console.error('Error handling successPayments:', error);
+        res.status(500).json({ message: 'Error processing payment', error });
+    }
+};
+
+const distributePayments = async (payments, res) => {
+    try {
+        const payoutPromises = payments.map(paymentDetail => {
+            const payout = {
+                sender_batch_header: {
+                    sender_batch_id: Math.random().toString(36).substring(9),
+                    email_subject: 'You have a payment!',
+                },
+                items: [{
+                    recipient_type: 'EMAIL',
+                    amount: {
+                        value: parseFloat(paymentDetail.amount).toFixed(2),
+                        currency: 'EUR',
+                    },
+                    receiver: paymentDetail.sellerPayPalId,
+                    note: 'Congratulations on your sale!',
+                    sender_item_id: 'item_1',
+                }],
+            };
+
+            return new Promise((resolve, reject) => {
+                paypal.payout.create(payout, true, (error, payoutResponse) => {
+                    if (error) {
+                        return reject(error);
+                    }
+                    resolve(payoutResponse);
+                });
+            });
+        });
+
+        const results = await Promise.all(payoutPromises);
+        console.log('Payout results:', results);
+        return res.json({ message: 'Payments distributed successfully', results });
+    } catch (error) {
+        console.error('Error distributing payments:', error);
+        return res.status(500).json({ message: 'Error distributing payments', error });
     }
 };
 

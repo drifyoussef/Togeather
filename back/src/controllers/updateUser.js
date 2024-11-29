@@ -2,12 +2,12 @@ const User = require('../models/User'); // Adjust the path to your User model
 
 module.exports = async (req, res) => {
     try {
-        const { connectedUserId, firstname, job, passions } = req.body;
+        const { userId, firstname, name, email, userGender, preferredGender, favoriteCategory, age, job, passions } = req.body;
 
         // Find the user by ID and update the fields
         const updatedUser = await User.findByIdAndUpdate(
-            connectedUserId,
-            { firstname, job, passions },
+            userId,
+            { firstname, name, email, userGender, preferredGender, favoriteCategory, age, job, passions },
             { new: true }
         );
 

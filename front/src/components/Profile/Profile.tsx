@@ -9,14 +9,20 @@ const Profile: React.FC = () => {
   const [isEditing, setIsEditing] = useState<{ [key: string]: boolean }>({});
   const [inputValues, setInputValues] = useState<{ [key: string]: string }>({});
   const [updatedField, setUpdatedField] = useState<string | null>(null);
+  const [reload, setReload] = useState(false);
 
   const connectedUserId = localStorage.getItem("userId");
 
   console.log(connectedUserId, "ID of current user");
 
-  //A FAIRE L'EDIT D'INFORMATIONS NON RENTREES
-
   useEffect(() => {
+    if (reload) {
+      fetchUserData();
+      setReload(false);
+    }
+  }, [reload]);
+
+  const fetchUserData = () => {
     const token = localStorage.getItem("token");
     fetch(`${process.env.REACT_APP_API_URL}/auth/user`, {
       headers: {
@@ -35,19 +41,35 @@ const Profile: React.FC = () => {
       .catch((error) => {
         console.error("Error fetching user:", error);
       });
-  }, []);
+  };
 
+  useEffect(() => {
+    fetchUserData();
+  }, []);
 
   useEffect(() => {
     const token = localStorage.getItem("token");
     if (updatedField && user) {
-      // Send updated data to the backend
+      const updatedData = {
+        userId: connectedUserId,
+        firstname: inputValues.firstname,
+        name: inputValues.name,
+        email: inputValues.email,
+        userGender: inputValues.userGender,
+        preferredGender: inputValues.preferredGender,
+        favoriteCategory: inputValues.favoriteCategory,
+        age: inputValues.age,
+        job: inputValues.job,
+        passions: inputValues.passions,
+      };
+
       fetch(`${process.env.REACT_APP_API_URL}/users/update`, {
         method: 'POST',
         headers: {
           Authorization: `Bearer ${token}`,
+          'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ userId: connectedUserId, [updatedField]: inputValues[updatedField] }),
+        body: JSON.stringify(updatedData),
       })
         .then((response) => response.json())
         .then((data) => {
@@ -62,6 +84,7 @@ const Profile: React.FC = () => {
         })
         .finally(() => {
           setUpdatedField(null);
+          setReload(true);
         });
     }
   }, [updatedField, inputValues, user, connectedUserId]);
@@ -106,44 +129,156 @@ const Profile: React.FC = () => {
                   />
                 ) : (
                   <div className="edit-data-content">
-                  <p className="profile">
-                    {user.firstname}
-                  </p>
-                  <MdEdit className="editDataProfil" onClick={() => toggleEdit('firstname')} />
+                    <p className="profile">
+                      {user.firstname}
+                    </p>
+                    <MdEdit className="editDataProfil" onClick={() => toggleEdit('firstname')} />
                   </div>
                 )}
               </div>
               <div className="divName">
                 <label>Nom :</label>
-                <p>{user.name}</p>
+                {isEditing.name ? (
+                  <input
+                    type="text"
+                    value={inputValues.name}
+                    onChange={(e) => handleChange(e, 'name')}
+                    onBlur={() => handleSave('name')}
+                  />
+                ) : (
+                  <div className="edit-data-content">
+                    <p className="profile">
+                      {user.name}
+                    </p>
+                    <MdEdit className="editDataProfil" onClick={() => toggleEdit('name')} />
+                  </div>
+                )}
               </div>
               <div className="divMail">
-                <label>Adresse mail :</label>
-                <p>{user.email}</p>
+                <label>Email :</label>
+                {isEditing.email ? (
+                  <input
+                    type="text"
+                    value={inputValues.email}
+                    onChange={(e) => handleChange(e, 'email')}
+                    onBlur={() => handleSave('email')}
+                  />
+                ) : (
+                  <div className="edit-data-content">
+                    <p className="profile">
+                      {user.email}
+                    </p>
+                    <MdEdit className="editDataProfil" onClick={() => toggleEdit('email')} />
+                  </div>
+                )}
               </div>
               <div className="divGender">
                 <label>Genre :</label>
-                <p>{user.userGender}</p>
+                {isEditing.userGender ? (
+                  <input
+                    type="text"
+                    value={inputValues.userGender}
+                    onChange={(e) => handleChange(e, 'userGender')}
+                    onBlur={() => handleSave('userGender')}
+                  />
+                ) : (
+                  <div className="edit-data-content">
+                    <p className="profile">
+                      {user.userGender}
+                    </p>
+                    <MdEdit className="editDataProfil" onClick={() => toggleEdit('userGender')} />
+                  </div>
+                )}
               </div>
               <div className="divFavGender">
                 <label>Préférence :</label>
-                <p>{user.preferredGender}</p>
+                {isEditing.preferredGender ? (
+                  <input
+                    type="text"
+                    value={inputValues.preferredGender}
+                    onChange={(e) => handleChange(e, 'preferredGender')}
+                    onBlur={() => handleSave('preferredGender')}
+                  />
+                ) : (
+                  <div className="edit-data-content">
+                    <p className="profile">
+                      {user.preferredGender}
+                    </p>
+                    <MdEdit className="editDataProfil" onClick={() => toggleEdit('preferredGender')} />
+                  </div>
+                )}
               </div>
               <div className="divFavFood">
                 <label>Nourriture favorite :</label>
-                <p>{user.favoriteCategory}</p>
+                {isEditing.favoriteCategory ? (
+                  <input
+                    type="text"
+                    value={inputValues.favoriteCategory}
+                    onChange={(e) => handleChange(e, 'favoriteCategory')}
+                    onBlur={() => handleSave('favoriteCategory')}
+                  />
+                ) : (
+                  <div className="edit-data-content">
+                    <p className="profile">
+                      {user.favoriteCategory}
+                    </p>
+                    <MdEdit className="editDataProfil" onClick={() => toggleEdit('favoriteCategory')} />
+                  </div>
+                )}
               </div>
               <div className="divAge">
                 <label>Age :</label>
-                <p>{user.age} ans</p>
+                {isEditing.age ? (
+                  <input
+                    type="text"
+                    value={inputValues.age}
+                    onChange={(e) => handleChange(e, 'age')}
+                    onBlur={() => handleSave('age')}
+                  />
+                ) : (
+                  <div className="edit-data-content">
+                    <p className="profile">
+                      {user.age}
+                    </p>
+                    <MdEdit className="editDataProfil" onClick={() => toggleEdit('age')} />
+                  </div>
+                )}
               </div>
               <div className="divJob">
                 <label>Mêtier :</label>
-                <p>{user.job || "Veuillez indiquer votre métier"}</p>
+                {isEditing.job ? (
+                  <input
+                    type="text"
+                    value={inputValues.job}
+                    onChange={(e) => handleChange(e, 'job')}
+                    onBlur={() => handleSave('job')}
+                  />
+                ) : (
+                  <div className="edit-data-content">
+                    <p className="profile">
+                      {user.job}
+                    </p>
+                    <MdEdit className="editDataProfil" onClick={() => toggleEdit('job')} />
+                  </div>
+                )}
               </div>
               <div className="divPassions">
                 <label>Passions :</label>
-                <p>{user.passions || "Veuillez indiquer vos passions"}</p>
+                {isEditing.passions ? (
+                  <input
+                    type="text"
+                    value={inputValues.passions}
+                    onChange={(e) => handleChange(e, 'passions')}
+                    onBlur={() => handleSave('passions')}
+                  />
+                ) : (
+                  <div className="edit-data-content">
+                    <p className="profile">
+                      {user.passions}
+                    </p>
+                    <MdEdit className="editDataProfil" onClick={() => toggleEdit('passions')} />
+                  </div>
+                )}
               </div>
             </div>
           ) : (
@@ -151,7 +286,6 @@ const Profile: React.FC = () => {
           )}
         </div>
       </div>
-     { /* Faire fonction pour supprimer le compte (dans controller et front).*/}
       <button className="delete-profil">
         Supprimer votre compte
       </button>
