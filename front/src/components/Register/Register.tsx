@@ -1,8 +1,14 @@
-import React, { useState, useCallback, ChangeEvent, KeyboardEvent } from "react";
+import React, {
+  useState,
+  useCallback,
+  ChangeEvent,
+  KeyboardEvent,
+} from "react";
 import { useNavigate } from "react-router-dom";
 import { registerUser } from "../../services/userService";
 import "./Register.css";
 import { RxCross2 } from "react-icons/rx";
+import { FaEdit } from "react-icons/fa";
 
 const Register: React.FC = () => {
   const [name, setName] = useState<string>("");
@@ -17,6 +23,8 @@ const Register: React.FC = () => {
   const [job, setJob] = useState<string>("");
   const [inputValue, setInputValue] = useState<string>("");
   const [passions, setPassions] = useState<string[]>([]);
+  const [imageUrl, setImageUrl] = useState<string>(""); // Add state for image URL
+  const [imageFile, setImageFile] = useState<File | null>(null); // Add state for image file
   const navigate = useNavigate();
 
   const calcAge = useCallback((birthdate: string): number => {
@@ -24,7 +32,10 @@ const Register: React.FC = () => {
     const birthDate = new Date(birthdate);
     let age = today.getFullYear() - birthDate.getFullYear();
     const monthDiff = today.getMonth() - birthDate.getMonth();
-    if (monthDiff < 0 || (monthDiff === 0 && today.getDate() < birthDate.getDate())) {
+    if (
+      monthDiff < 0 ||
+      (monthDiff === 0 && today.getDate() < birthDate.getDate())
+    ) {
       age--;
     }
     return age;
@@ -44,6 +55,7 @@ const Register: React.FC = () => {
       preferredGender,
       passions,
       favoriteCategory,
+      imageFile,
     };
 
     try {
@@ -78,39 +90,77 @@ const Register: React.FC = () => {
     setPassions(passions.filter((p) => p !== passion));
   };
 
+  const handleEditClick = () => {
+    const fileInput = document.createElement("input");
+    fileInput.type = "file";
+    fileInput.accept = "image/*";
+    fileInput.onchange = (e: any) => {
+      const file = e.target.files[0];
+      if (file) {
+        setImageFile(file); // Set image file
+        const reader = new FileReader();
+        reader.onload = (e: any) => {
+          setImageUrl(e.target.result);
+        };
+        reader.readAsDataURL(file);
+      }
+    };
+    fileInput.click();
+  };
+
   return (
     <div className="div-register">
-      <form id="userForm" onSubmit={handleSubmit}>
-        <label>
-          Nom:
-          <input
-            type="text"
-            name="name"
-            value={name}
-            onChange={(e) => setName(e.target.value)}
-            required
-          />
-        </label>
-        <label>
-          Prénom:
-          <input
-            type="text"
-            name="firstname"
-            value={firstname}
-            onChange={(e) => setFirstname(e.target.value)}
-            required
-          />
-        </label>
-        <label>
-          Email:
-          <input
-            type="email"
-            name="email"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-            required
-          />
-        </label>
+      <form id="userForm" className="register-form" onSubmit={handleSubmit}>
+        <div className="user-image">
+          {imageUrl && <img src={imageUrl} alt="User" className="user-img" />}
+          <div className="edit-button-container" onClick={handleEditClick}>
+            <FaEdit className="edit-button" />
+          </div>
+        </div>
+        <div className="name-firstname-div">
+          <label>
+            Nom:
+            <input
+              type="text"
+              name="name"
+              value={name}
+              onChange={(e) => setName(e.target.value)}
+              required
+            />
+          </label>
+          <label>
+            Prénom:
+            <input
+              type="text"
+              name="firstname"
+              value={firstname}
+              onChange={(e) => setFirstname(e.target.value)}
+              required
+            />
+          </label>
+        </div>
+        <div className="email-password-div">
+          <label>
+            Email:
+            <input
+              type="email"
+              name="email"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              required
+            />
+          </label>
+          <label>
+            Mot de passe:
+            <input
+              type="password"
+              name="password"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              required
+            />
+          </label>
+        </div>
         <label>
           Date de naissance:
           <input
@@ -118,16 +168,6 @@ const Register: React.FC = () => {
             name="age"
             value={birthdate}
             onChange={(e) => setBirthdate(e.target.value)}
-            required
-          />
-        </label>
-        <label>
-          Mot de passe:
-          <input
-            type="password"
-            name="password"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
             required
           />
         </label>
@@ -150,7 +190,9 @@ const Register: React.FC = () => {
             onChange={(e) => setFavoriteCategory(e.target.value)}
             required
           >
-            <option value="">--Veuillez choisir votre catégorie préférée--</option>
+            <option value="">
+              --Veuillez choisir votre catégorie préférée--
+            </option>
             <option value="Asiatique">Asiatique</option>
             <option value="Pizza">Pizza</option>
             <option value="Poulet">Poulet</option>
@@ -173,7 +215,8 @@ const Register: React.FC = () => {
           {passions.map((passion, index) => (
             <div key={index} className="passionTag">
               {passion}
-              <span className="remove" onClick={() => removePassion(passion)}><RxCross2 />
+              <span className="remove" onClick={() => removePassion(passion)}>
+                <RxCross2 />
               </span>
             </div>
           ))}

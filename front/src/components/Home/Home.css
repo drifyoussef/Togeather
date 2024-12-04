@@ -17,6 +17,28 @@
     transition: transform 0.3s ease;
 }
 
+.circle:hover{
+    cursor: pointer;
+    transform: scale(1.07);
+}
+
+.circle-match { 
+    width: 100px;
+    height: 100px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    -moz-border-radius: 70px; 
+    -webkit-border-radius: 70px; 
+    border-radius: 70px;
+    transition: transform 0.3s ease;
+}
+
+.circle-match:hover{
+    cursor: pointer;
+    transform: scale(1.07);
+}
+
 .user-image { 
     width: 100px;
     height: 100px;
@@ -80,11 +102,6 @@
 .icon-category{
     font-size: 48px;
     color: #fff;
-}
-
-.circle:hover{
-    cursor: pointer;
-    transform: scale(1.07);
 }
 
 .circle:hover .icon-category {

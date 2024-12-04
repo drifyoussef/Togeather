@@ -220,7 +220,7 @@ export default function Home() {
         <p className="p-match">Mes matchs</p>
         <div className="parent">
           <div className="div1">
-            <div className="circle">
+            <div className="circle-match">
               {mutualMatches.length > 0 ? (
                 mutualMatches.map((user:any) => (
                   <div

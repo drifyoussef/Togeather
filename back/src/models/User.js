@@ -6,6 +6,10 @@ var uniqueValidator = require('mongoose-unique-validator');
 const Schema = mongoose.Schema;
 
 const UserSchema = new Schema({
+  image: {
+    type: String,
+    required: [false],
+  },
   name: {
     type: String,
     required: [true, 'Veuillez rentrer votre nom']
@@ -40,15 +44,15 @@ const UserSchema = new Schema({
   },
   userGender: {
     type: String,
-    required: [true],
+    required: [true, 'Veuillez indiquer votre genre'],
   },
   preferredGender: {
     type: String,
-    required: [true],
+    required: [true, 'Veuillez indiquer le genre que vous recherchez'],
   },
   favoriteCategory: {
     type: String,
-    required: [true],
+    required: [true, 'Veuillez indiquer votre catégorie préférée'],
   },
   likedBy: [{ type: mongoose.Schema.Types.ObjectId, ref: 'User' }],
   isMutual: { type: Boolean, default: false },

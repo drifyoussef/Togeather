@@ -1,120 +1,173 @@
 .div-register {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    height: calc(100vh - 64px);
-  }
-  
-  form {
-    display: flex;
-    flex-direction: column;
-    width: 300px;
-    padding: 20px;
-    border: 1px solid #ccc;
-    border-radius: 8px;
-    background-color: #f9f9f9;
-  }
-  
-  .form-group {
-    display: flex;
-    flex-direction: column;
-    width: 100%;
-    margin-bottom: 15px;
-  }
-  
-  label {
-    display: flex;
-    flex-direction: column;
-    font-weight: bold;
-    margin-bottom: 5px;
-  }
-  
-  input[type="text"],
-  input[type="email"],
-  input[type="date"],
-  input[type="password"] {
-    width: 100%;
-    padding: 8px;
-    margin-top: 5px;
-    border: 1px solid #ccc;
-    border-radius: 4px;
-    box-sizing: border-box;
-  }
-  
-  button {
-    margin-top: 16px;
-    width: 100%;
-    padding: 10px;
-    border: none;
-    border-radius: 4px;
-    background-color: #FF0077;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-top: 32px;
+}
+
+.register-form {
+  display: flex;
+  flex-direction: column;
+  width: 400px;
+  padding: 20px;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  background-color: #f9f9f9;
+}
+
+.form-group {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  margin-bottom: 15px;
+}
+
+label {
+  display: flex;
+  flex-direction: column;
+  font-weight: bold;
+  margin-bottom: 5px;
+}
+
+input[type="text"],
+input[type="email"],
+input[type="date"],
+input[type="password"] {
+  width: 100%;
+  padding: 8px;
+  margin-top: 5px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  box-sizing: border-box;
+}
+
+button {
+  margin-top: 16px;
+  width: 100%;
+  padding: 10px;
+  border: none;
+  border-radius: 4px;
+  background-color: #FF0077;
+  color: white;
+  font-size: 16px;
+  cursor: pointer;
+}
+
+button:hover {
+  background-color: #a5004d;
+}
+
+.labelInputs, .labelInputsSeen{
+  display: flex;
+  place-content: space-evenly;
+}
+
+.genderLabel{
+  margin-top: 8px;
+  margin-bottom: 8px;
+  font-weight: bold;
+}
+
+input[type="radio"] {
+  margin-top: 8px;
+  appearance: none;
+  width: 20px;
+  height: 20px;
+  border: 2px solid #FF0077;
+  border-radius: 50%;
+  outline: none;
+  cursor: pointer;
+  position: relative;
+  align-self: center;
+}
+
+input[type="radio"]:checked::before {
+  content: '';
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  background-color: #FF0077;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+
+input[type="radio"]:hover {
+  border-color: #FF0077;
+}
+
+.favoriteCategory{
+  margin-top: 8px;
+}
+
+.passionTag{
+  background-color: #FF0077;
+  color: #fff;
+  width: fit-content;
+  padding: 8px;
+  margin-top: 8px;
+  border-radius: 50px;
+}
+
+.remove:hover{
+  cursor: pointer;
+}
+
+.passionContainer{
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.name-firstname-div, .email-password-div{
+  display: flex;
+  place-content: space-between;
+}
+
+.user-image{
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: gray;
+  width: 100px;
+  height: 100px;
+  border-radius: 50%;
+  margin-bottom: 16px;
+  align-self: center;
+  position: relative; /* Add this */
+}
+
+.user-img {
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  object-fit: cover;
+}
+
+.edit-button-container {
+  position: absolute;
+  top: 0;
+  right: 0;
+  background-color: white;
+  border-radius: 50%;
+  padding: 4px;
+  cursor: pointer;
+  width: 20px;
+  height: 20px;
+  text-align: center;
+  transition: background-color 0.3s ease;
+}
+
+.edit-button {
+  color: #FF0077;
+  transition: color 0.3s ease;
+}
+
+.edit-button-container:hover {
+  background-color: #FF0077;
+  .edit-button {
     color: white;
-    font-size: 16px;
-    cursor: pointer;
   }
-  
-  button:hover {
-    background-color: #a5004d;
-  }
+}
 
-  .labelInputs, .labelInputsSeen{
-    display: flex;
-    place-content: space-evenly;
-  }
-  
-  .genderLabel{
-    margin-top: 8px;
-    margin-bottom: 8px;
-    font-weight: bold;
-  }
-
-  input[type="radio"] {
-    margin-top: 8px;
-    appearance: none;
-    width: 20px;
-    height: 20px;
-    border: 2px solid #FF0077;
-    border-radius: 50%;
-    outline: none;
-    cursor: pointer;
-    position: relative;
-    align-self: center;
-  }
-  
-  input[type="radio"]:checked::before {
-    content: '';
-    width: 12px;
-    height: 12px;
-    border-radius: 50%;
-    background-color: #FF0077;
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-  }
-  
-  input[type="radio"]:hover {
-    border-color: #FF0077;
-  }
-
-  .favoriteCategory{
-    margin-top: 8px;
-  }
-
-  .passionTag{
-    background-color: #FF0077;
-    color: #fff;
-    width: fit-content;
-    padding: 8px;
-    margin-top: 8px;
-    border-radius: 50px;
-  }
-
-  .remove:hover{
-    cursor: pointer;
-  }
-
-  .passionContainer{
-    display: flex;
-    gap: 8px;
-  }
