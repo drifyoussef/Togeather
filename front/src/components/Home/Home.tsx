@@ -202,8 +202,12 @@ export default function Home() {
                     {getGenderSubcategory(user.preferredGender)}
                   </>
                 }
+                imageUrl={
+                  user.imageUrl ||
+                  "https://www.gravatar.com/avatar?d=mp&s=200"
+                } // Default image if not available
                 image={
-                  user.image ||
+                  user.imageUrl ||
                   "https://www.gravatar.com/avatar?d=mp&s=200"
                 } // Default image if not available
                 text={`${user.firstname}, ${user.age} ans`}
@@ -230,7 +234,7 @@ export default function Home() {
                   >
                     <img
                       src={
-                        user.image ||
+                        user.imageUrl ||
                         "https://www.gravatar.com/avatar?d=mp&s=200"
                       }
                       alt={`${user.firstname}'s avatar`}

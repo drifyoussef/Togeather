@@ -64,6 +64,10 @@
     margin: 16px;
 }
 
+.profileImage{
+    margin-bottom: 32px;
+}
+
 .profileImageIcon{
     font-size: 104px;
     color: #FF0077;

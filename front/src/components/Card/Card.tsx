@@ -10,6 +10,7 @@ import { RiDrinks2Fill } from "react-icons/ri";
 type Category = 'Asiatique' | 'Pizza' | 'Poulet' | 'Sandwich' | 'Mexicain' | 'Burger' | 'Glaces' | 'Boissons';
 
 interface CardProps {
+  imageUrl: string;
   category: Category;
   subcategory: React.ReactNode;
   image: string;
@@ -32,7 +33,7 @@ const categoryIcons: Record<Category, React.ReactElement> = {
 export default function Card({
   category,
   subcategory,
-  image,
+  imageUrl,
   text,
   job,
   id,
@@ -45,7 +46,7 @@ export default function Card({
 
   return (
     <div className="card" onClick={handleClick}>
-      <img src={image} alt="person" className="card-image" />
+      <img src={imageUrl} alt="person" className="card-image" />
       <div className="card-content">
         <div className="card-container">
           <p className="card-text">{text}</p>
