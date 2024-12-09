@@ -4,7 +4,6 @@ import React, {
   ChangeEvent,
   KeyboardEvent,
 } from "react";
-import { useNavigate } from "react-router-dom";
 import { registerUser } from "../../services/userService";
 import "./Register.css";
 import { RxCross2 } from "react-icons/rx";
@@ -25,7 +24,6 @@ const Register: React.FC = () => {
   const [passions, setPassions] = useState<string[]>([]);
   const [imageUrl, setImageUrl] = useState<string>(""); // Add state for image URL
   const [imageFile, setImageFile] = useState<File | null>(null); // Add state for image file
-  const navigate = useNavigate();
 
   const calcAge = useCallback((birthdate: string): number => {
     const today = new Date();
@@ -41,27 +39,54 @@ const Register: React.FC = () => {
     return age;
   }, []);
 
-  const handleSubmit = async (event: React.FormEvent) => {
+  const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     const age = calcAge(birthdate);
-    const userData = {
-      name,
-      firstname,
-      email,
-      age,
-      password,
-      userGender,
-      job,
-      preferredGender,
-      passions,
-      favoriteCategory,
-      imageFile,
-    };
+    if (age < 18) {
+      setError("Vous devez avoir au moins 18 ans pour vous inscrire.");
+      return;
+    }
+
+    if (!imageFile) {
+      console.error("No file selected");
+      return;
+    }
+
+    const formData = new FormData();
+    formData.append("file", imageFile);
+   
 
     try {
+      // Upload the image first
+      const imageResponse = await fetch( `${process.env.REACT_APP_API_URL}/upload`, {
+        method: "POST",
+        body: formData,
+        headers: {
+          content: "multipart/form-data",
+        },
+      });
+      const result = await imageResponse.text();
+      console.log(result);
+
+      // Prepare user data with the uploaded image URL
+      const userData = {
+        imageUrl,
+        name,
+        firstname,
+        email,
+        age,
+        password,
+        userGender,
+        job,
+        preferredGender,
+        passions,
+        favoriteCategory,
+      };
+
+      // Register the user
       const response = await registerUser(userData);
       console.log("User registered successfully:", response);
-      navigate("/");
+      //navigate("/");
     } catch (error) {
       console.error("Error registering user:", error);
       setError("An error occurred during registration.");
@@ -110,7 +135,12 @@ const Register: React.FC = () => {
 
   return (
     <div className="div-register">
-      <form id="userForm" className="register-form" onSubmit={handleSubmit}>
+      <form
+        id="userForm"
+        className="register-form"
+        onSubmit={handleSubmit}
+        encType="multipart/form-data"
+      >
         <div className="user-image">
           {imageUrl && <img src={imageUrl} alt="User" className="user-img" />}
           <div className="edit-button-container" onClick={handleEditClick}>

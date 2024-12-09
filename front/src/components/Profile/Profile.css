@@ -79,3 +79,37 @@
     display: flex;
     gap: 8px;
 }
+
+.user-img-profile-container {
+    position: relative;
+    display: inline-block;
+  }
+  
+  .edit-button-container-profile {
+    position: absolute;
+    top: 16px;
+    right: 16px;
+    background-color: #fff;
+    border: 1px solid #FF0077;
+    border-radius: 50%;
+    padding: 5px;
+    cursor: pointer;
+    width: 20px;
+    height: 20px;
+    text-align: center;
+    transition: background-color 0.3s ease;
+  }
+
+  .edit-button-container-profile:hover {
+    background-color: #FF0077;
+    .edit-button {
+      color: white;
+    }
+  }
+
+.user-img-profile {
+    width: 200px;
+    height: 200px;
+    border-radius: 50%;
+    object-fit: cover;
+}

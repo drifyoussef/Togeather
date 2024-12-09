@@ -2,6 +2,8 @@ const express = require('express');
 const mongoose = require('mongoose');
 const cors = require('cors');
 const expressSession = require('express-session');
+const multer = require('multer');
+const path = require('path');
 const { paypalConfig } = require('./src/config/paypalConfig');
 const newUserController = require('./src/controllers/newUser');
 const paypal = require('./src/services/paypal-api.js');
@@ -178,6 +180,40 @@ let fetch;
             res.status(500).json({ error: error.message });
         }
     });
+
+    const storage = multer.diskStorage({
+        destination: (req, file, cb) => {
+            console.log(path.join(__dirname, 'uploads'), "PATH JOIN");
+            cb(null, (path.join(__dirname, 'uploads')));
+        },
+        filename: (req, file, cb) => {
+            console.log(file, "FILE");
+          cb(null, file.fieldname + '-' + Date.now() + path.extname(file.originalname));
+        }
+    });
+      
+      // Initialize upload
+    const upload = multer({ storage: storage });
+      
+      // Serve static files from the uploads folder
+      app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
+
+      // Upload endpoint
+      app.post('/upload', upload.single('file'), (req, res) => {
+        console.log(req.file, "REQ FILE");
+          if (!req.file) {
+              return res.status(400).send('No file uploaded.');
+          }
+          res.json({ imageUrl: `/uploads/${req.file.filename}` });
+      });
+
+      app.get('/uploads/:filename', (req, res) => {
+        res.sendFile(path.join(__dirname, `uploads/${req.params.filename}`));
+    });
+
+
+    //http://localhost:4000/uploads/file-1733443004501.jpg
+
 
     app.post('/users/register', redirectIfAuthenticatedMiddleware, storeUserController);
     app.post('/users/login', redirectIfAuthenticatedMiddleware, loginUserController);

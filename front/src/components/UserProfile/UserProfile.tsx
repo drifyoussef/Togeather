@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { useParams } from 'react-router-dom';
+import { useLocation, useParams } from 'react-router-dom';
 import { FaHeart } from "react-icons/fa";
 import { UserModel } from '../../models/User.model';
 import './UserProfile.css';
@@ -8,6 +8,8 @@ const UserProfile: React.FC = () => {
   const { id } = useParams<{ id: string }>();
   const [user, setUser] = useState<UserModel | null>(null);
   const [liked, setLiked] = useState(false);
+  const location = useLocation();
+  const { imageUrl } = location.state || { imageUrl: "" };
 
   useEffect(() => {
     const token = localStorage.getItem('token');
@@ -86,10 +88,7 @@ const UserProfile: React.FC = () => {
   return (
     <div className="user-profile">
       <h1>{user.firstname} {user.name}</h1>
-      <img
-        src={user.image || "https://architecture.ou.edu/wp-content/uploads/2018/07/ANGELAPERSON-1447-300x300.jpg"}
-        alt="User profile"
-      />
+        {imageUrl && <img src={imageUrl} alt="User Profile" />}
       <div>
         <div className="divGender">
           <label>Genre :</label>

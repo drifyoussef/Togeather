@@ -204,7 +204,7 @@ export default function Home() {
                 }
                 image={
                   user.image ||
-                  "https://architecture.ou.edu/wp-content/uploads/2018/07/ANGELAPERSON-1447-300x300.jpg"
+                  "https://www.gravatar.com/avatar?d=mp&s=200"
                 } // Default image if not available
                 text={`${user.firstname}, ${user.age} ans`}
                 job={user.job}
@@ -231,7 +231,7 @@ export default function Home() {
                     <img
                       src={
                         user.image ||
-                        "https://architecture.ou.edu/wp-content/uploads/2018/07/ANGELAPERSON-1447-300x300.jpg"
+                        "https://www.gravatar.com/avatar?d=mp&s=200"
                       }
                       alt={`${user.firstname}'s avatar`}
                       className="user-image"

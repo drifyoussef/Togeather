@@ -1,4 +1,5 @@
 module.exports = (req, res) => {
+    var imageUrl = ""
     var name = ""
     var firstname = ""
     var email = ""
@@ -6,6 +7,7 @@ module.exports = (req, res) => {
     var password = ""
     const data = req.flash('data')[0];
     if (typeof data != "undefined") {
+        imageUrl = data.imageUrl,
         name = data.name,
         firstname = data.firstname,
         email = data.email,
@@ -14,6 +16,7 @@ module.exports = (req, res) => {
     }
     res.redirect('/auth/register', {
         errors: req.flash('validationErrors'),
+        imageUrl: imageUrl,
         name: name,
         firstname: firstname,
         email: email,

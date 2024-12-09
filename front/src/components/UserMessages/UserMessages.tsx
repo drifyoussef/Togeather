@@ -195,8 +195,7 @@ export default function UserMessages() {
                 <div className="avatar">{message.sender._id === connectedUserId ? "L" : "Y"}</div>
                 <div className="bubble">
                   <p>{message.content}</p>
-                  <span className="time">{new Date(message.createdAt).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}</span>
-                  <div>{message.sender._id} et {connectedUserId} </div>
+                  <span className="time">Message de {message.sender.firstname} à {new Date(message.createdAt).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}</span>
                 </div>
               </div>
             );
