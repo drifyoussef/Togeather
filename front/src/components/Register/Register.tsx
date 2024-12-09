@@ -8,8 +8,10 @@ import { registerUser } from "../../services/userService";
 import "./Register.css";
 import { RxCross2 } from "react-icons/rx";
 import { FaEdit } from "react-icons/fa";
+import { useNavigate } from "react-router-dom";
 
 const Register: React.FC = () => {
+  const navigate = useNavigate();
   const [name, setName] = useState<string>("");
   const [firstname, setFirstname] = useState<string>("");
   const [email, setEmail] = useState<string>("");
@@ -86,7 +88,7 @@ const Register: React.FC = () => {
       // Register the user
       const response = await registerUser(userData);
       console.log("User registered successfully:", response);
-      //navigate("/");
+      navigate("/");
     } catch (error) {
       console.error("Error registering user:", error);
       setError("An error occurred during registration.");
