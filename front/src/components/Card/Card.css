@@ -6,6 +6,9 @@
     height: 283px;
     overflow: hidden;
     transition: transform 0.3s ease;
+    display: inline-block;
+    margin-left: 32px;
+    margin-top: 4px;
 }
 
 .card:hover {
@@ -16,7 +19,8 @@
   
 .card-image {
     width: 100%;
-    height: auto;
+    height: 60%;
+    object-fit: scale-down;
 }
   
 .card-content {

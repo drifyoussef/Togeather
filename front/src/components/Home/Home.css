@@ -48,9 +48,10 @@
 }
 
 .div-card {
-    display: flex;
-    place-content: space-evenly;
-    flex-wrap: wrap;
+    overflow-x: auto;
+    white-space: nowrap;
+    overflow-y: hidden;
+    gap: 16px;
 }
 
 .p1-home{

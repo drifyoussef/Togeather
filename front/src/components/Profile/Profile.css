@@ -65,13 +65,14 @@
 }
 
 .profileImage{
-    margin-bottom: 32px;
+    margin-bottom: 16px;
 }
 
 .profileImageIcon{
     font-size: 104px;
     color: #FF0077;
     margin: 16px;
+    border-radius: 50%;
 }
 
 .profileImageIcon:hover{
@@ -91,8 +92,8 @@
   
   .edit-button-container-profile {
     position: absolute;
-    top: 16px;
-    right: 16px;
+    top: 32px;
+    right: 32px;
     background-color: #fff;
     border: 1px solid #FF0077;
     border-radius: 50%;
