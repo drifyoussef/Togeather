@@ -51,7 +51,8 @@
     overflow-x: auto;
     white-space: nowrap;
     overflow-y: hidden;
-    gap: 16px;
+    padding-top: 16px;
+    padding-bottom: 16px;
 }
 
 .p1-home{
