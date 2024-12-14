@@ -13,4 +13,5 @@ export interface UserModel {
   favoriteCategory: string;
   image?: string;
   isMutual?: boolean;
+  isEmailConfirmed: boolean;
 }

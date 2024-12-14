@@ -2,6 +2,10 @@ const mongoose = require('mongoose');
 const validator = require('validator');
 const bcrypt = require('bcryptjs');
 var uniqueValidator = require('mongoose-unique-validator');
+const { Resend } = require('resend');
+
+
+const resend = new Resend(`${process.env.RESEND_API_KEY}`);
 
 const Schema = mongoose.Schema;
 
@@ -26,6 +30,10 @@ const UserSchema = new Schema({
       validator: validator.isEmail,
       message: 'Veuillez rentrer une adresse mail valide'
     }
+  },
+  isEmailConfirmed: {
+    type: Boolean,
+    default: false,
   },
   age: {
     type: Number,
@@ -68,6 +76,20 @@ UserSchema.pre('save', async function (next) {
   }
   next();
 });
+
+UserSchema.methods.resendConfirmationEmail = async function () {
+  try {
+    await resend.emails.send({
+      from: 'imredzcsgo@gmail.com',
+      to: this.email,
+      subject: 'Please confirm your email address',
+      html: `<p>Click <a href="https://localhost:300/confirm-email?token=${this._id}">here</a> to confirm your email address.</p>`,
+    });
+    console.log(`Confirmation email sent to ${this.email}`);
+  } catch (error) {
+    console.error('Error sending confirmation email:', error);
+  }
+};
 
 const User = mongoose.model('User', UserSchema);
 

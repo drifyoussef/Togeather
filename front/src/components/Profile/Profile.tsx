@@ -15,7 +15,7 @@ const Profile: React.FC = () => {
 
   const connectedUserId = localStorage.getItem("userId");
 
-  console.log(connectedUserId, "ID of current user");
+  //console.log(connectedUserId, "ID of current user");
 
   useEffect(() => {
     if (reload) {
@@ -39,6 +39,7 @@ const Profile: React.FC = () => {
         } else {
           setUser(data);
           setImageUrl(data.imageUrl);
+          console.log(data.imageUrl, "DATA IMAGE URL");
         }
       })
       .catch((error) => {
@@ -107,41 +108,24 @@ const Profile: React.FC = () => {
     field: string
   ) => {
     setInputValues((prev) => ({ ...prev, [field]: event.target.value }));
-    console.log(`Donnée ${field} changée en: ${event.target.value}`);
+    //console.log(`Donnée ${field} changée en: ${event.target.value}`);
   };
 
   const handleSave = (field: string) => {
     setUpdatedField(field);
     setIsEditing((prev) => ({ ...prev, [field]: false }));
-    console.log(`Nouvelle Donnée ${field} a la valeur: ${inputValues[field]}`);
+    //console.log(`Nouvelle Donnée ${field} a la valeur: ${inputValues[field]}`);
   };
 
-  const handleEditClick = () => {
-    const fileInput = document.createElement("input");
-    fileInput.type = "file";
-    fileInput.accept = "image/*";
-    fileInput.onchange = (e: any) => {
-      const file = e.target.files[0];
-      if (file) {
-        setImageFile(file); // Set image file
-        const reader = new FileReader();
-        reader.onload = (e: any) => {
-          setImageUrl(e.target.result);
-        };
-        reader.readAsDataURL(file);
-      }
-    };
-    fileInput.click();
-  };
-
-  const handleImageUpload = async () => {
-    if (!imageFile) {
+  const handleImageUpload = async (file: File) => {
+    console.log("File :", file);
+    if (!file) {
       console.error("No file selected");
       return;
     }
 
     const formData = new FormData();
-    formData.append("file", imageFile);
+    formData.append("file", file);
 
     try {
       const imageResponse = await fetch(
@@ -153,10 +137,45 @@ const Profile: React.FC = () => {
       );
       const result = await imageResponse.json();
       setImageUrl(result.imageUrl);
+      // Update the user's imageUrl in the backend
+      const token = localStorage.getItem("token");
+      const updatedData = {
+        userId: connectedUserId,
+        imageUrl: result.imageUrl,
+      };
+
+      await fetch(`${process.env.REACT_APP_API_URL}/users/update`, {
+        method: "POST",
+        headers: {
+          Authorization: `Bearer ${token}`,
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(updatedData),
+      });
+
       setUpdatedField("imageUrl");
     } catch (error) {
       console.error("Error uploading image:", error);
     }
+  };
+
+  const handleEditClick = () => {
+    const fileInput = document.createElement("input");
+    fileInput.type = "file";
+    fileInput.accept = "image/*";
+    fileInput.onchange = (e: any) => {
+      const file = e.target.files[0];
+      if (file) {
+        setImageFile(file); // Set image file
+        handleImageUpload(file);
+        const reader = new FileReader();
+        reader.onload = (e: any) => {
+          setImageUrl(e.target.result);
+        };
+        reader.readAsDataURL(file);
+      }
+    };
+    fileInput.click();
   };
 
   return (
@@ -164,23 +183,30 @@ const Profile: React.FC = () => {
       <div className="profileCard">
         <div className="profileImage">
           {imageUrl ? (
+            //console.log(imageUrl, "image url"),
             <div className="user-img-profile-container">
-            <img src={imageUrl} alt="User" className="user-img-profile" />
-            <div className="edit-button-container-profile" onClick={handleEditClick}>
-              <FaEdit className="edit-button" />
+              <img src={`${process.env.REACT_APP_API_URL}/${imageUrl}`} alt="User" className="user-img-profile" />
+              <div
+                className="edit-button-container-profile"
+                onClick={handleEditClick}
+              >
+                <FaEdit className="edit-button" />
+              </div>
             </div>
-          </div>
           ) : (
             <div className="user-img-profile-container">
-            <img
-              src="https://www.gravatar.com/avatar?d=mp&s=200"
-              alt="default-userimage"
-              className="profileImageIcon"
-            />
-            <div className="edit-button-container-profile" onClick={handleEditClick}>
-              <FaEdit className="edit-button" />
+              <img
+                src="https://www.gravatar.com/avatar?d=mp&s=200"
+                alt="default-userimage"
+                className="profileImageIcon"
+              />
+              <div
+                className="edit-button-container-profile"
+                onClick={handleEditClick}
+              >
+                <FaEdit className="edit-button" />
+              </div>
             </div>
-          </div>
           )}
         </div>
         <div className="profileInfo">

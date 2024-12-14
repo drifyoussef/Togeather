@@ -11,6 +11,10 @@
     margin-top: 4px;
 }
 
+.card:nth-last-child(1) {
+    margin-right: 32px;
+}
+
 .card:hover {
     transform: scale(1.07);
     cursor: pointer;

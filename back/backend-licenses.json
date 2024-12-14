@@ -1,0 +1,142 @@
+{
+  "app-root-path@3.1.0": {
+    "licenses": "MIT",
+    "repository": "https://github.com/inxilpro/node-app-root-path",
+    "publisher": "Chris Morrell",
+    "email": "http://cmorrell.com",
+    "path": "C:\\Users\\youss\\Desktop\\Togeather\\back\\node_modules\\app-root-path",
+    "licenseFile": "C:\\Users\\youss\\Desktop\\Togeather\\back\\node_modules\\app-root-path\\LICENSE"
+  },
+  "bcryptjs@2.4.3": {
+    "licenses": "MIT",
+    "repository": "https://github.com/dcodeIO/bcrypt.js",
+    "publisher": "Daniel Wirtz",
+    "email": "dcode@dcode.io",
+    "path": "C:\\Users\\youss\\Desktop\\Togeather\\back\\node_modules\\bcryptjs",
+    "licenseFile": "C:\\Users\\youss\\Desktop\\Togeather\\back\\node_modules\\bcryptjs\\LICENSE"
+  },
+  "cors@2.8.5": {
+    "licenses": "MIT",
+    "repository": "https://github.com/expressjs/cors",
+    "publisher": "Troy Goode",
+    "email": "troygoode@gmail.com",
+    "url": "https://github.com/troygoode/",
+    "path": "C:\\Users\\youss\\Desktop\\Togeather\\back\\node_modules\\cors",
+    "licenseFile": "C:\\Users\\youss\\Desktop\\Togeather\\back\\node_modules\\cors\\LICENSE"
+  },
+  "dotenv@16.4.5": {
+    "licenses": "BSD-2-Clause",
+    "repository": "https://github.com/motdotla/dotenv",
+    "path": "C:\\Users\\youss\\Desktop\\Togeather\\back\\node_modules\\dotenv",
+    "licenseFile": "C:\\Users\\youss\\Desktop\\Togeather\\back\\node_modules\\dotenv\\LICENSE"
+  },
+  "express-session@1.18.0": {
+    "licenses": "MIT",
+    "repository": "https://github.com/expressjs/session",
+    "publisher": "TJ Holowaychuk",
+    "email": "tj@vision-media.ca",
+    "url": "http://tjholowaychuk.com",
+    "path": "C:\\Users\\youss\\Desktop\\Togeather\\back\\node_modules\\express-session",
+    "licenseFile": "C:\\Users\\youss\\Desktop\\Togeather\\back\\node_modules\\express-session\\LICENSE"
+  },
+  "express@4.19.2": {
+    "licenses": "MIT",
+    "repository": "https://github.com/expressjs/express",
+    "publisher": "TJ Holowaychuk",
+    "email": "tj@vision-media.ca",
+    "path": "C:\\Users\\youss\\Desktop\\Togeather\\back\\node_modules\\express",
+    "licenseFile": "C:\\Users\\youss\\Desktop\\Togeather\\back\\node_modules\\express\\LICENSE"
+  },
+  "jsonwebtoken@9.0.2": {
+    "licenses": "MIT",
+    "repository": "https://github.com/auth0/node-jsonwebtoken",
+    "publisher": "auth0",
+    "path": "C:\\Users\\youss\\Desktop\\Togeather\\back\\node_modules\\jsonwebtoken",
+    "licenseFile": "C:\\Users\\youss\\Desktop\\Togeather\\back\\node_modules\\jsonwebtoken\\LICENSE"
+  },
+  "license-checker@25.0.1": {
+    "licenses": "BSD-3-Clause",
+    "repository": "https://github.com/davglass/license-checker",
+    "publisher": "Dav Glass",
+    "email": "davglass@gmail.com",
+    "path": "C:\\Users\\youss\\Desktop\\Togeather\\back\\node_modules\\license-checker",
+    "licenseFile": "C:\\Users\\youss\\Desktop\\Togeather\\back\\node_modules\\license-checker\\LICENSE"
+  },
+  "mongoose-unique-validator@5.0.1": {
+    "licenses": "MIT",
+    "repository": "https://github.com/mongoose-unique-validator/mongoose-unique-validator",
+    "publisher": "Blake Haswell",
+    "email": "haswell00@gmail.com",
+    "url": "http://blakehaswell.com/",
+    "path": "C:\\Users\\youss\\Desktop\\Togeather\\back\\node_modules\\mongoose-unique-validator",
+    "licenseFile": "C:\\Users\\youss\\Desktop\\Togeather\\back\\node_modules\\mongoose-unique-validator\\README.md"
+  },
+  "mongoose@8.4.1": {
+    "licenses": "MIT",
+    "repository": "https://github.com/Automattic/mongoose",
+    "publisher": "Guillermo Rauch",
+    "email": "guillermo@learnboost.com",
+    "path": "C:\\Users\\youss\\Desktop\\Togeather\\back\\node_modules\\mongoose",
+    "licenseFile": "C:\\Users\\youss\\Desktop\\Togeather\\back\\node_modules\\mongoose\\LICENSE.md"
+  },
+  "multer@1.4.5-lts.1": {
+    "licenses": "MIT",
+    "repository": "https://github.com/expressjs/multer",
+    "path": "C:\\Users\\youss\\Desktop\\Togeather\\back\\node_modules\\multer",
+    "licenseFile": "C:\\Users\\youss\\Desktop\\Togeather\\back\\node_modules\\multer\\LICENSE"
+  },
+  "node-fetch@3.3.2": {
+    "licenses": "MIT",
+    "repository": "https://github.com/node-fetch/node-fetch",
+    "publisher": "David Frank",
+    "path": "C:\\Users\\youss\\Desktop\\Togeather\\back\\node_modules\\node-fetch",
+    "licenseFile": "C:\\Users\\youss\\Desktop\\Togeather\\back\\node_modules\\node-fetch\\LICENSE.md"
+  },
+  "paypal-rest-sdk@1.8.1": {
+    "licenses": "Custom: https://travis-ci.org/paypal/PayPal-node-SDK.svg",
+    "repository": "https://github.com/paypal/PayPal-node-SDK",
+    "publisher": "PayPal",
+    "email": "DL-PP-NODEJS-SDK@paypal.com",
+    "url": "https://developer.paypal.com/",
+    "path": "C:\\Users\\youss\\Desktop\\Togeather\\back\\node_modules\\paypal-rest-sdk",
+    "licenseFile": "C:\\Users\\youss\\Desktop\\Togeather\\back\\node_modules\\paypal-rest-sdk\\LICENSE"
+  },
+  "resend@4.0.1": {
+    "licenses": "MIT",
+    "repository": "https://github.com/resendlabs/resend-node",
+    "path": "C:\\Users\\youss\\Desktop\\Togeather\\back\\node_modules\\resend",
+    "licenseFile": "C:\\Users\\youss\\Desktop\\Togeather\\back\\node_modules\\resend\\LICENSE"
+  },
+  "socket.io-adapter@2.5.5": {
+    "licenses": "MIT",
+    "repository": "https://github.com/socketio/socket.io-adapter",
+    "path": "C:\\Users\\youss\\Desktop\\Togeather\\back\\node_modules\\socket.io-adapter",
+    "licenseFile": "C:\\Users\\youss\\Desktop\\Togeather\\back\\node_modules\\socket.io-adapter\\LICENSE"
+  },
+  "socket.io-client@4.8.1": {
+    "licenses": "MIT",
+    "repository": "https://github.com/socketio/socket.io",
+    "path": "C:\\Users\\youss\\Desktop\\Togeather\\back\\node_modules\\socket.io-client",
+    "licenseFile": "C:\\Users\\youss\\Desktop\\Togeather\\back\\node_modules\\socket.io-client\\LICENSE"
+  },
+  "socket.io-parser@4.2.4": {
+    "licenses": "MIT",
+    "repository": "https://github.com/socketio/socket.io-parser",
+    "path": "C:\\Users\\youss\\Desktop\\Togeather\\back\\node_modules\\socket.io-parser",
+    "licenseFile": "C:\\Users\\youss\\Desktop\\Togeather\\back\\node_modules\\socket.io-parser\\LICENSE"
+  },
+  "socket.io@4.8.1": {
+    "licenses": "MIT",
+    "repository": "https://github.com/socketio/socket.io",
+    "path": "C:\\Users\\youss\\Desktop\\Togeather\\back\\node_modules\\socket.io",
+    "licenseFile": "C:\\Users\\youss\\Desktop\\Togeather\\back\\node_modules\\socket.io\\LICENSE"
+  },
+  "validator@13.12.0": {
+    "licenses": "MIT",
+    "repository": "https://github.com/validatorjs/validator.js",
+    "publisher": "Chris O'Hara",
+    "email": "cohara87@gmail.com",
+    "path": "C:\\Users\\youss\\Desktop\\Togeather\\back\\node_modules\\validator",
+    "licenseFile": "C:\\Users\\youss\\Desktop\\Togeather\\back\\node_modules\\validator\\LICENSE"
+  }
+}

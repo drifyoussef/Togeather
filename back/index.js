@@ -7,6 +7,7 @@ const path = require('path');
 const { paypalConfig } = require('./src/config/paypalConfig');
 const newUserController = require('./src/controllers/newUser');
 const paypal = require('./src/services/paypal-api.js');
+const bodyParser = require('body-parser'); // Import body-parser
 const storeUserController = require('./src/controllers/storeUser');
 const loginController = require('./src/controllers/login');
 const loginUserController = require('./src/controllers/loginUser');
@@ -19,6 +20,7 @@ const getUserByIdController = require('./src/controllers/getUserById');
 const likeUserController = require('./src/controllers/likeUser');
 const updateUserController = require('./src/controllers/updateUser');
 const messagesRouter = require('./src/routes/messages');
+const User = require('./src/models/User');
 const { createOrder, successPayments } = require('./src/services/paypal-api.js');
 const Message = require('./src/models/Message');
 const http = require('http');
@@ -50,6 +52,10 @@ let fetch;
           console.log('Client disconnected');
         });
     });
+
+       // Increase the limit for the request body size
+       app.use(bodyParser.json({ limit: '50mb' }));
+       app.use(bodyParser.urlencoded({ limit: '50mb', extended: true }));
 
     app.use(express.json());
     app.use(cors());
@@ -183,8 +189,8 @@ let fetch;
 
     const storage = multer.diskStorage({
         destination: (req, file, cb) => {
-            console.log(path.join(__dirname, 'uploads'), "PATH JOIN");
-            cb(null, (path.join(__dirname, 'uploads')));
+            console.log(path.join(__dirname, 'src/uploads'), "PATH JOIN");
+            cb(null, (path.join(__dirname, 'src/uploads')));
         },
         filename: (req, file, cb) => {
             console.log(file, "FILE");
@@ -196,7 +202,6 @@ let fetch;
     const upload = multer({ storage: storage });
       
       // Serve static files from the uploads folder
-      app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 
       // Upload endpoint
       app.post('/upload', upload.single('file'), (req, res) => {
@@ -204,11 +209,13 @@ let fetch;
           if (!req.file) {
               return res.status(400).send('No file uploaded.');
           }
-          res.json({ imageUrl: `/uploads/${req.file.filename}` });
+          res.json({ imageUrl: `uploads/${req.file.filename}` });
       });
 
       app.get('/uploads/:filename', (req, res) => {
-        res.sendFile(path.join(__dirname, `uploads/${req.params.filename}`));
+        console.log(path.join(__dirname, `src/uploads/${req.params.filename}`), "PATH JOIN");
+        res.sendFile(path.join(__dirname, `src/uploads/${req.params.filename}`));
+       
     });
 
 
@@ -238,6 +245,25 @@ let fetch;
 
 
     app.post('/successPayments', successPayments);
+
+    app.post('/resend-confirmation', async (req, res) => {
+        const { email } = req.body;
+        try {
+            const user = await User.findOne({ email });
+            if (!user) {
+                return res.status(404).json({ message: 'User not found' });
+            }
+            if (user.isEmailConfirmed) {
+                return res.status(400).json({ message: 'Email is already confirmed' });
+            }
+            await user.resendConfirmationEmail();
+            res.status(200).json({ message: 'Confirmation email resent' });
+        } catch (error) {
+            console.error('Error resending confirmation email:', error);
+            res.status(500).json({ message: 'Error resending confirmation email' });
+        }
+    });
+    
     
     app.get('/cancelPayments', (req, res) => {
         res.send('Payment canceled');

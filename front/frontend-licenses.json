@@ -1,0 +1,197 @@
+{
+  "@paypal/react-paypal-js@8.7.0": {
+    "licenses": "Apache-2.0",
+    "repository": "https://github.com/paypal/react-paypal-js",
+    "path": "C:\\Users\\youss\\Desktop\\Togeather\\front\\node_modules\\@paypal\\react-paypal-js",
+    "licenseFile": "C:\\Users\\youss\\Desktop\\Togeather\\front\\node_modules\\@paypal\\react-paypal-js\\LICENSE"
+  },
+  "@testing-library/jest-dom@5.17.0": {
+    "licenses": "MIT",
+    "repository": "https://github.com/testing-library/jest-dom",
+    "publisher": "Ernesto Garcia",
+    "email": "gnapse@gmail.com",
+    "url": "http://gnapse.github.io",
+    "path": "C:\\Users\\youss\\Desktop\\Togeather\\front\\node_modules\\@testing-library\\jest-dom",
+    "licenseFile": "C:\\Users\\youss\\Desktop\\Togeather\\front\\node_modules\\@testing-library\\jest-dom\\LICENSE"
+  },
+  "@testing-library/react@13.4.0": {
+    "licenses": "MIT",
+    "repository": "https://github.com/testing-library/react-testing-library",
+    "publisher": "Kent C. Dodds",
+    "email": "me@kentcdodds.com",
+    "url": "https://kentcdodds.com",
+    "path": "C:\\Users\\youss\\Desktop\\Togeather\\front\\node_modules\\@testing-library\\react",
+    "licenseFile": "C:\\Users\\youss\\Desktop\\Togeather\\front\\node_modules\\@testing-library\\react\\LICENSE"
+  },
+  "@testing-library/user-event@13.5.0": {
+    "licenses": "MIT",
+    "repository": "https://github.com/testing-library/user-event",
+    "publisher": "Giorgio Polvara",
+    "email": "polvara@gmail.com",
+    "path": "C:\\Users\\youss\\Desktop\\Togeather\\front\\node_modules\\@testing-library\\user-event",
+    "licenseFile": "C:\\Users\\youss\\Desktop\\Togeather\\front\\node_modules\\@testing-library\\user-event\\LICENSE"
+  },
+  "@types/jest@27.5.2": {
+    "licenses": "MIT",
+    "repository": "https://github.com/DefinitelyTyped/DefinitelyTyped",
+    "path": "C:\\Users\\youss\\Desktop\\Togeather\\front\\node_modules\\@types\\jest",
+    "licenseFile": "C:\\Users\\youss\\Desktop\\Togeather\\front\\node_modules\\@types\\jest\\LICENSE"
+  },
+  "@types/node-forge@1.3.11": {
+    "licenses": "MIT",
+    "repository": "https://github.com/DefinitelyTyped/DefinitelyTyped",
+    "path": "C:\\Users\\youss\\Desktop\\Togeather\\front\\node_modules\\@types\\node-forge",
+    "licenseFile": "C:\\Users\\youss\\Desktop\\Togeather\\front\\node_modules\\@types\\node-forge\\LICENSE"
+  },
+  "@types/node@16.18.97": {
+    "licenses": "MIT",
+    "repository": "https://github.com/DefinitelyTyped/DefinitelyTyped",
+    "path": "C:\\Users\\youss\\Desktop\\Togeather\\front\\node_modules\\@types\\node",
+    "licenseFile": "C:\\Users\\youss\\Desktop\\Togeather\\front\\node_modules\\@types\\node\\LICENSE"
+  },
+  "@types/react-dom@18.3.0": {
+    "licenses": "MIT",
+    "repository": "https://github.com/DefinitelyTyped/DefinitelyTyped",
+    "path": "C:\\Users\\youss\\Desktop\\Togeather\\front\\node_modules\\@types\\react-dom",
+    "licenseFile": "C:\\Users\\youss\\Desktop\\Togeather\\front\\node_modules\\@types\\react-dom\\LICENSE"
+  },
+  "@types/react@18.3.2": {
+    "licenses": "MIT",
+    "repository": "https://github.com/DefinitelyTyped/DefinitelyTyped",
+    "path": "C:\\Users\\youss\\Desktop\\Togeather\\front\\node_modules\\@types\\react",
+    "licenseFile": "C:\\Users\\youss\\Desktop\\Togeather\\front\\node_modules\\@types\\react\\LICENSE"
+  },
+  "license-checker@25.0.1": {
+    "licenses": "BSD-3-Clause",
+    "repository": "https://github.com/davglass/license-checker",
+    "publisher": "Dav Glass",
+    "email": "davglass@gmail.com",
+    "path": "C:\\Users\\youss\\Desktop\\Togeather\\front\\node_modules\\license-checker",
+    "licenseFile": "C:\\Users\\youss\\Desktop\\Togeather\\front\\node_modules\\license-checker\\LICENSE"
+  },
+  "react-app-polyfill@3.0.0": {
+    "licenses": "MIT",
+    "repository": "https://github.com/facebook/create-react-app",
+    "path": "C:\\Users\\youss\\Desktop\\Togeather\\front\\node_modules\\react-app-polyfill",
+    "licenseFile": "C:\\Users\\youss\\Desktop\\Togeather\\front\\node_modules\\react-app-polyfill\\LICENSE"
+  },
+  "react-dev-utils@12.0.1": {
+    "licenses": "MIT",
+    "repository": "https://github.com/facebook/create-react-app",
+    "path": "C:\\Users\\youss\\Desktop\\Togeather\\front\\node_modules\\react-dev-utils",
+    "licenseFile": "C:\\Users\\youss\\Desktop\\Togeather\\front\\node_modules\\react-dev-utils\\LICENSE"
+  },
+  "react-dom@18.3.1": {
+    "licenses": "MIT",
+    "repository": "https://github.com/facebook/react",
+    "path": "C:\\Users\\youss\\Desktop\\Togeather\\front\\node_modules\\react-dom",
+    "licenseFile": "C:\\Users\\youss\\Desktop\\Togeather\\front\\node_modules\\react-dom\\LICENSE"
+  },
+  "react-error-overlay@6.0.11": {
+    "licenses": "MIT",
+    "repository": "https://github.com/facebook/create-react-app",
+    "publisher": "Joe Haddad",
+    "email": "timer150@gmail.com",
+    "path": "C:\\Users\\youss\\Desktop\\Togeather\\front\\node_modules\\react-error-overlay",
+    "licenseFile": "C:\\Users\\youss\\Desktop\\Togeather\\front\\node_modules\\react-error-overlay\\LICENSE"
+  },
+  "react-icons@5.2.1": {
+    "licenses": "MIT",
+    "repository": "https://github.com/react-icons/react-icons",
+    "publisher": "Goran Gajic",
+    "path": "C:\\Users\\youss\\Desktop\\Togeather\\front\\node_modules\\react-icons",
+    "licenseFile": "C:\\Users\\youss\\Desktop\\Togeather\\front\\node_modules\\react-icons\\LICENSE"
+  },
+  "react-is@16.13.1": {
+    "licenses": "MIT",
+    "repository": "https://github.com/facebook/react",
+    "path": "C:\\Users\\youss\\Desktop\\Togeather\\front\\node_modules\\prop-types\\node_modules\\react-is",
+    "licenseFile": "C:\\Users\\youss\\Desktop\\Togeather\\front\\node_modules\\prop-types\\node_modules\\react-is\\LICENSE"
+  },
+  "react-is@17.0.2": {
+    "licenses": "MIT",
+    "repository": "https://github.com/facebook/react",
+    "path": "C:\\Users\\youss\\Desktop\\Togeather\\front\\node_modules\\react-is",
+    "licenseFile": "C:\\Users\\youss\\Desktop\\Togeather\\front\\node_modules\\react-is\\LICENSE"
+  },
+  "react-is@18.3.1": {
+    "licenses": "MIT",
+    "repository": "https://github.com/facebook/react",
+    "path": "C:\\Users\\youss\\Desktop\\Togeather\\front\\node_modules\\jest-watch-typeahead\\node_modules\\react-is",
+    "licenseFile": "C:\\Users\\youss\\Desktop\\Togeather\\front\\node_modules\\jest-watch-typeahead\\node_modules\\react-is\\LICENSE"
+  },
+  "react-refresh@0.11.0": {
+    "licenses": "MIT",
+    "repository": "https://github.com/facebook/react",
+    "path": "C:\\Users\\youss\\Desktop\\Togeather\\front\\node_modules\\react-refresh",
+    "licenseFile": "C:\\Users\\youss\\Desktop\\Togeather\\front\\node_modules\\react-refresh\\LICENSE"
+  },
+  "react-router-dom@6.23.1": {
+    "licenses": "MIT",
+    "repository": "https://github.com/remix-run/react-router",
+    "publisher": "Remix Software",
+    "email": "hello@remix.run",
+    "path": "C:\\Users\\youss\\Desktop\\Togeather\\front\\node_modules\\react-router-dom",
+    "licenseFile": "C:\\Users\\youss\\Desktop\\Togeather\\front\\node_modules\\react-router-dom\\LICENSE.md"
+  },
+  "react-router@6.23.1": {
+    "licenses": "MIT",
+    "repository": "https://github.com/remix-run/react-router",
+    "publisher": "Remix Software",
+    "email": "hello@remix.run",
+    "path": "C:\\Users\\youss\\Desktop\\Togeather\\front\\node_modules\\react-router",
+    "licenseFile": "C:\\Users\\youss\\Desktop\\Togeather\\front\\node_modules\\react-router\\LICENSE.md"
+  },
+  "react-scripts@5.0.1": {
+    "licenses": "MIT",
+    "repository": "https://github.com/facebook/create-react-app",
+    "path": "C:\\Users\\youss\\Desktop\\Togeather\\front\\node_modules\\react-scripts",
+    "licenseFile": "C:\\Users\\youss\\Desktop\\Togeather\\front\\node_modules\\react-scripts\\LICENSE"
+  },
+  "react@18.3.1": {
+    "licenses": "MIT",
+    "repository": "https://github.com/facebook/react",
+    "path": "C:\\Users\\youss\\Desktop\\Togeather\\front\\node_modules\\react",
+    "licenseFile": "C:\\Users\\youss\\Desktop\\Togeather\\front\\node_modules\\react\\LICENSE"
+  },
+  "socket.io-adapter@2.5.5": {
+    "licenses": "MIT",
+    "repository": "https://github.com/socketio/socket.io-adapter",
+    "path": "C:\\Users\\youss\\Desktop\\Togeather\\front\\node_modules\\socket.io-adapter",
+    "licenseFile": "C:\\Users\\youss\\Desktop\\Togeather\\front\\node_modules\\socket.io-adapter\\LICENSE"
+  },
+  "socket.io-client@4.8.1": {
+    "licenses": "MIT",
+    "repository": "https://github.com/socketio/socket.io",
+    "path": "C:\\Users\\youss\\Desktop\\Togeather\\front\\node_modules\\socket.io-client",
+    "licenseFile": "C:\\Users\\youss\\Desktop\\Togeather\\front\\node_modules\\socket.io-client\\LICENSE"
+  },
+  "socket.io-parser@4.2.4": {
+    "licenses": "MIT",
+    "repository": "https://github.com/socketio/socket.io-parser",
+    "path": "C:\\Users\\youss\\Desktop\\Togeather\\front\\node_modules\\socket.io-parser",
+    "licenseFile": "C:\\Users\\youss\\Desktop\\Togeather\\front\\node_modules\\socket.io-parser\\LICENSE"
+  },
+  "socket.io@4.8.1": {
+    "licenses": "MIT",
+    "repository": "https://github.com/socketio/socket.io",
+    "path": "C:\\Users\\youss\\Desktop\\Togeather\\front\\node_modules\\socket.io",
+    "licenseFile": "C:\\Users\\youss\\Desktop\\Togeather\\front\\node_modules\\socket.io\\LICENSE"
+  },
+  "typescript@4.9.5": {
+    "licenses": "Apache-2.0",
+    "repository": "https://github.com/Microsoft/TypeScript",
+    "publisher": "Microsoft Corp.",
+    "path": "C:\\Users\\youss\\Desktop\\Togeather\\front\\node_modules\\typescript",
+    "licenseFile": "C:\\Users\\youss\\Desktop\\Togeather\\front\\node_modules\\typescript\\LICENSE.txt"
+  },
+  "web-vitals@2.1.4": {
+    "licenses": "Apache-2.0",
+    "repository": "https://github.com/GoogleChrome/web-vitals",
+    "publisher": "Philip Walton",
+    "email": "philip@philipwalton.com",
+    "url": "http://philipwalton.com",
+    "path": "C:\\Users\\youss\\Desktop\\Togeather\\front\\node_modules\\web-vitals",
+    "licenseFile": "C:\\Users\\youss\\Desktop\\Togeather\\front\\node_modules\\web-vitals\\LICENSE"
+  }
+}
