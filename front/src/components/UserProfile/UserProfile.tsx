@@ -84,6 +84,8 @@ const UserProfile: React.FC = () => {
         });
     }
   };
+  
+  console.log(imageUrl, 'imageUrl');
 
   return (
     <div className="user-profile">

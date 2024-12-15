@@ -22,7 +22,7 @@
     transform: scale(1.07);
 }
 
-.circle-match { 
+.circle-match-home { 
     width: 100px;
     height: 100px;
     display: flex;
@@ -31,13 +31,18 @@
     -moz-border-radius: 70px; 
     -webkit-border-radius: 70px; 
     border-radius: 70px;
+    gap: 16px;
+}
+
+.user-card{
     transition: transform 0.3s ease;
 }
 
-.circle-match:hover{
+.user-card:hover{
     cursor: pointer;
     transform: scale(1.07);
 }
+
 
 .user-image { 
     width: 100px;
@@ -75,12 +80,19 @@
     margin-top: 16px;
 }
 
-.p3-home, .p-match {
+.p3-home{
     color: #FF0077;
     margin-left: 96px;
     margin-bottom: 16px;
     font-size: 32px;
 }
+
+.p-match {
+    color: #FF0077;
+    margin-left: 96px;
+    font-size: 32px;
+}
+
 
 .category{
     margin-top: 24px;

@@ -19,18 +19,29 @@
     border-top: none;
 }
 
-.match-box:hover{
+.match-box:hover,
+.match-box.selected {
     cursor: pointer;
     background-color: #bbb;
 }
 
-.match-box:hover .circle-match {
+.match-box:hover .circle-match,
+.match-box.selected .circle-match {
     background-color: #fff;
     color: #bbb;
 }
 
-.match-box:hover .preview-message-box, .match-box:hover .header-text{
+.match-box:hover .preview-message-box,
+.match-box:hover .header-text,
+.match-box.selected .preview-message-box,
+.match-box.selected .header-text {
     color: #fff;
+}
+
+
+.latest-message{
+    padding-left: 84px;
+    padding-top: 16px;
 }
 
 
@@ -197,6 +208,10 @@
     padding: 16px;
     background-color: #fff;
     border-top: 1px solid #ddd;
+}
+
+.user-message{
+    margin-bottom: 16px;
 }
 
 ::-webkit-scrollbar {

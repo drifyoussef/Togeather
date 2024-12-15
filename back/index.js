@@ -85,7 +85,7 @@ let fetch;
     app.get('/auth/user', authMiddleware, getUserController);
     app.get('/auth/users', authMiddleware, getUsersController);
     app.get('/auth/users/:id', authMiddleware, getUserByIdController);
-    app.get('/messages', async (req, res) => {
+    app.get('/messages', authMiddleware, async (req, res) => {
         try {
             const messages = await Message.find().populate('sender receiver');
             res.json(messages);

@@ -30,6 +30,7 @@ const Login: React.FC = () => {
         console.log('successdata', successData);
         localStorage.setItem("token", successData.token);
         localStorage.setItem("userId", successData.userId);
+        localStorage.setItem("firstname", successData.firstname);
 
         console.log('Login successful:', successData.message);
         navigate('/');

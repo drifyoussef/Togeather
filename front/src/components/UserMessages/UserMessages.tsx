@@ -8,13 +8,11 @@ import io from "socket.io-client";
 const socket = io(process.env.REACT_APP_API_URL);
 
 export default function UserMessages() {
-  
   const { id } = useParams();
   const { mutualMatches } = useFetchUsers();
   const navigate = useNavigate();
-  //console.log(mutualMatches.map((user) => user), "ID of current user");
-  // define console log of mutualMatches _id from the User.model.ts
   const connectedUserId = localStorage.getItem("userId");
+  const connectedFirstname = localStorage.getItem("firstname");
 
   interface Message {
     _id: string;
@@ -27,7 +25,7 @@ export default function UserMessages() {
   const [messages, setMessages] = useState<Message[]>([]);
   const [newMessage, setNewMessage] = useState("");
   const [reload, setReload] = useState(false);
-
+  const [selectedUser, setSelectedUser] = useState<UserModel | null>(null);
 
   const fetchMessages = async () => {
     try {
@@ -46,19 +44,14 @@ export default function UserMessages() {
     }
   };
 
-  //reload page when new message is sent
   useEffect(() => {
     if (reload) {
-      fetchMessages()
-        setReload(false);
-        console.log(fetchMessages, 'fetchMessages');
-
+      fetchMessages();
+      setReload(false);
     }
-  },[reload]);
-
+  }, [reload]);
 
   useEffect(() => {
-
     const fetchUserMessages = async () => {
       try {
         const response = await fetch(
@@ -76,10 +69,9 @@ export default function UserMessages() {
       }
     };
 
-    
     fetchUserMessages();
 
-    socket.on("receiveMessage", (message:any) => {
+    socket.on("receiveMessage", (message: any) => {
       setMessages((prevMessages) => [...prevMessages, message]);
     });
 
@@ -88,24 +80,25 @@ export default function UserMessages() {
     };
   }, [id]);
 
+  useEffect(() => {
+    const selectedUserId = localStorage.getItem("selectedUserId");
+    if (selectedUserId) {
+      const user = mutualMatches.find((user) => user._id === selectedUserId);
+      if (user) {
+        setSelectedUser(user);
+      }
+    }
+  }, [mutualMatches]);
+
   const handleSendMessage = async () => {
     if (newMessage.trim() === "") return;
-
-    //console.log(handleSendMessage, 'button clicked handleSendMessage');
-    //console.log(newMessage, 'content of newMessage');
 
     const messageData = {
       content: newMessage,
       senderId: connectedUserId,
-      sender: {_id: connectedUserId},
+      sender: { _id: connectedUserId },
       receiverId: id,
     };
-
-    console.log(messageData, 'content of messageData');
-
-    console.log(connectedUserId, 'senderId (connectedUserId)');
-
-    console.log(id, 'recieverId (id)');
 
     try {
       const response = await fetch(`${process.env.REACT_APP_API_URL}/messages`, {
@@ -121,8 +114,6 @@ export default function UserMessages() {
         const newMessageData = await response.json();
         socket.emit("sendMessage", newMessageData);
         setNewMessage("");
-
-        // Display the message in the chat
         displayMessage(newMessageData);
       } else {
         console.error("Failed to send message");
@@ -132,74 +123,97 @@ export default function UserMessages() {
     }
   };
 
-  const handleUserClick = (userId:any) => {
-    navigate(`/messages/${userId}`);
+  const handleUserClick = (user: UserModel) => {
+    setSelectedUser(user);
+    localStorage.setItem("selectedUserId", user._id);
+    navigate(`/messages/${user._id}`);
   };
 
-  const displayMessage = (messageData:any) => {
+  const displayMessage = (messageData: any) => {
     const chat = document.querySelector('.chat');
     const messageContainer = document.createElement('div');
     const bubble = document.createElement('div');
-    
+
     bubble.classList.add('bubble');
-    
+
     if (messageData.senderId === connectedUserId) {
-        messageContainer.classList.add('right');
+      messageContainer.classList.add('right');
     } else if (messageData.senderId === id) {
-        messageContainer.classList.add('left');
+      messageContainer.classList.add('left');
     }
-    
+
     bubble.textContent = `${messageData.senderId}: ${messageData.content}`;
     messageContainer.appendChild(bubble);
     if (chat) {
       chat.appendChild(messageContainer);
     }
-};
+  };
+
+  const getLatestMessage = (userId: string) => {
+    const userMessages = messages.filter(
+      (message) =>
+        (message.sender._id === userId && message.receiver._id === connectedUserId) ||
+        (message.sender._id === connectedUserId && message.receiver._id === userId)
+    );
+    if (userMessages.length === 0) return { content: "", sender: null };
+    const latestMessage = userMessages.reduce((latest, current) =>
+      new Date(latest.createdAt) > new Date(current.createdAt) ? latest : current
+    );
+    return { content: latestMessage.content, sender: latestMessage.sender };
+  };
 
   return (
     <div className="div-matches">
       <div className="box-match">
-        {mutualMatches.map((user) => (
-          <div className="match-box" key={user._id} onClick={() => handleUserClick(user._id)}>
-            <div className="header-match-box">
-              <div className="circle-match">{user.firstname.charAt(0)}</div>
-              <div className="header-text">
-                <p>
-                  {user.firstname}, {user.age} ans
-                </p>
-                <p>{user.job}</p>
+        {mutualMatches.map((user) => {
+          const latestMessage = getLatestMessage(user._id);
+          return (
+            <div
+              className={`match-box ${selectedUser && selectedUser._id === user._id ? "selected" : ""}`}
+              key={user._id}
+              onClick={() => handleUserClick(user)}
+            >
+              <div className="header-match-box">
+                <div className="circle-match">{user.firstname.charAt(0)}</div>
+                <div className="header-text">
+                  <p>
+                    {user.firstname}, {user.age} ans
+                  </p>
+                  <p>{user.job}</p>
+                </div>
+                
               </div>
+              <p className="latest-message">
+                  {latestMessage.sender ? `${latestMessage.sender.firstname}: ${latestMessage.content}` : ""}
+                </p>
             </div>
-          </div>
-        ))}
+          );
+        })}
       </div>
       <div className="messages">
-        {mutualMatches.map((user) => (
+        {selectedUser && (
           <div className="header-messages">
-            <div className="circle-match">{user.firstname.charAt(0)}</div>
+            <div className="circle-match">{selectedUser.firstname.charAt(0)}</div>
             <p className="header-conversation">
-              Conversation avec {user.firstname}
+              Conversation avec {selectedUser.firstname}
             </p>
           </div>
-        ))}
+        )}
         <div className="chat-container">
-        {messages
-          .sort((a, b) => new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime())
-          .map((message) => {
-            console.log(message, connectedUserId, "nfdjsnfdkjsnjsdnjkfndsj");
-            return (
+          {messages
+            .sort((a, b) => new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime())
+            .map((message) => (
               <div
                 key={message._id}
                 className={`message ${message.sender._id === connectedUserId ? "right" : "left"}`}
               >
-                <div className="avatar">{message.sender._id === connectedUserId ? "L" : "Y"}</div>
+                <div className="avatar">{message.sender._id === connectedUserId ? (connectedFirstname ? connectedFirstname.charAt(0) : "U") : (selectedUser ? selectedUser.firstname.charAt(0) : "U")}</div>
                 <div className="bubble">
-                  <p>{message.content}</p>
+                  <p className="user-message">{message.content}</p>
                   <span className="time">Message de {message.sender.firstname} à {new Date(message.createdAt).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}</span>
                 </div>
               </div>
-            );
-          })}
+            ))}
         </div>
         <div className="bubble-type-div">
           <input
@@ -209,23 +223,23 @@ export default function UserMessages() {
             value={newMessage}
             onChange={(e) => setNewMessage(e.target.value)}
           />
-          <button className="send-message" onClick={(e) => {handleSendMessage(); setReload(true)} }>Envoyer</button>
+          <button className="send-message" onClick={(e) => { handleSendMessage(); setReload(true) }}>Envoyer</button>
         </div>
       </div>
-      {mutualMatches.map((user) => (
-      <div className="profile-match">
-        <div className="header-profile-match">
-          <div className="header-match-profile">
-            <div className="profile-picture">{user.image}</div>
-            <div className="header-text-profile">
-              <p>{user.firstname} {user.name}, {user.age} ans</p>
-              <p>Catégorie de nourriture préferée : {user.favoriteCategory}</p>
+      {selectedUser && (
+        <div className="profile-match">
+          <div className="header-profile-match">
+            <div className="header-match-profile">
+            <img className="profile-picture" src={selectedUser.imageUrl} alt={`${selectedUser.firstname} ${selectedUser.name}`} />
+              <div className="header-text-profile">
+                <p>{selectedUser.firstname} {selectedUser.name}, {selectedUser.age} ans</p>
+                <p>Catégorie de nourriture préferée : {selectedUser.favoriteCategory}</p>
+              </div>
             </div>
+            <p className="profile-bio"></p>
           </div>
-          <p className="profile-bio"></p>
         </div>
-      </div>
-      ))}
+      )}
     </div>
   );
 }

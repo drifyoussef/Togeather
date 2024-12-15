@@ -30,6 +30,7 @@ export default function Home() {
   };
 
   const handleUserinfosClick = (user: any) => {
+    localStorage.setItem("selectedUserId", user._id);
     navigate(`/messages/${user._id}`);
   };
 
@@ -224,7 +225,7 @@ export default function Home() {
         <p className="p-match">Mes matchs</p>
         <div className="parent">
           <div className="div1">
-            <div className="circle-match">
+            <div className="circle-match-home">
               {mutualMatches.length > 0 ? (
                 mutualMatches.map((user:any) => (
                   <div
