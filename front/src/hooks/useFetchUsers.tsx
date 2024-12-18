@@ -12,6 +12,8 @@ export const useFetchUsers = () => {
 
     if (!token) {
       console.error("Token not found");
+      localStorage.setItem("showSwal", "true");
+      window.location.href = '/auth/login';
       return;
     }
 

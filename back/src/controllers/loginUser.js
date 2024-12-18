@@ -18,6 +18,12 @@ module.exports = async (req, res) => {
             console.log('User found:', userFind); 
             const same = await bcrypt.compare(password, userFind.password);
 
+            if(userFind.isEmailConfirmed === false){
+                console.error('Email not confirmed');
+                res.status(401).json({ message: 'Email non confirmé', emailNotConfirmed: true });
+                return;
+            }
+
             if (same) {
                 req.session.userId = userFind._id;
                 const privateKey = fs.readFileSync(path.join(appRoot.path, "private.key"));

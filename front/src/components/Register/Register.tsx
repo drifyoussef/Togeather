@@ -63,9 +63,6 @@ const Register: React.FC = () => {
       const imageResponse = await fetch( `${process.env.REACT_APP_API_URL}/upload`, {
         method: "POST",
         body: formData,
-        headers: {
-          content: "multipart/form-data",
-        },
       });
       const result = await imageResponse.text();
       console.log(result);
@@ -87,8 +84,12 @@ const Register: React.FC = () => {
 
       // Register the user
       const response = await registerUser(userData);
-      console.log("User registered successfully:", response);
-      navigate("/");
+      if (response.token) {
+        console.log("User registered successfully:", response);
+        navigate("/auth/login");
+      } else {
+        throw new Error("Token not found in response");
+      }
     } catch (error) {
       console.error("Error registering user:", error);
       setError("An error occurred during registration.");
@@ -133,26 +134,6 @@ const Register: React.FC = () => {
       }
     };
     fileInput.click();
-  };
-
-  const handleResendConfirmation = async () => {
-    try {
-      const response = await fetch(`${process.env.REACT_APP_API_URL}/resend-confirmation`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ email }),
-      });
-      const result = await response.json();
-      if (response.ok) {
-        console.log('Confirmation email resent:', result);
-      } else {
-        console.error('Error resending confirmation email:', result);
-      }
-    } catch (error) {
-      console.error('Error resending confirmation email:', error);
-    }
   };
 
   return (
@@ -337,7 +318,7 @@ const Register: React.FC = () => {
         </div>
 
         {error && <p className="error">{error}</p>}
-        <button type="submit" onClick={handleResendConfirmation}>Créer un compte</button>
+        <button type="submit">Créer un compte</button>
       </form>
     </div>
   );

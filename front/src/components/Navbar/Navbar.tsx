@@ -18,6 +18,7 @@ const Navbar: React.FC = () => {
         credentials: "include",
       });
       if (response.ok) {
+        localStorage.clear();
         navigate("/connection");
       } else {
         console.error("Failed to log out");

@@ -1,15 +1,27 @@
 import React, { useState, useEffect } from 'react';
 import { useLocation, useParams } from 'react-router-dom';
-import { FaHeart } from "react-icons/fa";
+import { GoHeart, GoHeartFill } from "react-icons/go";
 import { UserModel } from '../../models/User.model';
+
 import './UserProfile.css';
 
 const UserProfile: React.FC = () => {
   const { id } = useParams<{ id: string }>();
   const [user, setUser] = useState<UserModel | null>(null);
   const [liked, setLiked] = useState(false);
+  const [updatedField, setUpdatedField] = useState<string | null>(null);
+  const [reload, setReload] = useState(false);
   const location = useLocation();
   const { imageUrl } = location.state || { imageUrl: "" };
+
+
+  const likeUser = () => {
+    
+  };
+
+  const unlikeUser = () => {
+    
+  };
 
   useEffect(() => {
     const token = localStorage.getItem('token');
@@ -24,7 +36,9 @@ const UserProfile: React.FC = () => {
         .then((data) => {
           console.log(data, "DATA USER LOG");
           setUser(data);
-          setLiked(data.liked !== undefined ? data.liked : false);  // Explicitly set liked state
+          console.log(data.liked, "DATA LIKED LOG");
+          setLiked(data.liked = true ? true : false);  // Explicitly set liked state
+
           if (data.message) {
             console.log(data.message);
           }
@@ -33,7 +47,7 @@ const UserProfile: React.FC = () => {
           console.error('Error fetching user details:', error);
         });
     }
-  }, [id]);
+  }, [updatedField,id]);
 
   useEffect(() => {
     console.log('Rendering with liked state:', liked);
@@ -83,9 +97,9 @@ const UserProfile: React.FC = () => {
           alert('Failed to update like status. Please try again later.');
         });
     }
-  };
+  }
   
-  console.log(imageUrl, 'imageUrl');
+  //console.log(imageUrl, 'imageUrl');
 
   return (
     <div className="user-profile">
@@ -118,7 +132,7 @@ const UserProfile: React.FC = () => {
         </div>
       </div>
       <button className="like-button" onClick={handleLike}>
-        <FaHeart className={`icon-heart-profile ${liked ? 'liked' : 'not-liked'}`} />
+        {liked ? <GoHeartFill /> : <GoHeart />}
       </button>
     </div>
   );

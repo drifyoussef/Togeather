@@ -78,7 +78,7 @@ let fetch;
         res.setHeader("Access-Control-Allow-Credentials", true);
         next();
     });
-    app.use('/messages', messagesRouter);
+    app.use('/messages', authMiddleware, messagesRouter);
 
     app.get('/auth/register', redirectIfAuthenticatedMiddleware, newUserController);
     app.get('/auth/logout', logoutController);
@@ -94,7 +94,7 @@ let fetch;
         }
     });
 
-    app.get('/messages/:id', async (req, res) => {
+    app.get('/messages/:id', authMiddleware, async (req, res) => {
         try {
             const { id } = req.params;
             const messages = await Message.find({ $or: [{ sender: id }, { receiver: id }] }).populate('sender receiver');
@@ -225,7 +225,7 @@ let fetch;
     app.post('/users/register', redirectIfAuthenticatedMiddleware, storeUserController);
     app.post('/users/login', redirectIfAuthenticatedMiddleware, loginUserController);
     app.post('/auth/users/:id/like', authMiddleware, likeUserController);
-    app.post('/messages', async (req, res) => {
+    app.post('/messages', authMiddleware, async (req, res) => {
         try {
             const { senderId, receiverId, content } = req.body;
             const message = new Message({ sender: senderId, receiver: receiverId, content });
@@ -256,6 +256,7 @@ let fetch;
             if (user.isEmailConfirmed) {
                 return res.status(400).json({ message: 'Email is already confirmed' });
             }
+            console.log(`Resending confirmation email to ${email}`);
             await user.resendConfirmationEmail();
             res.status(200).json({ message: 'Confirmation email resent' });
         } catch (error) {
@@ -264,6 +265,27 @@ let fetch;
         }
     });
     
+    app.post('/confirm-email', async (req, res) => {
+        const { id } = req.body;
+        try {
+          const user = await User.findOne({ emailConfirmationId: id });
+          if (!user) {
+            return res.status(400).json({ message: 'Invalid confirmation ID' });
+          }
+          user.isEmailConfirmed = true;
+          user.emailConfirmationId = null; // Clear the confirmation ID
+          await user.save();
+      
+          // Generate a token for the user
+          const privateKey = fs.readFileSync(path.join(appRoot.path, "private.key"));
+          const token = jwt.sign({ _id: user._id }, privateKey, { algorithm: 'RS256' });
+      
+          res.status(200).json({ message: 'Email confirmed successfully', token });
+        } catch (error) {
+          console.error('Error confirming email:', error);
+          res.status(500).json({ message: 'Error confirming email' });
+        }
+      });
     
     app.get('/cancelPayments', (req, res) => {
         res.send('Payment canceled');

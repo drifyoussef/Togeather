@@ -2,10 +2,21 @@ const mongoose = require('mongoose');
 const validator = require('validator');
 const bcrypt = require('bcryptjs');
 var uniqueValidator = require('mongoose-unique-validator');
-const { Resend } = require('resend');
+const nodemailer = require("nodemailer");
+const jwt = require('jsonwebtoken');
+const path = require("path");
+const appRoot = require('app-root-path');
+const fs = require("fs");
+const { v4: uuidv4 } = require('uuid');
 
 
-const resend = new Resend(`${process.env.RESEND_API_KEY}`);
+const transporter = nodemailer.createTransport({
+  service: "gmail",
+  auth: {
+    user: "imredzcsgo@gmail.com",
+    pass: "xwcv kmnu cwzz bbiv",
+  },
+});
 
 const Schema = mongoose.Schema;
 
@@ -34,6 +45,10 @@ const UserSchema = new Schema({
   isEmailConfirmed: {
     type: Boolean,
     default: false,
+  },
+  emailConfirmationId: {
+    type: String,
+    default: uuidv4,
   },
   age: {
     type: Number,
@@ -79,15 +94,19 @@ UserSchema.pre('save', async function (next) {
 
 UserSchema.methods.resendConfirmationEmail = async function () {
   try {
-    await resend.emails.send({
+    console.log(`Attempting to send confirmation email to ${this.email}`);
+    const emailConfirmationId = uuidv4();
+    this.emailConfirmationId = emailConfirmationId;
+    await this.save();
+    await transporter.sendMail({
       from: 'imredzcsgo@gmail.com',
       to: this.email,
-      subject: 'Please confirm your email address',
-      html: `<p>Click <a href="https://localhost:300/confirm-email?token=${this._id}">here</a> to confirm your email address.</p>`,
+      subject: 'Veuillez confirmer votre adresse mail',
+      html: `<p>Cliquez sur ce <a href="https://localhost:3000/confirm-email?id=${emailConfirmationId}">lien</a> pour confirmer votre adresse mail.</p>`,
     });
-    console.log(`Confirmation email sent to ${this.email}`);
+    console.log(`Mail de confirmation envoyé à ${this.email}`);
   } catch (error) {
-    console.error('Error sending confirmation email:', error);
+    console.error('Erreur lors de l\'envoi du mail:', error);
   }
 };
 

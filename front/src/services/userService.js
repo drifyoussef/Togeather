@@ -14,7 +14,9 @@ export const registerUser = async (userData) => {
             throw new Error(error.message || 'Error registering user');
         }
 
-        return response.json();
+        const data = await response.json();
+        console.log('REPONSE DU REGISTER:', data); // Log the response to check if the token is present
+        return data;
     } catch (error) {
         console.error('Error registering user:', error);
         throw error;

@@ -15,6 +15,8 @@ import UserMessages from './components/UserMessages/UserMessages';
 import Premium from './components/Premium/Premium';
 import Success from "./components/Success/Success";
 import Cancel from "./components/Cancel/Cancel";
+import ConfirmEmail from "./components/ConfirmEmail/ConfirmEmail";
+//import AuthMiddleware from "./components/AuthMiddleware/AuthMiddleware";
 
 
 function App() {
@@ -36,6 +38,7 @@ function App() {
         <Route path="/premium" element={<Premium />} />
         <Route path="/success" element={<Success />} />
         <Route path="/cancel" element={<Cancel />} />
+        <Route path="/confirm-email" element={<ConfirmEmail />} />
       </Routes>
     </Router>
   );

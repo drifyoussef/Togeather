@@ -24,6 +24,8 @@ module.exports = async (req, res) => {
 
     const hasLiked = user.likedBy.includes(currentUserId); // Check if the current user has liked this user
 
+    //Changer cette methode pour que ça fasse ça via le front et non le controller
+    
     if (hasLiked) {
       // If already liked, unlike
       await User.findByIdAndUpdate(id, { $pull: { likedBy: currentUserId } });

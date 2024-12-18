@@ -27,6 +27,8 @@ export default function UserMessages() {
   const [reload, setReload] = useState(false);
   const [selectedUser, setSelectedUser] = useState<UserModel | null>(null);
 
+  console.log(messages, "MESSAGES");
+
   const fetchMessages = async () => {
     try {
       const response = await fetch(
