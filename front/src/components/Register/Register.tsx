@@ -86,6 +86,7 @@ const Register: React.FC = () => {
       const response = await registerUser(userData);
       if (response.token) {
         console.log("User registered successfully:", response);
+        console.log("Token dans le register:", response.token);
         navigate("/auth/login");
       } else {
         throw new Error("Token not found in response");

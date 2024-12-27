@@ -1,0 +1,19 @@
+.confirm-email{
+    height: 100vh;
+    align-content: center;
+    text-align: center;
+}
+
+.header-confirm-text{
+    margin-bottom: 16px;
+}
+
+.confirm-icon{
+    font-size: 128px;
+    color: #FF0077;
+}
+
+.text-spam{
+    margin-top: 8px;
+    font-style: italic;
+}

@@ -10,6 +10,13 @@ const Login: React.FC = () => {
   const [emailNotConfirmed, setEmailNotConfirmed] = useState(false);
   const navigate = useNavigate();
 
+  //localsotrage token
+  //const token = localStorage.getItem("token");
+
+  //console.log("token DU LOGIN", token);
+
+  //TOKEN DU LOGIN EST NULL CE QUI EST NORMAL LOGIQUEMENT
+
   const handleResendConfirmation = async () => {
     try {
       await fetch(`${process.env.REACT_APP_API_URL}/resend-confirmation`, {

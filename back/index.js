@@ -25,6 +25,10 @@ const { createOrder, successPayments } = require('./src/services/paypal-api.js')
 const Message = require('./src/models/Message');
 const http = require('http');
 const socketIo = require('socket.io');
+const fs = require("fs");
+const appRoot = require('app-root-path');
+const jwt = require('jsonwebtoken');
+const crypto = require('crypto');
 
 let fetch;
 
@@ -267,25 +271,86 @@ let fetch;
     
     app.post('/confirm-email', async (req, res) => {
         const { id } = req.body;
+        console.log("Recieved ID", id);
         try {
           const user = await User.findOne({ emailConfirmationId: id });
           if (!user) {
+            Console.log('Invalid confirmation ID');
             return res.status(400).json({ message: 'Invalid confirmation ID' });
           }
           user.isEmailConfirmed = true;
           user.emailConfirmationId = null; // Clear the confirmation ID
           await user.save();
-      
-          // Generate a token for the user
-          const privateKey = fs.readFileSync(path.join(appRoot.path, "private.key"));
-          const token = jwt.sign({ _id: user._id }, privateKey, { algorithm: 'RS256' });
-      
+
+          console.log(`Email confirmed for user ${user.email}`);
+
           res.status(200).json({ message: 'Email confirmed successfully', token });
         } catch (error) {
           console.error('Error confirming email:', error);
           res.status(500).json({ message: 'Error confirming email' });
         }
-      });
+    });
+
+// Configuration de l'algorithme de chiffrement et de la clé secrète
+const algorithm = 'aes-256-cbc';
+const secretKey = Buffer.from(process.env.SECRET_KEY, 'hex');
+
+
+// Fonction pour dechiffrer le html dans le mail de confirmation
+const decrypt = (hash, ignoreHmac = true) => {
+  const hmac = crypto.createHmac('sha256', secretKey)
+    .update(hash.iv + hash.content)
+    .digest('hex'); // Créer un HMAC avec les données chiffrées
+
+    console.log("Decrypting hash:", hash);
+    console.log("Generated HMAC:", hmac);
+  //dechiffrer les données
+  const decipher = crypto.createDecipheriv(algorithm, secretKey, Buffer.from(hash.iv, 'hex'));
+  const decrypted = Buffer.concat([decipher.update(Buffer.from(hash.content, 'hex')), decipher.final()]);
+  console.log("Decrypted buffer:", decrypted);
+  return decrypted.toString();
+};
+
+//route pour vérifier le token de confirmation d'email
+app.get('/account/verify/:token', async (req, res) => {
+    const token = req.params.token;
+    console.log("Received token:", token);
+    try {
+        const decodedToken = Buffer.from(token, 'base64').toString('utf-8');
+        console.log("Decoded token:", decodedToken); // Add this line to log the decoded token
+
+         // Assuming the decoded token is a hexadecimal string
+         const [iv, content] = decodedToken.split(':');
+         const hash = {
+             iv,
+             content
+         };
+         console.log("Parsed hash:", hash); // Log the parsed hash
+
+        const decryptedEmail = decrypt(hash);
+        console.log("Decrypted email:", decryptedEmail); // Log the decrypted email
+
+        const user = await User.findOne({ emailConfirmationId: `${hash.iv}:${hash.content}` });
+        if (!user) {
+            console.log('User not found');
+            return res.status(400).json({ message: 'Invalid confirmation ID' });
+        }
+
+        console.log('User found:', user);
+
+        user.isEmailConfirmed = true;
+        user.emailConfirmationId = null;
+        await user.save();
+        res.status(200).json({ message: 'Email confirmed successfully' });
+    } catch (error) {
+        console.error('Error confirming email:', error);
+        res.status(500).json({ message: 'Error confirming email' });
+    }
+});
+app.get('/welcome', async (req, res) => {
+    res.send('Welcome to our website');
+}
+);
     
     app.get('/cancelPayments', (req, res) => {
         res.send('Payment canceled');

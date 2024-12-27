@@ -1,25 +1,36 @@
 import React, { useEffect } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
+import "./ConfirmEmail.css";
+import { IoIosMail } from "react-icons/io";
 
-const ConfirmEmail: React.FC = () => {
+const ConfirmEmail: React.FC<{ data: { message: string } }> = ({ data }) => {
   const location = useLocation();
   const navigate = useNavigate();
+  const navigateToSuccess = useNavigate();
 
   useEffect(() => {
     const queryParams = new URLSearchParams(location.search);
-    const id = queryParams.get('id');
+    const token = queryParams.get('token');
 
-    if (id) {
-      fetch('https://localhost:3000/confirm-email', {
-        method: 'POST',
+    console.log('Query Params:', queryParams.toString());
+    console.log('Token from ConfirmEmail:', token);
+
+    if (token) {
+      fetch(`http://localhost:4000/account/verify?token=${encodeURIComponent(token)}`, {
+        method: 'GET',
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ id }),
       })
-        .then(response => response.json())
+        .then(response => {
+          console.log('Response Status:', response.status);
+          return response.json();
+        })
         .then(data => {
+          console.log('Response Data:', data);
           if (data.message === 'Email confirmed successfully') {
+            // Store the token in localStorage or any other storage
+            localStorage.setItem('token', data.token);
             navigate('/login');
           } else {
             console.error('Error confirming email:', data.message);
@@ -30,9 +41,21 @@ const ConfirmEmail: React.FC = () => {
         });
     }
   }, [location, navigate]);
+  
+  useEffect(() => {
+    if (data.message === 'Email confirmed successfully') {
+      navigateToSuccess('/login'); // Redirect to the success page
+    }
+  }, [data, navigateToSuccess]);
 
   return (
-    <div>Veuillez confirmer votre mail</div>
+    <div className='confirm-email'>
+      <IoIosMail className='confirm-icon' />
+      <h1 className='header-confirm-text'>Mail de confirmation envoyé</h1>
+      <p>Veuillez regarder votre boite mail <br /> et cliquez sur le lien de confirmation pour activer votre compte
+      </p>
+      <p className='text-spam'>Si vous ne le voyez pas veuillez vérifier vos spams</p>
+    </div>
   );
 };
 
