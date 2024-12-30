@@ -205,11 +205,11 @@ export default function Home() {
                 }
                 imageUrl={
                   user.imageUrl ||
-                  "https://www.gravatar.com/avatar?d=mp&s=200"
+                  "https://www.w3schools.com/w3images/avatar2.png"
                 } // Default image if not available
                 image={
                   user.imageUrl ||
-                  "https://www.gravatar.com/avatar?d=mp&s=200"
+                  "https://www.w3schools.com/w3images/avatar2.png"
                 } // Default image if not available
                 text={`${user.firstname}, ${user.age} ans`}
                 job={user.job}
@@ -236,7 +236,7 @@ export default function Home() {
                     <img
                       src={
                         user.imageUrl ||
-                        "https://www.gravatar.com/avatar?d=mp&s=200"
+                        "https://www.w3schools.com/w3images/avatar2.png"
                       }
                       alt={`${user.firstname}'s avatar`}
                       className="user-image"

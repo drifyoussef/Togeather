@@ -26,6 +26,7 @@ export default function UserMessages() {
   const [newMessage, setNewMessage] = useState("");
   const [reload, setReload] = useState(false);
   const [selectedUser, setSelectedUser] = useState<UserModel | null>(null);
+  const [isChatVisible, setIsChatVisible] = useState(false);
 
   console.log(messages, "MESSAGES");
 
@@ -129,6 +130,7 @@ export default function UserMessages() {
     setSelectedUser(user);
     localStorage.setItem("selectedUserId", user._id);
     navigate(`/messages/${user._id}`);
+    setIsChatVisible(true); // Show chat-container on user click
   };
 
   const displayMessage = (messageData: any) => {
@@ -166,7 +168,7 @@ export default function UserMessages() {
 
   return (
     <div className="div-matches">
-      <div className="box-match">
+      <div className={`box-match ${isChatVisible ? "hidden" : ""}`}>
         {mutualMatches.map((user) => {
           const latestMessage = getLatestMessage(user._id);
           return (
@@ -192,42 +194,44 @@ export default function UserMessages() {
           );
         })}
       </div>
-      <div className="messages">
-        {selectedUser && (
-          <div className="header-messages">
-            <div className="circle-match">{selectedUser.firstname.charAt(0)}</div>
-            <p className="header-conversation">
-              Conversation avec {selectedUser.firstname}
-            </p>
-          </div>
-        )}
-        <div className="chat-container">
-          {messages
-            .sort((a, b) => new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime())
-            .map((message) => (
-              <div
-                key={message._id}
-                className={`message ${message.sender._id === connectedUserId ? "right" : "left"}`}
-              >
-                <div className="avatar">{message.sender._id === connectedUserId ? (connectedFirstname ? connectedFirstname.charAt(0) : "U") : (selectedUser ? selectedUser.firstname.charAt(0) : "U")}</div>
-                <div className="bubble">
-                  <p className="user-message">{message.content}</p>
-                  <span className="time">Message de {message.sender.firstname} à {new Date(message.createdAt).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}</span>
+      {isChatVisible && (
+        <div className="messages">
+          {selectedUser && (
+            <div className="header-messages">
+              <div className="circle-match">{selectedUser.firstname.charAt(0)}</div>
+              <p className="header-conversation">
+                Conversation avec {selectedUser.firstname}
+              </p>
+            </div>
+          )}
+          <div className="chat-container">
+            {messages
+              .sort((a, b) => new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime())
+              .map((message) => (
+                <div
+                  key={message._id}
+                  className={`message ${message.sender._id === connectedUserId ? "right" : "left"}`}
+                >
+                  <div className="avatar">{message.sender._id === connectedUserId ? (connectedFirstname ? connectedFirstname.charAt(0) : "U") : (selectedUser ? selectedUser.firstname.charAt(0) : "U")}</div>
+                  <div className="bubble">
+                    <p className="user-message">{message.content}</p>
+                    <span className="time">Message de {message.sender.firstname} à {new Date(message.createdAt).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}</span>
+                  </div>
                 </div>
-              </div>
-            ))}
-        </div>
-        <div className="bubble-type-div">
-          <input
-            className="input-send-message"
-            type="text"
-            placeholder="Ecrivez votre message ici..."
-            value={newMessage}
-            onChange={(e) => setNewMessage(e.target.value)}
-          />
-          <button className="send-message" onClick={(e) => { handleSendMessage(); setReload(true) }}>Envoyer</button>
-        </div>
+              ))}
+          </div>
+          <div className="bubble-type-div">
+            <input
+              className="input-send-message"
+              type="text"
+              placeholder="Ecrivez votre message ici..."
+              value={newMessage}
+              onChange={(e) => setNewMessage(e.target.value)}
+            />
+            <button className="send-message" onClick={(e) => { handleSendMessage(); setReload(true) }}>Envoyer</button>
+            </div>
       </div>
+      )}
       {selectedUser && (
         <div className="profile-match">
           <div className="header-profile-match">

@@ -91,9 +91,6 @@
   }
   
   .edit-button-container-profile {
-    position: absolute;
-    top: 32px;
-    right: 32px;
     background-color: #fff;
     border: 1px solid #FF0077;
     border-radius: 50%;

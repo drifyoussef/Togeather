@@ -180,6 +180,7 @@
     .p2-home{
         font-size: 14px;
         margin-left: 32px;
+        margin-top: 8px;
     }
 
     .p3-home{
@@ -258,6 +259,7 @@
     .p2-home{
         font-size: 14px;
         margin-left: 32px;
+        margin-top: 8px;
     }
 
     .p3-home{
@@ -314,5 +316,100 @@
 
     .div8{
         margin-right: 16px;
+    }
+}
+
+@media only screen and (max-width: 1440px) {
+    .parent {
+        flex-wrap: nowrap;
+        gap: 16px;
+        overflow-x: auto;
+    }
+
+    .div1{
+        margin-left: 16px;
+    }
+
+    .p1-home{
+        font-size: 20px;
+        margin-left: 32px;
+    }
+
+    .p2-home{
+        font-size: 14px;
+        margin-left: 32px;
+        margin-top: 8px;
+    }
+
+    .p3-home{
+        margin-left: 16px;
+        font-size: 20px;
+    }
+
+    .p-match {
+        margin-left: 16px;
+        font-size: 20px;
+    }
+
+    .div-card {
+        margin-left: 0px;
+        margin-right: 0px;
+    }
+
+    .p-category{
+        margin-top: 8px;
+        margin-bottom: 8px;
+    }
+
+    .icon-category{
+        font-size: 32px;
+    }
+
+    .circle { 
+        width: 75px !important;
+        height: 75px !important;
+    }
+
+    .circle-match-home { 
+        width: 75px !important;
+        height: 75px !important;
+    }
+
+    .user-image { 
+        width: 80px!important;
+        height: 80px!important;
+    }
+
+    .icon-heart-home{
+        font-size: 12px!important;
+        padding: 2px;
+    }
+
+    .icon-category-card {
+        font-size: 16px;
+    }
+
+    .parent-match {
+        margin-top: 24px;
+    }
+
+    .div8{
+        margin-right: 16px;
+    }
+
+    .category, .div-match{
+        margin-top: 16px;
+    }
+}
+
+@media only screen and (min-width: 1440px) {
+
+    .p-category{
+        margin-top: 8px;
+        margin-bottom: 8px;
+    }
+
+    .div-match, .category{
+        margin-top: 16px;
     }
 }

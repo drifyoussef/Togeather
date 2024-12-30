@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 import { UserModel } from "../models/User.model";
 
 export const useFetchUsers = () => {
@@ -6,14 +7,17 @@ export const useFetchUsers = () => {
   const [preferredGender, setPreferredGender] = useState<string | null>(null);
   const [filteredUsers, setFilteredUsers] = useState<UserModel[]>([]);
   const [mutualMatches, setMutualMatches] = useState<UserModel[]>([]); 
+  const navigate = useNavigate();
 
   useEffect(() => {
     const token = localStorage.getItem("token");
 
-    if (!token) {
+    const currentPath = window.location.pathname;
+
+    if (!token && currentPath !== '/auth/login' && currentPath !== '/auth/register' && currentPath !== '/connection') {
       console.error("Token not found");
       localStorage.setItem("showSwal", "true");
-      window.location.href = '/auth/login';
+      navigate('/auth/login');
       return;
     }
 
@@ -48,7 +52,7 @@ export const useFetchUsers = () => {
       .catch((error) => {
         console.error("Error fetching users:", error);
       });
-  }, []);
+  }, [navigate]);
 
   useEffect(() => {
     if (preferredGender && users.length > 0) {

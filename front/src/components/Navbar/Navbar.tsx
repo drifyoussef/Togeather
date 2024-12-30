@@ -3,11 +3,14 @@ import { NavLink, useLocation, useNavigate } from "react-router-dom";
 import { RxHamburgerMenu } from "react-icons/rx";
 import "./Navbar.css";
 import Logo from "../../../src/images/logo-white.png";
+import { useFetchUsers } from "../../hooks/useFetchUsers";
+import Swal from "sweetalert2";
 
 const Navbar: React.FC = () => {
   const [isOpen, setIsOpen] = useState(false);
   const location = useLocation();
   const navigate = useNavigate();
+  const { mutualMatches } = useFetchUsers();
 
   const toggleMenu = () => {
     setIsOpen(!isOpen);
@@ -27,6 +30,22 @@ const Navbar: React.FC = () => {
       }
     } catch (error) {
       console.error("Error:", error);
+    }
+  };
+
+  const handleClickMessages = () => {
+    if (mutualMatches.length > 0) {
+      const firstUser = mutualMatches[0];
+      localStorage.setItem("selectedUserId", firstUser._id);
+      navigate(`/messages/${firstUser._id}`);
+      console.log(firstUser._id, "firstUser ID");
+    } else {
+      console.error("No mutual matches found");
+      Swal.fire({
+        icon: "error",
+        title: "Il y a un problème...",
+        text: "Vous n'avez pas de matchs pour le moment",
+      });
     }
   };
 
@@ -61,7 +80,7 @@ const Navbar: React.FC = () => {
                 Parcourir
               </NavLink>
             </li>
-            <li>
+            <li onClick={handleClickMessages}>
               <NavLink
                 to="/messages"
                 className={({ isActive }) => (isActive ? "active" : "")}

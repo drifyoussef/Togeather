@@ -171,6 +171,26 @@ input[type="radio"]:hover {
   }
 }
 
+.accept-terms{
+  font-weight: bold;
+}
+
+.terms-div{
+  display: flex;
+  gap: 8px;
+  margin-top: 16px;
+}
+
+.keypoint-terms{
+  font-weight: bold;
+  margin-top: 8px;
+  margin-bottom: 8px;
+}
+
+.data-collected{
+  font-weight: bold;
+}
+
 @media only screen and (max-width: 320px), only screen and (max-width: 375px), only screen and (max-width: 425px)  {
 
   .name-firstname-div, .email-password-div {

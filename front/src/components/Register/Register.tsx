@@ -9,6 +9,7 @@ import "./Register.css";
 import { RxCross2 } from "react-icons/rx";
 import { FaEdit } from "react-icons/fa";
 import { useNavigate } from "react-router-dom";
+import Modal from "react-modal";
 
 const Register: React.FC = () => {
   const navigate = useNavigate();
@@ -20,12 +21,14 @@ const Register: React.FC = () => {
   const [userGender, setUserGender] = useState<string>("");
   const [preferredGender, setPreferredGender] = useState<string>("");
   const [error, setError] = useState<string>("");
+  const [termsAccepted, setTermsAccepted] = useState(false);
   const [favoriteCategory, setFavoriteCategory] = useState<string>("");
   const [job, setJob] = useState<string>("");
   const [inputValue, setInputValue] = useState<string>("");
   const [passions, setPassions] = useState<string[]>([]);
   const [imageUrl, setImageUrl] = useState<string>(""); // Add state for image URL
   const [imageFile, setImageFile] = useState<File | null>(null); // Add state for image file
+  const [isModalOpen, setIsModalOpen] = useState(false);
 
   const calcAge = useCallback((birthdate: string): number => {
     const today = new Date();
@@ -43,6 +46,10 @@ const Register: React.FC = () => {
 
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
+    if (!termsAccepted) {
+      setError("Vous devez accepter les conditions d'utilisation.");
+      return;
+    }
     const age = calcAge(birthdate);
     if (age < 18) {
       setError("Vous devez avoir au moins 18 ans pour vous inscrire.");
@@ -56,14 +63,16 @@ const Register: React.FC = () => {
 
     const formData = new FormData();
     formData.append("file", imageFile);
-   
 
     try {
       // Upload the image first
-      const imageResponse = await fetch( `${process.env.REACT_APP_API_URL}/upload`, {
-        method: "POST",
-        body: formData,
-      });
+      const imageResponse = await fetch(
+        `${process.env.REACT_APP_API_URL}/upload`,
+        {
+          method: "POST",
+          body: formData,
+        }
+      );
       const result = await imageResponse.text();
       console.log(result);
 
@@ -95,6 +104,14 @@ const Register: React.FC = () => {
       console.error("Error registering user:", error);
       setError("An error occurred during registration.");
     }
+  };
+
+  const openModal = () => {
+    setIsModalOpen(true);
+  };
+
+  const closeModal = () => {
+    setIsModalOpen(false);
   };
 
   const handleInputChange = (e: ChangeEvent<HTMLTextAreaElement>) => {
@@ -318,9 +335,166 @@ const Register: React.FC = () => {
           </div>
         </div>
 
+        <div>
+          <div className="terms-div">
+            <input
+              type="checkbox"
+              checked={termsAccepted}
+              onChange={(e) => setTermsAccepted(e.target.checked)}
+            />
+            <p className="accept-terms">
+              {" "}
+              J'accepte les{" "}
+              <span
+                onClick={openModal}
+                style={{
+                  color: "blue",
+                  textDecoration: "underline",
+                  cursor: "pointer",
+                }}
+              >
+                conditions d'utilisation
+              </span>
+            </p>
+          </div>
+        </div>
+
         {error && <p className="error">{error}</p>}
-        <button type="submit">Créer un compte</button>
+        <button type="submit">
+          Créer un compte
+        </button>
       </form>
+      <Modal
+        isOpen={isModalOpen}
+        onRequestClose={closeModal}
+        contentLabel="Conditions d'utilisation"
+        style={{
+          content: {
+            top: "50%",
+            left: "50%",
+            right: "auto",
+            bottom: "auto",
+            marginRight: "-50%",
+            transform: "translate(-50%, -50%)",
+          },
+        }}
+      >
+        <h2>Conditions d'utilisation</h2>
+        <div>
+          <p>
+            Bienvenue sur Togeather. En utilisant
+            le site web Togeather, vous acceptez les présentes conditions d'utilisation.
+            Veuillez les lire attentivement.
+          </p>
+          <div>
+            <p className="keypoint-terms">1. Collecte et utilisation des données</p>
+            <p>
+              Lors de l'inscription ou de l'utilisation de nos services, nous
+              pouvons collecter les informations suivantes :
+            </p>
+            <p>
+              <span className="data-collected">• Image de profil :</span> utilisée pour personnaliser votre expérience
+              et faciliter les interactions avec d'autres utilisateurs.
+            </p>
+            <p>
+              <span className="data-collected">• Nom et prénom :</span> utilisés pour identifier les utilisateurs sur le
+              Site.
+            </p>
+            <p>
+              <span className="data-collected">• Email :</span> utilisé pour la communication, la récupération de compte
+              et les notifications importantes.
+            </p>
+            <p>
+              <span className="data-collected">• Âge :</span> utilisé pour vérifier l'éligibilité aux services du Site
+              et personnaliser l'expérience utilisateur.
+            </p>
+            <p>
+              <span className="data-collected">• Mot de passe :</span> utilisé pour sécuriser l'accès à votre compte. Il
+              est crypté et ne peut pas être consulté en clair. En cas de perte
+              veuillez envoyer un message au support car il nous n'avons pas encore
+              d'outil pour récuperer son mot de passe via un envoi d'email.
+            </p>
+            <p>
+              <span className="data-collected">• Genre :</span> utilisé pour personnaliser les interactions et les
+              recommandations.
+            </p>
+            <p>
+              <span className="data-collected">• Emploi :</span> peut être utilisé pour enrichir votre profil
+              public ou améliorer les suggestions d'interactions.
+            </p>
+            <p>
+              <span className="data-collected">• Genre préféré :</span> utilisé pour adapter les
+              suggestions en fonction de vos préférences.
+            </p>
+            <p>
+              <span className="data-collected">• Passions :</span> utilisées pour faciliter les connexions entre
+              utilisateurs partageant des centres d'intérêt communs.
+            </p>
+            <p>
+            <span className="data-collected">• Catégorie favorite :</span> utilisée pour
+              personnaliser votre expérience et vos suggestions.
+            </p>
+          </div>
+          <div>
+            <p className="keypoint-terms">2. Protection des données personnelles</p>
+            <p>
+              Nous nous engageons à protéger vos données personnelles
+              conformément aux lois en vigueur, notamment le RGPD pour les
+              utilisateurs européens. Vos informations ne seront jamais vendues
+              à des tiers sans votre consentement explicite.
+            </p>
+          </div>
+          <div>
+            <p className="keypoint-terms">3. Responsabilités des utilisateurs</p>
+            <p>En utilisant le Togeather, vous vous engagez à :</p>
+            <p>
+              • Fournir des informations exactes et complètes lors de votre
+              inscription.
+            </p>
+            <p>
+              • Respecter les autres utilisateurs et ne pas utiliser Togeather à
+              des fins illégales ou nuisibles.
+            </p>
+            <p>
+              • Préserver la confidentialité de vos identifiants de connexion.
+            </p>
+          </div>
+          <div>
+            <p className="keypoint-terms">4. Utilisation des services</p>
+            <p>
+              Nos services sont réservés aux personnes âgées d'au moins 18 ans.
+              Toute infraction à cette règle peut entraîner la suspension ou la
+              suppression de votre compte.
+            </p>
+          </div>
+          <div>
+            <p className="keypoint-terms">5. Limitations de responsabilité</p>
+            <p>
+              Bien que nous nous efforcions de fournir un service fiable, nous
+              ne garantissons pas l'absence d'interruptions ou d'erreurs. En
+              aucun cas, nous ne serons responsables des dommages directs ou
+              indirects résultant de l'utilisation du site Togeather.
+            </p>
+          </div>
+          <div>
+            <p className="keypoint-terms">6. Modification des conditions</p>
+            <p>
+              Nous nous réservons le droit de modifier les présentes conditions
+              d'utilisation à tout moment. Les utilisateurs seront informés de
+              tout changement significatif via leur adresse email ou une
+              notification sur le site Togeather.
+            </p>
+          </div>
+          <div>
+            <p className="keypoint-terms">7. Contact</p>
+            <p>
+              Pour toute question ou préoccupation concernant ces conditions
+              d'utilisation, vous pouvez nous contacter à : imredzcsgo@gmail.com.
+            </p>
+          </div>
+        </div>
+        <button onClick={closeModal}>Fermer</button>
+      </Modal>
     </div>
   );
 };

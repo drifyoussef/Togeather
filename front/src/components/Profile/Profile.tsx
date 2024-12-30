@@ -196,7 +196,7 @@ const Profile: React.FC = () => {
           ) : (
             <div className="user-img-profile-container">
               <img
-                src="https://www.gravatar.com/avatar?d=mp&s=200"
+                src="https://www.w3schools.com/w3images/avatar2.png"
                 alt="default-userimage"
                 className="profileImageIcon"
               />
