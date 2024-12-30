@@ -38,7 +38,9 @@ function App() {
         <Route path="/premium" element={<Premium />} />
         <Route path="/success" element={<Success />} />
         <Route path="/cancel" element={<Cancel />} />
-        <Route path="/confirm-email" element={<ConfirmEmail />} />
+        <Route path="/confirm-email" element={<ConfirmEmail data={{
+          message: ""
+        }} />} />
       </Routes>
     </Router>
   );

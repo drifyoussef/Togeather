@@ -63,3 +63,9 @@
   transform: scale(1.07);
   animation: 0.5s ease;
 }
+
+@media (max-width: 768px) {
+  .premium-container {
+    padding: 16px;
+  }
+}

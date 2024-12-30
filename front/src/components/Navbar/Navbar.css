@@ -61,18 +61,32 @@
   text-decoration: underline;
 }
 
+.navbar-toggle {
+  display: none;
+}
+
+.home-navbar{
+  width: 50px;
+}
+
 
 @media (max-width: 768px) {
-  .menu-icon {
+  .navbar-toggle {
     display: block;
     color: white;
     cursor: pointer;
+    font-size: 24px;
   }
 
   .navbar-links {
     display: none;
     flex-direction: column;
     width: 100%;
+    position: absolute;
+    top: 90px;
+    left: 0;
+    background-color: #FF0077;
+    z-index: 1000;
   }
 
   .navbar-links.active {

@@ -2,6 +2,7 @@ import React, { useEffect } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import "./ConfirmEmail.css";
 import { IoIosMail } from "react-icons/io";
+import Swal from 'sweetalert2';
 
 const ConfirmEmail: React.FC<{ data: { message: string } }> = ({ data }) => {
   const location = useLocation();
@@ -44,6 +45,11 @@ const ConfirmEmail: React.FC<{ data: { message: string } }> = ({ data }) => {
   
   useEffect(() => {
     if (data.message === 'Email confirmed successfully') {
+      Swal.fire({
+        icon: 'success',
+        title: 'Email confirmé avec succès',
+        text: 'Vous pouvez maintenant vous connecter',
+      });
       navigateToSuccess('/login'); // Redirect to the success page
     }
   }, [data, navigateToSuccess]);

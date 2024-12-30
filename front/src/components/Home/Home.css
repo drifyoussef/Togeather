@@ -4,6 +4,12 @@
     flex-wrap: wrap;
 }
 
+.parent-match {
+    display: flex;
+    place-content: space-evenly;
+    flex-wrap: wrap;
+}
+
 .circle { 
     width: 100px;
     height: 100px;
@@ -58,6 +64,8 @@
     overflow-y: hidden;
     padding-top: 16px;
     padding-bottom: 16px;
+    margin-left: 64px;
+    margin-right: 64px;
 }
 
 .p1-home{
@@ -150,4 +158,161 @@
     font-size: 16px!important;
     color: #fff!important;
     padding: 4PX;
+}
+
+
+@media only screen and (max-width: 320px), only screen and (max-width: 375px), only screen and (max-width: 425px)  {
+    .parent {
+        flex-wrap: nowrap;
+        gap: 16px;
+        overflow-x: auto;
+    }
+
+    .div1{
+        margin-left: 16px;
+    }
+
+    .p1-home{
+        font-size: 20px;
+        margin-left: 32px;
+    }
+
+    .p2-home{
+        font-size: 14px;
+        margin-left: 32px;
+    }
+
+    .p3-home{
+        margin-left: 16px;
+        font-size: 20px;
+    }
+
+    .p-match {
+        margin-left: 16px;
+        font-size: 20px;
+    }
+
+    .div-card {
+        margin-left: 0px;
+        margin-right: 0px;
+    }
+
+    .p-category{
+        margin-top: 8px;
+        margin-bottom: 8px;
+    }
+
+    .icon-category{
+        font-size: 32px;
+    }
+
+    .circle { 
+        width: 70px !important;
+        height: 70px !important;
+    }
+
+    .circle-match-home { 
+        width: 70px !important;
+        height: 70px !important;
+    }
+
+    .user-image { 
+        width: 80px!important;
+        height: 80px!important;
+    }
+
+    .icon-heart-home{
+        font-size: 12px!important;
+        padding: 2px;
+    }
+
+    .icon-category-card {
+        font-size: 16px;
+    }
+
+    .parent-match {
+        margin-top: 24px;
+    }
+
+    .div8{
+        margin-right: 16px;
+    }
+}
+
+@media only screen and (min-width: 768px) and (max-width: 1024px) {
+    .parent {
+        flex-wrap: nowrap;
+        gap: 16px;
+        overflow-x: auto;
+    }
+
+    .div1{
+        margin-left: 16px;
+    }
+
+    .p1-home{
+        font-size: 20px;
+        margin-left: 32px;
+    }
+
+    .p2-home{
+        font-size: 14px;
+        margin-left: 32px;
+    }
+
+    .p3-home{
+        margin-left: 16px;
+        font-size: 20px;
+    }
+
+    .p-match {
+        margin-left: 16px;
+        font-size: 20px;
+    }
+
+    .div-card {
+        margin-left: 0px;
+        margin-right: 0px;
+    }
+
+    .p-category{
+        margin-top: 8px;
+        margin-bottom: 8px;
+    }
+
+    .icon-category{
+        font-size: 32px;
+    }
+
+    .circle { 
+        width: 75px !important;
+        height: 75px !important;
+    }
+
+    .circle-match-home { 
+        width: 75px !important;
+        height: 75px !important;
+    }
+
+    .user-image { 
+        width: 80px!important;
+        height: 80px!important;
+    }
+
+    .icon-heart-home{
+        font-size: 12px!important;
+        padding: 2px;
+    }
+
+    .icon-category-card {
+        font-size: 16px;
+    }
+
+    .parent-match {
+        margin-top: 24px;
+    }
+
+    .div8{
+        margin-right: 16px;
+    }
 }

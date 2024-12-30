@@ -96,3 +96,37 @@
   font-weight: bold;
   color: #ff0077;
 }
+
+@media (max-width: 768px) {
+  .header-container{
+    margin-top: 24px;
+  }
+
+  .header-container-title {
+    align-content: center;
+    font-size: 15px;
+  }
+
+  .icon-title {
+    font-size: 24px;
+  }
+
+  .browse-container {
+    padding-top: 0;
+    overflow-y: auto;
+  }
+
+  .divAsiatique{
+    margin-left: 16px;
+  }
+
+  .divFast{
+    margin-right: 16px;
+  }
+
+  .browse-name, .open-status {
+    font-size: 15px;
+  }
+
+  
+}

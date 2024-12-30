@@ -1,6 +1,8 @@
 import React, { useState } from "react";
 import { NavLink, useLocation, useNavigate } from "react-router-dom";
+import { RxHamburgerMenu } from "react-icons/rx";
 import "./Navbar.css";
+import Logo from "../../../src/images/logo-white.png";
 
 const Navbar: React.FC = () => {
   const [isOpen, setIsOpen] = useState(false);
@@ -37,11 +39,9 @@ const Navbar: React.FC = () => {
   return (
     <nav className={`navbar ${isConnectionPage ? "navbar-connection" : ""}`}>
       <div className="navbar-logo">
-        <NavLink to="/">Togeather</NavLink>
+        <NavLink to={isConnectionPage ? "/connection" : "/"}><img src={Logo} alt="" className="home-navbar" /></NavLink>
       </div>
-      <div className="menu-icon" onClick={toggleMenu}>
-        <i className={isOpen ? "fas fa-times" : "fas fa-bars"}></i>
-      </div>
+        <RxHamburgerMenu onClick={toggleMenu} className="navbar-toggle"/>
       <ul className={isOpen ? "navbar-links active" : "navbar-links"}>
         {!isConnectionPage ? (
           <>

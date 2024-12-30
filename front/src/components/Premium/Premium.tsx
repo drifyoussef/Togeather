@@ -17,7 +17,7 @@ export default function Premium() {
     <div className="premium-container">
       <div className="premium-card">
         <div className="premium-header">
-          <h1>Souscrire au premium pour 2€99/mois</h1>
+          <h1>Souscrire au premium pour 2€99</h1>
           <p>Avec le premium vous aurez accès:</p>
         </div>
         <ul className="premium-features">

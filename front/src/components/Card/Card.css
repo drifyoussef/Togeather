@@ -75,3 +75,64 @@
     display: flex;
     width: max-content;
 }
+
+@media only screen and (max-width: 320px), only screen and (max-width: 375px), only screen and (max-width: 425px) {
+    .card{
+        width: 130px;
+        height: 226px;
+    }
+
+    .card-content {
+        padding: 8px;
+        padding-top: 0px;
+    }
+
+    .card-subcontainer {
+        gap: 4px;
+        margin-top: 2px;
+    }
+
+    .circle-card {
+        width: 32px;
+        height: 32px;
+    }
+
+    .card-title {
+        font-size: 14px;
+    }
+
+    .card-subtitle {
+        font-size: 14px;
+    }
+
+}
+
+@media only screen and (min-width: 768px) and (max-width: 1024px) {
+    .card{
+        width: 145px;
+        height: 250px;
+    }
+
+    .card-content {
+        padding: 8px;
+        padding-top: 0px;
+    }
+
+    .card-subcontainer {
+        gap: 4px;
+        margin-top: 2px;
+    }
+
+    .circle-card {
+        width: 32px;
+        height: 32px;
+    }
+
+    .card-title {
+        font-size: 14px;
+    }
+
+    .card-subtitle {
+        font-size: 14px;
+    }
+}

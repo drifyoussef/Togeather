@@ -118,3 +118,29 @@
     border-radius: 50%;
     object-fit: cover;
 }
+
+@media only screen and (max-width: 320px), only screen and (max-width: 375px), only screen and (max-width: 425px) {
+
+    .delete-profil {
+        width: 60%;
+    }
+
+    .profileCard {
+        width: 260px;
+    }
+
+    .divFirstname, .divName, .divMail, .divGender, .divFavGender, .divFavFood, .divAge, .divJob, .divPassions{
+        font-size: 15px;
+    }
+
+}
+
+@media only screen and (min-width: 768px) and (max-width: 1024px) {
+    .profileCard {
+        width: 400px;
+    }
+
+    .delete-profil {
+        width: 25%;
+    }
+}
