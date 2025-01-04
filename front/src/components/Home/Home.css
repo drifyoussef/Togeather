@@ -152,12 +152,28 @@
   color: #ff0077;
 }
 
+.loading-users {
+    margin-top: 32px;
+    justify-self: center;
+}
+
 .icon-heart-home{
     border-radius: 50px;
     background-color: #FF0077;
     font-size: 16px!important;
     color: #fff!important;
     padding: 4PX;
+}
+
+.user-card {
+    width: 100%;
+    height: 100%;
+}
+
+.match-card-image{
+    width: 100%;
+    height: 100%;
+    border-radius: 70px;
 }
 
 

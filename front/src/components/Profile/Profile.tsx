@@ -1,8 +1,10 @@
 import React, { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import "./Profile.css";
 import { UserModel } from "../../models/User.model";
 import { MdEdit } from "react-icons/md";
 import { FaEdit } from "react-icons/fa";
+import Swal from "sweetalert2";
 
 const Profile: React.FC = () => {
   const [user, setUser] = useState<UserModel>();
@@ -12,8 +14,9 @@ const Profile: React.FC = () => {
   const [reload, setReload] = useState(false);
   const [imageUrl, setImageUrl] = useState<string>("");
   const [imageFile, setImageFile] = useState<File | null>(null);
+  const navigate = useNavigate();
 
-  const connectedUserId = localStorage.getItem("userId");
+  const connectedUserId = localStorage.getItem("currentUserId");
 
   //console.log(connectedUserId, "ID of current user");
 
@@ -53,7 +56,8 @@ const Profile: React.FC = () => {
 
   useEffect(() => {
     const token = localStorage.getItem("token");
-    if (updatedField && user) {
+    const connectedUserId = localStorage.getItem("currentUserId");
+    if (updatedField && connectedUserId && user) {
       const updatedData = {
         userId: connectedUserId,
         imageUrl: inputValues.imageUrl,
@@ -93,6 +97,63 @@ const Profile: React.FC = () => {
         });
     }
   }, [updatedField, inputValues, user, connectedUserId]);
+
+  const handleDeleteAccount = async () => {
+    const token = localStorage.getItem("token");
+    const connectedUserId = localStorage.getItem("currentUserId");
+  
+    if (!token || !connectedUserId) {
+      console.error("User not authenticated");
+      return;
+    }
+  
+    try {
+      const result = await Swal.fire({
+        title: 'Êtes-vous sûr?',
+        text: "Vous ne pourrez pas revenir en arrière!",
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonColor: '#3085d6',
+        cancelButtonColor: '#d33',
+        confirmButtonText: 'Oui, supprimez-le!'
+      });
+  
+      if (result.isConfirmed) {
+        const response = await fetch(`${process.env.REACT_APP_API_URL}/users/${connectedUserId}`, {
+          method: "DELETE",
+          headers: {
+            Authorization: `Bearer ${token}`,
+            "Content-Type": "application/json",
+          },
+        });
+  
+        const data = await response.json();
+  
+        if (data.message === 'User deleted successfully') {
+          console.log('User deleted successfully, showing Swal...');
+          console.log('navigating to /auth/login');
+          Swal.fire({
+            icon: 'success',
+            title: 'Succès',
+            text: 'Votre compte a été supprimé avec succès',
+          });
+  
+          localStorage.removeItem("token");
+          localStorage.removeItem("currentUserId");
+          navigate('/auth/login');
+        } else {
+          throw new Error("Failed to delete account");
+        }
+      }
+    } catch (error) {
+      console.error("Error deleting account:", error);
+      Swal.fire(
+        'Erreur!',
+        'Une erreur est survenue lors de la suppression de votre compte.',
+        'error'
+      );
+    }
+  };
 
   const toggleEdit = (field: string) => {
     if (user) {
@@ -389,7 +450,7 @@ const Profile: React.FC = () => {
           )}
         </div>
       </div>
-      <button className="delete-profil">Supprimer votre compte</button>
+      <button className="delete-profil" onClick={handleDeleteAccount}>Supprimer votre compte</button>
     </div>
   );
 };

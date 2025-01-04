@@ -72,20 +72,6 @@ const encrypt = (text) => {
   };
 };
 
-// Fonction pour déchiffrer le html dans le mail de confirmation
-const decrypt = (hash, ignoreHmac = true) => {
-  const hmac = crypto.createHmac('sha256', secretKey)
-    .update(hash.iv + hash.content)
-    .digest('hex'); // Créer un HMAC avec les données chiffrées
-
-  if (!ignoreHmac && hmac !== hash.hmac) { // Vérifier l'intégrité des données des deux hmac (le cas échéant)
-    throw new Error('Données altérées ou invalides.');
-  }
-  const decipher = crypto.createDecipheriv(algorithm, secretKey, Buffer.from(hash.iv, 'hex'));
-  const decrypted = Buffer.concat([decipher.update(Buffer.from(hash.content, 'hex')), decipher.final()]);
-  return decrypted.toString();
-};
-
 UserSchema.methods.resendConfirmationEmail = async function () {
   try {
     console.log(`Attempting to send confirmation email to ${this.email}`);
@@ -99,7 +85,7 @@ UserSchema.methods.resendConfirmationEmail = async function () {
     const encryptedToken = Buffer.from(emailConfirmationId).toString('base64');
     console.log(`Encrypted token: ${encryptedToken}`);
 
-    const confirmationLink = `http://localhost:4000/account/verify/${encodeURIComponent(encryptedToken)}`;
+    const confirmationLink = `http://localhost:3000/confirm-email?token=${encodeURIComponent(encryptedToken)}`;
     console.log('Confirmation Link:', confirmationLink);
     
     await transporter.sendMail({

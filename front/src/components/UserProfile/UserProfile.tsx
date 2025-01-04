@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { useLocation, useParams } from 'react-router-dom';
+import { useParams } from 'react-router-dom';
 import { GoHeart, GoHeartFill } from "react-icons/go";
 import { UserModel } from '../../models/User.model';
 
@@ -9,23 +9,59 @@ const UserProfile: React.FC = () => {
   const { id } = useParams<{ id: string }>();
   const [user, setUser] = useState<UserModel | null>(null);
   const [liked, setLiked] = useState(false);
-  const [updatedField, setUpdatedField] = useState<string | null>(null);
   const [reload, setReload] = useState(false);
-  const location = useLocation();
-  const { imageUrl } = location.state || { imageUrl: "" };
-
 
   const likeUser = () => {
-    
+    const token = localStorage.getItem("token");
+    console.log('token when like user', token);
+    const currentUserId = localStorage.getItem("currentUserId");
+
+    fetch(`${process.env.REACT_APP_API_URL}/auth/users/${id}/like`, {
+      method: "POST",
+      headers: {
+        Authorization: `Bearer ${token}`,
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ liked: true, currentUserId }),
+    })
+      .then((response) => response.json())
+      .then((data) => {
+        setLiked(true);
+        setReload(true); // Trigger reload to refresh the state
+      })
+      .catch((error) => {
+        console.error("Error liking user:", error);
+      });
   };
 
   const unlikeUser = () => {
-    
+    const token = localStorage.getItem("token");
+    console.log('token when unlike user', token);
+    const currentUserId = localStorage.getItem("currentUserId");
+
+    fetch(`${process.env.REACT_APP_API_URL}/auth/users/${id}/like`, {
+      method: "POST",
+      headers: {
+        Authorization: `Bearer ${token}`,
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ liked: false, currentUserId }),
+    })
+      .then((response) => response.json())
+      .then((data) => {
+        setLiked(false);
+        setReload(true); // Trigger reload to refresh the state
+      })
+      .catch((error) => {
+        console.error("Error unliking user:", error);
+      });
   };
 
   useEffect(() => {
     const token = localStorage.getItem('token');
-    if (id) {
+    const currentUserId = localStorage.getItem('currentUserId');
+    console.log(currentUserId, 'currentUserId from UserProfile');
+    if (id && currentUserId) {
       fetch(`${process.env.REACT_APP_API_URL}/auth/users/${id}`, {
         headers: {
           Authorization: `Bearer ${token}`,
@@ -34,10 +70,8 @@ const UserProfile: React.FC = () => {
       })
         .then((response) => response.json())
         .then((data) => {
-          console.log(data, "DATA USER LOG");
           setUser(data);
-          console.log(data.liked, "DATA LIKED LOG");
-          setLiked(data.liked = true ? true : false);  // Explicitly set liked state
+          setLiked(data.likedBy.includes(currentUserId));   // Explicitly set liked state
 
           if (data.message) {
             console.log(data.message);
@@ -47,7 +81,7 @@ const UserProfile: React.FC = () => {
           console.error('Error fetching user details:', error);
         });
     }
-  }, [updatedField,id]);
+  }, [id, reload]); // Add reload as a dependency
 
   useEffect(() => {
     console.log('Rendering with liked state:', liked);
@@ -69,42 +103,17 @@ const UserProfile: React.FC = () => {
   };
 
   const handleLike = () => {
-    const token = localStorage.getItem("token");
-
-    if (user) {
-      fetch(`${process.env.REACT_APP_API_URL}/auth/users/${user._id}/like`, {
-        method: "POST",
-        headers: {
-          Authorization: `Bearer ${token}`,
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ liked: !liked }),
-      })
-        .then((response) => {
-          if (!response.ok) {
-            return response.json().then((error) => {
-              throw new Error(error.message || 'Unknown error occurred');
-            });
-          }
-          return response.json();
-        })
-        .then((data) => {
-          console.log("User liked status updated successfully:", data);
-          setLiked(data.liked);  // Use the updated value from the backend
-        })
-        .catch((error) => {
-          console.error("Error liking user:", error);
-          alert('Failed to update like status. Please try again later.');
-        });
+    if (liked) {
+      unlikeUser();
+    } else {
+      likeUser();
     }
-  }
-  
-  //console.log(imageUrl, 'imageUrl');
+  };
 
   return (
     <div className="user-profile">
+      <div className='user-profile-image'><img src={`http://localhost:4000/${user.imageUrl}`} className='user-profile-image' alt="User Profile" /></div>
       <h1>{user.firstname} {user.name}</h1>
-        {imageUrl && <img src={imageUrl} alt="User Profile" />}
       <div>
         <div className="divGender">
           <label>Genre :</label>

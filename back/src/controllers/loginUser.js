@@ -20,12 +20,14 @@ module.exports = async (req, res) => {
 
             if(userFind.isEmailConfirmed === false){
                 console.error('Email not confirmed');
+                await userFind.resendConfirmationEmail();
                 res.status(401).json({ message: 'Email non confirmé', emailNotConfirmed: true });
                 return;
             }
 
-            if (same) {
+            if (same) {    
                 req.session.userId = userFind._id;
+                console.log(req.session.userId, "ID DE L'UTILISATEUR LOGIN CONTROLLER REQ SESSION USERID");
                 const privateKey = fs.readFileSync(path.join(appRoot.path, "private.key"));
                 const token = jwt.sign({ _id: userFind._id }, privateKey, { algorithm: 'RS256' });
                 res.status(200).json({ message: 'Connexion réussie',token:token, userId: userFind._id, firstname: userFind.firstname });

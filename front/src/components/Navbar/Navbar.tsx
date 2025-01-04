@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { NavLink, useLocation, useNavigate } from "react-router-dom";
 import { RxHamburgerMenu } from "react-icons/rx";
 import "./Navbar.css";
-import Logo from "../../../src/images/logo-white.png";
+import Logo from "../../images/logo-white.png";
 import { useFetchUsers } from "../../hooks/useFetchUsers";
 import Swal from "sweetalert2";
 

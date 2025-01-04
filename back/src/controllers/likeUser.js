@@ -3,7 +3,9 @@ const User = require('../models/User');
 module.exports = async (req, res) => {
   try {
     const { id } = req.params;  // ID of the user being liked/unliked
-    const currentUserId = req.session.userId;  // ID of the logged-in user
+    const { liked, currentUserId } = req.body;  // Whether to like or unlike
+
+    console.log(currentUserId, "ID DE L'UTILISATEUR LIKEUSER CONTROLLER");
 
     if (!currentUserId) {
       return res.status(401).json({ message: 'Unauthorized' });
@@ -22,18 +24,14 @@ module.exports = async (req, res) => {
       return res.status(404).json({ message: 'Current user not found' });
     }
 
-    const hasLiked = user.likedBy.includes(currentUserId); // Check if the current user has liked this user
-
-    //Changer cette methode pour que ça fasse ça via le front et non le controller
-    
-    if (hasLiked) {
-      // If already liked, unlike
-      await User.findByIdAndUpdate(id, { $pull: { likedBy: currentUserId } });
-      console.log(`User ${currentUserId} unliked ${id}`);
-    } else {
-      // Else, like the user
+    if (liked) {
+      // Like the user
       await User.findByIdAndUpdate(id, { $addToSet: { likedBy: currentUserId } });
       console.log(`User ${currentUserId} liked ${id}`);
+    } else {
+      // Unlike the user
+      await User.findByIdAndUpdate(id, { $pull: { likedBy: currentUserId } });
+      console.log(`User ${currentUserId} unliked ${id}`);
     }
 
     // Re-fetch both users after updating
@@ -48,8 +46,8 @@ module.exports = async (req, res) => {
     await User.findByIdAndUpdate(id, { isMutual: isMutual });
 
     res.status(200).json({
-      message: hasLiked ? 'User unliked' : 'User liked',
-      liked: !hasLiked,  // Toggle like status
+      message: liked ? 'User liked' : 'User unliked',
+      liked: liked,  // Return the current like status
       totalLikes: updatedUser.likedBy.length,
       isMutual: isMutual,  // Updated mutual like status
     });

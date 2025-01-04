@@ -4,7 +4,6 @@ module.exports = async (req, res) => {
     try {
         const user = await User.create(req.body)
         console.log(`success User created ${user}`);
-        await user.resendConfirmationEmail();
         res.redirect('/')
     } catch (error) {
         console.log(JSON.stringify(error));

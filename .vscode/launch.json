@@ -1,0 +1,18 @@
+{
+    "version": "0.2.0",
+    "configurations": [
+      {
+        "name": "Docker Compose Up with Watch",
+        "type": "node",
+        "request": "launch",
+        "preLaunchTask": "Docker Compose Up with Watch",
+        "program": "${workspaceFolder}/back/index.js",
+        "cwd": "${workspaceFolder}/back",
+        "outFiles": [
+          "${workspaceFolder}/back/**/*.js"
+        ],
+        "sourceMaps": true
+      }
+    ]
+  }
+  

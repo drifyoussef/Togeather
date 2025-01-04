@@ -66,13 +66,18 @@ const Login: React.FC = () => {
         console.error('Login failed:', errorData);
       } else {
         const successData = await response.json();
-        console.log('successdata', successData);
-        localStorage.setItem("token", successData.token);
-        localStorage.setItem("userId", successData.userId);
-        localStorage.setItem("firstname", successData.firstname);
-
+        //console.log('successdata', successData);
         console.log('Login successful:', successData.message);
-        navigate('/');
+        if (successData.token) {
+          localStorage.setItem('token', successData.token);
+          localStorage.setItem('currentUserId', successData.userId); // Store the user ID
+          localStorage.setItem('firstname', successData.firstname);
+          console.log('userId from login', successData.userId);
+          navigate('/');
+        } else {
+          // Handle login error
+          console.error('Login failed:', successData.message);
+        }
       }
     } catch (error) {
       console.error('Error:', error);

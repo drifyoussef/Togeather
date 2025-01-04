@@ -7,7 +7,6 @@ import Swal from 'sweetalert2';
 const ConfirmEmail: React.FC<{ data: { message: string } }> = ({ data }) => {
   const location = useLocation();
   const navigate = useNavigate();
-  const navigateToSuccess = useNavigate();
 
   useEffect(() => {
     const queryParams = new URLSearchParams(location.search);
@@ -17,42 +16,50 @@ const ConfirmEmail: React.FC<{ data: { message: string } }> = ({ data }) => {
     console.log('Token from ConfirmEmail:', token);
 
     if (token) {
-      fetch(`http://localhost:4000/account/verify?token=${encodeURIComponent(token)}`, {
+      console.log('Token found, making fetch request...');
+      fetch(`http://localhost:4000/account/verify/${token}`, {
         method: 'GET',
         headers: {
           'Content-Type': 'application/json',
         },
       })
         .then(response => {
-          console.log('Response Status:', response.status);
+          console.log('Response status:', response.status);
           return response.json();
         })
         .then(data => {
-          console.log('Response Data:', data);
+          console.log('Data from confirm email:', data);
           if (data.message === 'Email confirmed successfully') {
-            // Store the token in localStorage or any other storage
-            localStorage.setItem('token', data.token);
-            navigate('/login');
+            console.log('Email confirmed successfully, showing Swal...');
+              console.log('navigating to /auth/login');
+              Swal.fire({
+                icon: 'success',
+                title: 'Succès',
+                text: 'Votre email a été confirmé avec succès',
+              });
+              navigate('/auth/login');
           } else {
-            console.error('Error confirming email:', data.message);
+            console.log('Email confirmation failed, showing error Swal...');
+            Swal.fire({
+              icon: 'error',
+              title: 'Erreur',
+              text: data.message,
+            });
           }
         })
         .catch(error => {
-          console.error('Error confirming email:', error);
+          console.error('Error during fetch:', error);
+          Swal.fire({
+            icon: 'error',
+            title: 'Erreur',
+            text: 'Une erreur est survenue lors de la confirmation de l\'email',
+          });
         });
+    } else {
+      console.log('No token found in the URL');
+      console.error('No token found in the URL');
     }
   }, [location, navigate]);
-  
-  useEffect(() => {
-    if (data.message === 'Email confirmed successfully') {
-      Swal.fire({
-        icon: 'success',
-        title: 'Email confirmé avec succès',
-        text: 'Vous pouvez maintenant vous connecter',
-      });
-      navigateToSuccess('/login'); // Redirect to the success page
-    }
-  }, [data, navigateToSuccess]);
 
   return (
     <div className='confirm-email'>

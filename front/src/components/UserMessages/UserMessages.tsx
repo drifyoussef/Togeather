@@ -11,8 +11,11 @@ export default function UserMessages() {
   const { id } = useParams();
   const { mutualMatches } = useFetchUsers();
   const navigate = useNavigate();
-  const connectedUserId = localStorage.getItem("userId");
+  const connectedUserId = localStorage.getItem("currentUserId");
   const connectedFirstname = localStorage.getItem("firstname");
+
+  console.log(connectedUserId, "CONNECTED USER ID FROM USERMESSAGES");
+  console.log(connectedFirstname, "CONNECTED FIRSTNAME FROM USERMESSAGES");
 
   interface Message {
     _id: string;
@@ -131,6 +134,7 @@ export default function UserMessages() {
     localStorage.setItem("selectedUserId", user._id);
     navigate(`/messages/${user._id}`);
     setIsChatVisible(true); // Show chat-container on user click
+    console.log(setIsChatVisible, "SETISCHATVISIBLE");
   };
 
   const displayMessage = (messageData: any) => {
@@ -154,15 +158,23 @@ export default function UserMessages() {
   };
 
   const getLatestMessage = (userId: string) => {
+    if (!connectedUserId) {
+      console.error("connectedUserId is null or undefined");
+      return { content: "", sender: null };
+    }
+  
     const userMessages = messages.filter(
       (message) =>
-        (message.sender._id === userId && message.receiver._id === connectedUserId) ||
-        (message.sender._id === connectedUserId && message.receiver._id === userId)
+        (message.sender && message.sender._id === userId && message.receiver && message.receiver._id === connectedUserId) ||
+        (message.sender && message.sender._id === connectedUserId && message.receiver && message.receiver._id === userId)
     );
+  
     if (userMessages.length === 0) return { content: "", sender: null };
+  
     const latestMessage = userMessages.reduce((latest, current) =>
       new Date(latest.createdAt) > new Date(current.createdAt) ? latest : current
     );
+  
     return { content: latestMessage.content, sender: latestMessage.sender };
   };
 
@@ -236,7 +248,7 @@ export default function UserMessages() {
         <div className="profile-match">
           <div className="header-profile-match">
             <div className="header-match-profile">
-            <img className="profile-picture" src={selectedUser.imageUrl} alt={`${selectedUser.firstname} ${selectedUser.name}`} />
+            <img className="profile-picture" src={`http://localhost:4000/${selectedUser.imageUrl}`} alt={`${selectedUser.firstname} ${selectedUser.name}`} />
               <div className="header-text-profile">
                 <p>{selectedUser.firstname} {selectedUser.name}, {selectedUser.age} ans</p>
                 <p>Catégorie de nourriture préferée : {selectedUser.favoriteCategory}</p>

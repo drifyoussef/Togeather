@@ -46,7 +46,7 @@ export default function Card({
 
   return (
     <div className="card" onClick={handleClick}>
-      <img src={imageUrl} alt="person" className="card-image" />
+      <img src={`http://localhost:4000/${imageUrl}`} alt="person" className="card-image" />
       <div className="card-content">
         <div className="card-container">
           <p className="card-text">{text}</p>

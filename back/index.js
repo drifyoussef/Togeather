@@ -29,6 +29,7 @@ const fs = require("fs");
 const appRoot = require('app-root-path');
 const jwt = require('jsonwebtoken');
 const crypto = require('crypto');
+const sharp = require('sharp');
 
 let fetch;
 
@@ -203,23 +204,40 @@ let fetch;
     });
       
       // Initialize upload
+    const MAX_FILE_SIZE = 5 * 1024 * 1024; // 5MB
     const upload = multer({ storage: storage });
       
       // Serve static files from the uploads folder
+      //app.use('/uploads', express.static(path.join(__dirname, 'src/uploads')));
 
       // Upload endpoint
-      app.post('/upload', upload.single('file'), (req, res) => {
-        console.log(req.file, "REQ FILE");
-          if (!req.file) {
-              return res.status(400).send('No file uploaded.');
-          }
-          res.json({ imageUrl: `uploads/${req.file.filename}` });
-      });
+    app.post('/upload', upload.single('file'), async (req, res) => {
+      console.log(req.file, "REQ FILE");
+      if (!req.file) {
+        return res.status(400).send('No file uploaded.');
+      }
+    
+      if (req.file.size > MAX_FILE_SIZE) {
+        return res.status(400).send('File size exceeds the maximum limit of 5MB.');
+      }
 
-      app.get('/uploads/:filename', (req, res) => {
-        console.log(path.join(__dirname, `src/uploads/${req.params.filename}`), "PATH JOIN");
-        res.sendFile(path.join(__dirname, `src/uploads/${req.params.filename}`));
-       
+      const resizedFilePath = path.join(path.dirname(req.file.path), `resized-${req.file.filename}`);
+    
+      try {
+        await sharp(req.file.path)
+          .resize(400) // Resize to 400px width, maintaining aspect ratio
+          .toFile(resizedFilePath); // Save with the same filename in the same directory
+    
+        res.json({ imageUrl: `uploads/resized-${req.file.filename}` });
+      } catch (error) {
+        console.error('Error resizing image:', error);
+        res.status(500).send('Error processing image.');
+      }
+    });
+
+    app.get('/uploads/:filename', (req, res) => {
+      console.log(path.join(__dirname, `src/uploads/${req.params.filename}`), "PATH JOIN");
+      res.sendFile(path.join(__dirname, `src/uploads/${req.params.filename}`));
     });
 
 
@@ -347,14 +365,24 @@ app.get('/account/verify/:token', async (req, res) => {
         res.status(500).json({ message: 'Error confirming email' });
     }
 });
-app.get('/welcome', async (req, res) => {
-    res.send('Welcome to our website');
-}
-);
     
     app.get('/cancelPayments', (req, res) => {
         res.send('Payment canceled');
     });
+
+    app.delete('/users/:id', authMiddleware, async (req, res) => {
+        try {
+          const { id } = req.params;
+          const user = await User.findByIdAndDelete(id);
+          if (!user) {
+            return res.status(404).json({ message: 'User not found' });
+          }
+          res.status(200).json({ message: 'User deleted successfully' });
+        } catch (error) {
+          console.error('Error deleting user:', error);
+          res.status(500).json({ message: 'Error deleting user' });
+        }
+      });
 
     async function main() {
         try {

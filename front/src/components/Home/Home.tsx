@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { BiSolidSushi } from "react-icons/bi";
 import { FaPizzaSlice, FaHamburger, FaIceCream, FaHeart } from "react-icons/fa";
@@ -21,8 +21,15 @@ type Category =
 
 export default function Home() {
   const [activeCategory, setActiveCategory] = useState<Category | null>(null);
+  const [loading, setLoading] = useState(true); 
   const navigate = useNavigate();
   const { users, preferredGender, mutualMatches } = useFetchUsers(); // Use the custom hook
+
+  useEffect(() => {
+    if (users.length > 0) {
+      setLoading(false); // Set loading to false when users are fetched
+    }
+  }, [users]);
 
   const handleCategoryClick = (category: Category) => {
     setActiveCategory(category);
@@ -192,8 +199,10 @@ export default function Home() {
           </div>
         </div>
         <div className="div-card">
-          {filteredUsersList.length > 0 ? (
-            filteredUsersList.map((user:any) => (
+          {loading ? (
+            <p className="loading-users">Chargement des utilisateurs...</p> // Show loading indicator
+          ) : filteredUsersList.length > 0 ? (
+            filteredUsersList.map((user: any) => (
               <Card
                 key={user._id}
                 category={user.favoriteCategory as Category}
@@ -226,21 +235,16 @@ export default function Home() {
         <div className="parent-match">
           <div className="div-circle-match">
             <div className="circle-match-home">
-              {mutualMatches.length > 0 ? (
+              {loading ? (
+            <p>Chargement des matchs...</p> // Show loading indicator
+          ) : mutualMatches.length > 0 ? (
                 mutualMatches.map((user:any) => (
                   <div
                     key={user._id}
                     className="user-card"
                     onClick={() => handleUserinfosClick(user)}
                   >
-                    <img
-                      src={
-                        user.imageUrl ||
-                        "https://www.w3schools.com/w3images/avatar2.png"
-                      }
-                      alt={`${user.firstname}'s avatar`}
-                      className="user-image"
-                    />
+                    <img src={`http://localhost:4000/${user.imageUrl}`} alt={`${user.firstname}'s avatar`} className="match-card-image" />
                   </div>
                 ))
               ) : (

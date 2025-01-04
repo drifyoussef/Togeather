@@ -7,7 +7,11 @@ services:
     ports:
       - "4000:4000"
     environment:
-      - NODE_ENV=production
+      - NODE_ENV=development
+    volumes:
+      - backend-data:/usr/src/app/src/uploads
+    mem_limit: 4g
+
 
 
   frontend:
@@ -18,6 +22,10 @@ services:
     ports:
       - "3000:3000"
     environment:
-      - NODE_ENV=production
+      - NODE_ENV=development
     depends_on:
       - backend
+    mem_limit: 4g
+
+volumes:
+  backend-data:

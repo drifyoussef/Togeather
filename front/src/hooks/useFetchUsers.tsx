@@ -11,10 +11,16 @@ export const useFetchUsers = () => {
 
   useEffect(() => {
     const token = localStorage.getItem("token");
+    console.log(token, 'token from useFetchUsers');
+    const currentUserId = localStorage.getItem("currentUserId");
+    console.log(currentUserId, 'currentUserId from useFetchUsers');
 
     const currentPath = window.location.pathname;
 
-    if (!token && currentPath !== '/auth/login' && currentPath !== '/auth/register' && currentPath !== '/connection') {
+    //console.log("Current Path:", currentPath);
+    //console.log("Token:", token);
+
+    if (!token && currentPath !== '/auth/login' && currentPath !== '/auth/register' && currentPath !== '/connection' && currentPath !== '/confirm-email') {
       console.error("Token not found");
       localStorage.setItem("showSwal", "true");
       navigate('/auth/login');

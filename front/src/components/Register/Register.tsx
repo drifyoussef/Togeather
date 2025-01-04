@@ -93,12 +93,11 @@ const Register: React.FC = () => {
 
       // Register the user
       const response = await registerUser(userData);
-      if (response.token) {
+      if (response) {
         console.log("User registered successfully:", response);
-        console.log("Token dans le register:", response.token);
         navigate("/auth/login");
       } else {
-        throw new Error("Token not found in response");
+        throw new Error("Error registering user");
       }
     } catch (error) {
       console.error("Error registering user:", error);
