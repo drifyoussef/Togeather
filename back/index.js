@@ -212,7 +212,7 @@ let fetch;
 
       // Upload endpoint
     app.post('/upload', upload.single('file'), async (req, res) => {
-      console.log(req.file, "REQ FILE");
+      console.log(req.file, "Recieved file");
       if (!req.file) {
         return res.status(400).send('No file uploaded.');
       }

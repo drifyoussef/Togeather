@@ -201,11 +201,6 @@ label[name="name"], label[name="firstname"], label[name="email"], label[name="pa
     margin-top: 8px;
 }
 
-.div-register {
-  overflow-y: auto; /* Enable vertical scrolling */
-  max-height: 100vh; /* Ensure it doesn't exceed the viewport height */
-}
-
 ::-webkit-scrollbar {
   width: 12px;
   height: 12px;
@@ -230,7 +225,8 @@ label[name="name"], label[name="firstname"], label[name="email"], label[name="pa
 
 .register-form {
   width: 230px;
-  margin-top: 128px;
+  height: 400px; /* Valeur que j'ai changée */
+  overflow-y: scroll; /* Valeur que j'ai changée */
 }
   
 }

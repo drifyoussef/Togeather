@@ -73,7 +73,7 @@ const Register: React.FC = () => {
           body: formData,
         }
       );
-      const result = await imageResponse.text();
+      const result = await imageResponse.json();
       console.log(result);
 
       // Prepare user data with the uploaded image URL
