@@ -85,7 +85,7 @@ UserSchema.methods.resendConfirmationEmail = async function () {
     const encryptedToken = Buffer.from(emailConfirmationId).toString('base64');
     console.log(`Encrypted token: ${encryptedToken}`);
 
-    const confirmationLink = `http://localhost:3000/confirm-email?token=${encodeURIComponent(encryptedToken)}`;
+    const confirmationLink = `${process.env.ORIGIN}/confirm-email?token=${encodeURIComponent(encryptedToken)}`;
     console.log('Confirmation Link:', confirmationLink);
     
     await transporter.sendMail({

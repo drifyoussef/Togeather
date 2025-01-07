@@ -24,8 +24,8 @@ const createOrder = async (req, res) => {
             description: product.description,
         }],
         redirect_urls: {
-            return_url: `http://localhost:4000/successPayments?buyerId=${buyerId}&sellerId=${sellerId}`,
-            cancel_url: `http://localhost:4000/cancelPayments`,
+            return_url: `${process.env.REACT_APP_API_URL}/successPayments?buyerId=${buyerId}&sellerId=${sellerId}`,
+            cancel_url: `${process.env.REACT_APP_API_URL}/cancelPayments`,
         },
     };
 

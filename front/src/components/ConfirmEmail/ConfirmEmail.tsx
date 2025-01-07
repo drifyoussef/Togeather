@@ -17,7 +17,7 @@ const ConfirmEmail: React.FC<{ data: { message: string } }> = ({ data }) => {
 
     if (token) {
       console.log('Token found, making fetch request...');
-      fetch(`http://localhost:4000/account/verify/${token}`, {
+      fetch(`${process.env.REACT_APP_API_URL}/account/verify/${token}`, {
         method: 'GET',
         headers: {
           'Content-Type': 'application/json',

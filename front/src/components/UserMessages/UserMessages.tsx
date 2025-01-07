@@ -248,7 +248,7 @@ export default function UserMessages() {
         <div className="profile-match">
           <div className="header-profile-match">
             <div className="header-match-profile">
-            <img className="profile-picture" src={`http://localhost:4000/${selectedUser.imageUrl}`} alt={`${selectedUser.firstname} ${selectedUser.name}`} />
+            <img className="profile-picture" src={`${process.env.REACT_APP_API_URL}/${selectedUser.imageUrl}`} alt={`${selectedUser.firstname} ${selectedUser.name}`} />
               <div className="header-text-profile">
                 <p>{selectedUser.firstname} {selectedUser.name}, {selectedUser.age} ans</p>
                 <p>Catégorie de nourriture préferée : {selectedUser.favoriteCategory}</p>

@@ -244,7 +244,7 @@ export default function Home() {
                     className="user-card"
                     onClick={() => handleUserinfosClick(user)}
                   >
-                    <img src={`http://localhost:4000/${user.imageUrl}`} alt={`${user.firstname}'s avatar`} className="match-card-image" />
+                    <img src={`${process.env.REACT_APP_API_URL}/${user.imageUrl}`} alt={`${user.firstname}'s avatar`} className="match-card-image" />
                   </div>
                 ))
               ) : (

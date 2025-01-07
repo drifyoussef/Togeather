@@ -112,7 +112,7 @@ const UserProfile: React.FC = () => {
 
   return (
     <div className="user-profile">
-      <div className='user-profile-image'><img src={`http://localhost:4000/${user.imageUrl}`} className='user-profile-image' alt="User Profile" /></div>
+      <div className='user-profile-image'><img src={`${process.env.REACT_APP_API_URL}/${user.imageUrl}`} className='user-profile-image' alt="User Profile" /></div>
       <h1>{user.firstname} {user.name}</h1>
       <div>
         <div className="divGender">

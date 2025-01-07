@@ -241,7 +241,7 @@ let fetch;
     });
 
 
-    //http://localhost:4000/uploads/file-1733443004501.jpg
+    //${process.env.REACT_APP_API_URL}/uploads/file-1733443004501.jpg
 
 
     app.post('/users/register', redirectIfAuthenticatedMiddleware, storeUserController);

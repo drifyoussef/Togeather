@@ -191,6 +191,13 @@ input[type="radio"]:hover {
   font-weight: bold;
 }
 
+.user-img-register {
+  width: 150px;
+  height: 150px;
+  border-radius: 50%;
+  object-fit: cover;
+}
+
 @media only screen and (max-width: 320px), only screen and (max-width: 375px), only screen and (max-width: 425px)  {
 
   .name-firstname-div, .email-password-div {

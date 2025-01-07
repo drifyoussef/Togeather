@@ -26,6 +26,7 @@ const Register: React.FC = () => {
   const [job, setJob] = useState<string>("");
   const [inputValue, setInputValue] = useState<string>("");
   const [passions, setPassions] = useState<string[]>([]);
+  const [updatedField, setUpdatedField] = useState<string | null>(null);
   const [imageUrl, setImageUrl] = useState<string>(""); // Add state for image URL
   const [imageFile, setImageFile] = useState<File | null>(null); // Add state for image file
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -43,6 +44,31 @@ const Register: React.FC = () => {
     }
     return age;
   }, []);
+
+  const handleImageUpload = async (file: File) => {
+    console.log("File :", file);
+    if (!file) {
+      console.error("No file selected");
+      return;
+    }
+
+    const formData = new FormData();
+    formData.append("file", file);
+
+    try {
+      const imageResponse = await fetch(
+        `${process.env.REACT_APP_API_URL}/upload`,
+        {
+          method: "POST",
+          body: formData,
+        }
+      );
+      const result = await imageResponse.json();
+      setImageUrl(result.imageUrl);
+    } catch (error) {
+      console.error("Error uploading image:", error);
+    }
+  };
 
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
@@ -74,7 +100,9 @@ const Register: React.FC = () => {
         }
       );
       const result = await imageResponse.json();
-      console.log(result);
+      console.log(result, "result");
+
+      const imageUrl = result.imageUrl;
 
       // Prepare user data with the uploaded image URL
       const userData = {
@@ -143,6 +171,7 @@ const Register: React.FC = () => {
       const file = e.target.files[0];
       if (file) {
         setImageFile(file); // Set image file
+        handleImageUpload(file);
         const reader = new FileReader();
         reader.onload = (e: any) => {
           setImageUrl(e.target.result);
@@ -161,11 +190,32 @@ const Register: React.FC = () => {
         onSubmit={handleSubmit}
         encType="multipart/form-data"
       >
-        <div className="user-image">
-          {imageUrl && <img src={imageUrl} alt="User" className="user-img" />}
-          <div className="edit-button-container" onClick={handleEditClick}>
-            <FaEdit className="edit-button" />
-          </div>
+        <div className="profileImage">
+          {imageUrl ? (
+            <div className="user-img-profile-container">
+              <img src={`${process.env.REACT_APP_API_URL}/${imageUrl}`} alt="User" className="user-img-register" />
+              <div
+                className="edit-button-container-profile"
+                onClick={handleEditClick}
+              >
+                <FaEdit className="edit-button" />
+              </div>
+            </div>
+          ) : (
+            <div className="user-img-profile-container">
+              <img
+                src="https://www.w3schools.com/w3images/avatar2.png"
+                alt="default-userimage"
+                className="profileImageIcon"
+              />
+              <div
+                className="edit-button-container-profile"
+                onClick={handleEditClick}
+              >
+                <FaEdit className="edit-button" />
+              </div>
+            </div>
+          )}
         </div>
         <div className="name-firstname-div">
           <label>

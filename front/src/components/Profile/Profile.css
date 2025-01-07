@@ -66,12 +66,12 @@
 
 .profileImage{
     margin-bottom: 16px;
+    align-self: center;
 }
 
 .profileImageIcon{
-    font-size: 104px;
-    color: #FF0077;
-    margin: 16px;
+    width: 150px;
+    height: 150px;
     border-radius: 50%;
 }
 
@@ -98,6 +98,9 @@
     cursor: pointer;
     width: 20px;
     height: 20px;
+    position: absolute;
+    top: 16px;
+    right: 0px;
     text-align: center;
     transition: background-color 0.3s ease;
   }
