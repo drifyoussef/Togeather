@@ -33,8 +33,8 @@ const createOrder = async (req, res) => {
         }],
         // Redirections en cas de succès ou d'annulation
         redirect_urls: {
-            return_url: `${process.env.REACT_APP_API_URL}/successPayments?buyerId=${buyerId}&sellerId=${sellerId}`,
-            cancel_url: `${process.env.REACT_APP_API_URL}/cancelPayments`,
+            return_url: `${process.env.ORIGIN}/successPayments?buyerId=${buyerId}&sellerId=${sellerId}`,
+            cancel_url: `${process.env.ORIGIN}/cancelPayments`,
         },
     };
 
