@@ -9,6 +9,7 @@ import Card from "../Card/Card";
 import { useFetchUsers } from "../../hooks/useFetchUsers";
 import "./Home.css";
 
+// Catégories disponibles
 type Category =
   | "Asiatique"
   | "Pizza"
@@ -19,28 +20,36 @@ type Category =
   | "Glaces"
   | "Boissons";
 
+// Composant principal Home
 export default function Home() {
+  // Catégorie active (par défaut: null)
   const [activeCategory, setActiveCategory] = useState<Category | null>(null);
+  // Chargement des utilisateurs (par défaut: true)
   const [loading, setLoading] = useState(true); 
   const navigate = useNavigate();
-  const { users, preferredGender, mutualMatches } = useFetchUsers(); // Use the custom hook
+  // Récupérer les utilisateurs, le genre préféré et les matchs mutuels
+  const { users, preferredGender, mutualMatches } = useFetchUsers();
 
   useEffect(() => {
+    // Vérifier si des utilisateurs sont disponibles
     if (users.length > 0) {
-      setLoading(false); // Set loading to false when users are fetched
+      setLoading(false); // Désactiver le chargement
     }
   }, [users]);
 
+  // Gérer le clic sur une catégorie de restaurant
   const handleCategoryClick = (category: Category) => {
     setActiveCategory(category);
     navigate(`/browse/${category}`);
   };
 
+  // Gérer le clic pour la navigation vers la page de messages
   const handleUserinfosClick = (user: any) => {
     localStorage.setItem("selectedUserId", user._id);
     navigate(`/messages/${user._id}`);
   };
 
+  // Obtenir la sous-catégorie de genre préférée (Hommes, Femmes ou les deux)
   const getGenderSubcategory = (preferredGender: string) => {
     switch (preferredGender) {
       case "both":
@@ -54,6 +63,7 @@ export default function Home() {
     }
   };
 
+  // Filtrer les utilisateurs par genre préféré
   const filteredUsersList = users.filter((user:any) =>
     preferredGender === "both" ? true : user.userGender === preferredGender
   );
@@ -200,7 +210,7 @@ export default function Home() {
         </div>
         <div className="div-card">
           {loading ? (
-            <p className="loading-users">Chargement des utilisateurs...</p> // Show loading indicator
+            <p className="loading-users">Chargement des utilisateurs...</p> // chargement
           ) : filteredUsersList.length > 0 ? (
             filteredUsersList.map((user: any) => (
               <Card
@@ -215,11 +225,11 @@ export default function Home() {
                 imageUrl={
                   user.imageUrl ||
                   "https://www.w3schools.com/w3images/avatar2.png"
-                } // Default image if not available
+                } // Image par défaut si non disponible
                 image={
                   user.imageUrl ||
                   "https://www.w3schools.com/w3images/avatar2.png"
-                } // Default image if not available
+                } // Image par défaut si non disponible
                 text={`${user.firstname}, ${user.age} ans`}
                 job={user.job}
                 id={user._id}

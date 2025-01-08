@@ -7,8 +7,10 @@ import { GiChickenOven, GiTacos } from "react-icons/gi";
 import { LuSandwich } from "react-icons/lu";
 import { RiDrinks2Fill } from "react-icons/ri";
 
+// Catégories disponibles
 type Category = 'Asiatique' | 'Pizza' | 'Poulet' | 'Sandwich' | 'Mexicain' | 'Burger' | 'Glaces' | 'Boissons';
 
+// Propriétés du composant Card
 interface CardProps {
   imageUrl: string;
   category: Category;
@@ -19,6 +21,7 @@ interface CardProps {
   id: string;
 }
 
+// Icones pour les catégories
 const categoryIcons: Record<Category, React.ReactElement> = {
   Asiatique: <BiSolidSushi className="icon-category-card" />,
   Pizza: <FaPizzaSlice className="icon-category-card" />,
@@ -30,6 +33,7 @@ const categoryIcons: Record<Category, React.ReactElement> = {
   Boissons: <RiDrinks2Fill className="icon-category-card" />
 };
 
+// Composant Card
 export default function Card({
   category,
   subcategory,
@@ -40,10 +44,12 @@ export default function Card({
 }: CardProps) {
   const navigate = useNavigate();
 
+  // Rediriger vers la page de profil de l'utilisateur
   const handleClick = () => {
     navigate(`/profile/${id}`);
   };
 
+  // Affichage du composant Card
   return (
     <div className="card" onClick={handleClick}>
       <img src={`${process.env.REACT_APP_API_URL}/${imageUrl}`} alt="person" className="card-image" />

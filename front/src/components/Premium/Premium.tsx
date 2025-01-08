@@ -6,6 +6,7 @@ import "./Premium.css";
 
 export default function Premium() {
 
+  // Initialiser les options PayPal
   const initialOptions = {
     clientId: "AaPgqVFDb-rCqMTXaqGIrs_eX06bN_c6MpKe4QB6qc-5rU1Q7OXi6m5-UOuOV04TMH5d2oTIYBA-YJks",
     currency: "EUR",

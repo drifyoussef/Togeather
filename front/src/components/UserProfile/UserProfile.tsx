@@ -6,11 +6,14 @@ import { UserModel } from '../../models/User.model';
 import './UserProfile.css';
 
 const UserProfile: React.FC = () => {
+  // Récupérer l'ID de l'utilisateur à partir des paramètres de l'URL
   const { id } = useParams<{ id: string }>();
+  // Définir l'état de l'utilisateur et de l'indicateur "liked"
   const [user, setUser] = useState<UserModel | null>(null);
   const [liked, setLiked] = useState(false);
   const [reload, setReload] = useState(false);
 
+  // Fonction pour liker un utilisateur
   const likeUser = () => {
     const token = localStorage.getItem("token");
     console.log('token when like user', token);
@@ -27,13 +30,14 @@ const UserProfile: React.FC = () => {
       .then((response) => response.json())
       .then((data) => {
         setLiked(true);
-        setReload(true); // Trigger reload to refresh the state
+        setReload(true); // Mettre à jour l'état pour rafraîchir la page
       })
       .catch((error) => {
         console.error("Error liking user:", error);
       });
   };
 
+  // Fonction pour unliker un utilisateur
   const unlikeUser = () => {
     const token = localStorage.getItem("token");
     console.log('token when unlike user', token);
@@ -57,6 +61,7 @@ const UserProfile: React.FC = () => {
       });
   };
 
+  // Récupérer les détails de l'utilisateur connecté à partir de l'API
   useEffect(() => {
     const token = localStorage.getItem('token');
     const currentUserId = localStorage.getItem('currentUserId');
@@ -83,12 +88,15 @@ const UserProfile: React.FC = () => {
     }
   }, [id, reload]); // Add reload as a dependency
 
+  // log de l'état du like
   useEffect(() => {
     console.log('Rendering with liked state:', liked);
   }, [liked]);
 
+  // Afficher un message de chargement si l'utilisateur n'est pas encore chargé
   if (!user) return <p>Chargement...</p>;
 
+  // Fonction pour obtenir le genre préféré
   const getGenderSubcategory = (preferredGender: string) => {
     switch (preferredGender) {
       case "both":
@@ -102,6 +110,7 @@ const UserProfile: React.FC = () => {
     }
   };
 
+  // Fonction pour liker ou unliker
   const handleLike = () => {
     if (liked) {
       unlikeUser();

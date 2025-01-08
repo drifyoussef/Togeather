@@ -5,16 +5,20 @@ import { IoIosMail } from "react-icons/io";
 import Swal from 'sweetalert2';
 
 const ConfirmEmail: React.FC<{ data: { message: string } }> = ({ data }) => {
+  // Récupérer les paramètres de l'URL
   const location = useLocation();
+  // Naviguer vers une autre page
   const navigate = useNavigate();
 
   useEffect(() => {
+    // Extraire le token de l'URL
     const queryParams = new URLSearchParams(location.search);
     const token = queryParams.get('token');
 
     console.log('Query Params:', queryParams.toString());
     console.log('Token from ConfirmEmail:', token);
 
+    // Vérifier si le token est présent
     if (token) {
       console.log('Token found, making fetch request...');
       fetch(`${process.env.REACT_APP_API_URL}/account/verify/${token}`, {
@@ -30,6 +34,7 @@ const ConfirmEmail: React.FC<{ data: { message: string } }> = ({ data }) => {
         .then(data => {
           console.log('Data from confirm email:', data);
           if (data.message === 'Email confirmed successfully') {
+            // Afficher une alerte de succès de confirmation de l'email
             console.log('Email confirmed successfully, showing Swal...');
               console.log('navigating to /auth/login');
               Swal.fire({
@@ -39,6 +44,7 @@ const ConfirmEmail: React.FC<{ data: { message: string } }> = ({ data }) => {
               });
               navigate('/auth/login');
           } else {
+            // Alerte d'erreur de confirmation de l'email
             console.log('Email confirmation failed, showing error Swal...');
             Swal.fire({
               icon: 'error',
@@ -48,6 +54,7 @@ const ConfirmEmail: React.FC<{ data: { message: string } }> = ({ data }) => {
           }
         })
         .catch(error => {
+          // Afficher une alerte d'erreur de confirmation de l'email
           console.error('Error during fetch:', error);
           Swal.fire({
             icon: 'error',
@@ -56,6 +63,7 @@ const ConfirmEmail: React.FC<{ data: { message: string } }> = ({ data }) => {
           });
         });
     } else {
+      // Aucun token trouvé dans l'URL
       console.log('No token found in the URL');
       console.error('No token found in the URL');
     }

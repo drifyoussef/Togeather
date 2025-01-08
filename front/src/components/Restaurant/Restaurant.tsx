@@ -5,6 +5,7 @@ import { PiStarFill } from "react-icons/pi";
 import { FaHome, FaPhoneAlt } from "react-icons/fa";
 import "./Restaurant.css";
 
+// Propriétés du composant RestaurantDetails
 interface RestaurantDetailsProps {
   opening_hours?: {
     open_now?: boolean; // Marqué comme optionnel pour éviter les erreurs
@@ -20,7 +21,9 @@ interface RestaurantDetailsProps {
 }
 
 const Restaurant: React.FC = () => {
+  // Récupérer l'ID du restaurant à partir des paramètres de l'URL
   const { place_id } = useParams<{ place_id: string }>();
+  // Définir l'état du restaurant et des images
   const [restaurant, setRestaurant] = useState<RestaurantDetailsProps | null>(
     null
   );
@@ -28,6 +31,7 @@ const Restaurant: React.FC = () => {
 
   useEffect(() => {
     const token = localStorage.getItem("token");
+    // Récupérer les détails du restaurant
     const fetchRestaurantDetails = async () => {
       try {
         const response = await fetch(
@@ -45,12 +49,11 @@ const Restaurant: React.FC = () => {
         const data = await response.json();
         setRestaurant(data.result);
 
-        // Log the formatted address
         console.log("data:", data);
 
-        // Cache and display up to 3 photos if available
+        // Mettre en cache les images pour éviter de les recharger
         if (data.result.photos && data.result.photos.length > 0) {
-          const photos = data.result.photos.slice(0, 3); // Get up to 3 photos
+          const photos = data.result.photos.slice(0, 3); // Limiter à 3 photos
           const photoPromises = photos.map(async (photo: any) => {
             const cachedImage = localStorage.getItem(photo.photo_reference);
 
@@ -68,7 +71,7 @@ const Restaurant: React.FC = () => {
             }
           });
 
-          // Set images once all promises are resolved
+          // Récupérer les sources des images
           const imageSrcs = await Promise.all(photoPromises);
           setImageSrcs(imageSrcs);
         }
@@ -93,7 +96,7 @@ const Restaurant: React.FC = () => {
             src={src}
             alt={`${index + 1}`}
             onError={(e) => {
-              e.currentTarget.src = defaultimage; // Fallback to default image
+              e.currentTarget.src = defaultimage; // Image par défaut en cas d'erreur
             }}
           />
         ))}

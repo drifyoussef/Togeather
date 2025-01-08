@@ -4,19 +4,15 @@ import { useNavigate } from "react-router-dom";
 import Swal from "sweetalert2";
 
 const Login: React.FC = () => {
+  // Email et mot de passe
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
+  // Email non confirmé (par défaut: false)
   const [emailNotConfirmed, setEmailNotConfirmed] = useState(false);
   const navigate = useNavigate();
 
-  //localsotrage token
-  //const token = localStorage.getItem("token");
-
-  //console.log("token DU LOGIN", token);
-
-  //TOKEN DU LOGIN EST NULL CE QUI EST NORMAL LOGIQUEMENT
-
+  // Gérer la confirmation de l'email
   const handleResendConfirmation = async () => {
     try {
       await fetch(`${process.env.REACT_APP_API_URL}/resend-confirmation`, {
@@ -31,6 +27,7 @@ const Login: React.FC = () => {
     }
   };
 
+  // Afficher une alerte si l'utilisateur n'est pas connecté
   useEffect(() => {
     const showSwal = localStorage.getItem("showSwal");
     if (showSwal === "true") {
@@ -43,11 +40,13 @@ const Login: React.FC = () => {
     }
   }, [email]);
 
+  // Gérer la soumission du formulaire
   const handleSubmit = async (event: any) => {
     event.preventDefault();
     setError('');
     setEmailNotConfirmed(false);
 
+    // Connexion de l'utilisateur
     try {
       const response = await fetch(`${process.env.REACT_APP_API_URL}/users/login`, {
         method: 'POST',
@@ -61,25 +60,32 @@ const Login: React.FC = () => {
         const errorData = await response.json();
         setError(errorData.message);
         if (errorData.emailNotConfirmed) {
+          // Erreur lors de la connexion de l'utilisateur (email non confirmé)
           setEmailNotConfirmed(true);
         }
         console.error('Login failed:', errorData);
       } else {
+        // Connexion réussie
         const successData = await response.json();
         //console.log('successdata', successData);
         console.log('Login successful:', successData.message);
         if (successData.token) {
+          // Créer un token et le stocke dans le localStorage
           localStorage.setItem('token', successData.token);
-          localStorage.setItem('currentUserId', successData.userId); // Store the user ID
+          // Stocker l'ID de l'utilisateur actuel dans le localStorage
+          localStorage.setItem('currentUserId', successData.userId);
+          // Stocker le prénom de l'utilisateur dans le localStorage
           localStorage.setItem('firstname', successData.firstname);
           console.log('userId from login', successData.userId);
+          // Rediriger l'utilisateur vers la page d'accueil
           navigate('/');
         } else {
-          // Handle login error
+          // Erreur lors de la connexion de l'utilisateur
           console.error('Login failed:', successData.message);
         }
       }
     } catch (error) {
+      // Erreur lors de la connexion de l'utilisateur
       console.error('Error:', error);
       setError('Erreur lors du login.');
     }

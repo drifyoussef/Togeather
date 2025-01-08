@@ -2,64 +2,76 @@ import { PayPalButtons } from "@paypal/react-paypal-js";
 import React from "react";
 
 export default function PaypalPayment() {
+  // Créer une commande PayPal
   const createOrder = async (data: any, actions: any) => {
+    // Récupérer le token d'authentification
     const token = localStorage.getItem('token');
-    const buyerId = "imredzcsgo@gmail.com";
-    const sellerId = "togeather@gmail.com"; // Include sellerId here
+    const buyerId = "imredzcsgo@gmail.com"; // ID de l'acheteur
+    const sellerId = "togeather@gmail.com"; // ID du vendeur
 
     try {
+      // Créer une commande PayPal avec l'appel d'API
       const response = await fetch(`${process.env.REACT_APP_API_URL}/create-paypal-order`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
           Authorization: `Bearer ${token}`,
         },
+        // body contient les informations du produit et les ID de l'acheteur et du vendeur
         body: JSON.stringify({
           product: {
-            description: "Togeather premium",
-            cost: "2.99",
+            description: "Togeather premium", // Description du produit
+            cost: "2.99", // Prix du produit
           },
-          buyerId: buyerId,
-          sellerId: sellerId, // Include sellerId in the request body
+          buyerId: buyerId, // Inclure l'ID de l'acheteur dans le corps de la requête
+          sellerId: sellerId, // Inclure l'ID du vendeur dans le corps de la requête
         }),
       });
       console.log(data, 'data from createOrder');
       console.log(actions, 'actions from createOrder');
+      // Vérifier si la réponse est OK
       if (!response.ok) {
         throw new Error(`Error: ${response.statusText}`);
       }
+      // Extraire les données JSON
       const order = await response.json();
       console.log(order, 'order from createOrder');
-      localStorage.setItem('paymentId', order.paymentId); // Store paymentId in localStorage
-      return order.token; // Return the EC-XXX token
+      localStorage.setItem('paymentId', order.paymentId); // Récupérer le paymentId et le stocker dans le localStorage
+      return order.token; // retourner le token de commande
     } catch (error) {
       console.error("Error creating order:", error);
       throw error;
     }
   };
 
+  // Approuver la commande PayPal
   const onApprove = async (data: any, actions: any) => {
     try {
       console.log("onApprove data:", data); // Add logging
-      const paymentId = localStorage.getItem('paymentId'); // Retrieve paymentId from localStorage
+      const paymentId = localStorage.getItem('paymentId'); // Récupérer le paymentId du localStorage
+      // Approuver la commande PayPal avec l'appel d'API
       const response = await fetch(`${process.env.REACT_APP_API_URL}/successPayments`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
         body: JSON.stringify({
-          paymentId: paymentId, // Use the stored paymentId
-          PayerID: data.payerID,
-          sellerId: "togeather@gmail.com", // Include sellerId in the request body
+          paymentId: paymentId, // Utiliser le paymentId stocké dans le localStorage
+          PayerID: data.payerID, // Utiliser le PayerID de l'objet data
+          sellerId: "togeather@gmail.com", // ID du vendeur
         }),
       });
+      // Vérifier si la réponse est OK
       if (!response.ok) {
         throw new Error(`Error: ${response.statusText}`);
       }
+      // Extraire les données JSON
       const result = await response.json();
       console.log(result, 'result from onApprove');
+      // Afficher un message de succès
       return result;
     } catch (error) {
+      // Gérer les erreurs de la commande PayPal
       console.error("Error capturing order:", error);
       throw error;
     }

@@ -5,10 +5,11 @@ import { UserModel } from "../../models/User.model";
 import { useNavigate } from "react-router-dom";
 
 export default function Messages() {
+  // Récupérer les matchs mutuels
   const { mutualMatches } = useFetchUsers();
   const navigate = useNavigate();
-  // define console log of mutualMatches _id from the User.model.ts
   console.log(mutualMatches.map((user) => user._id));
+  // Définir le type Message
   interface Message {
     _id: string;
     content: string;
@@ -17,9 +18,11 @@ export default function Messages() {
     receiver: UserModel;
   }
 
+  // Charger les messages (state par défaut tableau vide: [])
   const [messages, setMessages] = useState<Message[]>([]);
 
   useEffect(() => {
+    //API call pour récupérer les messages
     const fetchMessages = async () => {
       try {
         const response = await fetch(
@@ -30,6 +33,7 @@ export default function Messages() {
             },
           }
         );
+        // Extraire les données JSON
         const data = await response.json();
         setMessages(data);
       } catch (error) {
@@ -40,6 +44,7 @@ export default function Messages() {
     fetchMessages();
   }, []);
 
+  // Gérer le clic sur un utilisateur
   const handleUserClick = (userId:any) => {
     navigate(`/messages/${userId}`);
   };

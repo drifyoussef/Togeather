@@ -8,6 +8,7 @@ import { TbPremiumRights } from "react-icons/tb";
 export default function Connexion() {
 
   const LoginRedirect = () => {
+    // Rediriger vers la page de connexion
     window.location.href = "/auth/login";
   };
   

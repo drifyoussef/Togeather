@@ -7,15 +7,18 @@ import { useFetchUsers } from "../../hooks/useFetchUsers";
 import Swal from "sweetalert2";
 
 const Navbar: React.FC = () => {
+  // Etat pour ouvrir/fermer le menu (mobile responsive false par défaut)
   const [isOpen, setIsOpen] = useState(false);
   const location = useLocation();
   const navigate = useNavigate();
   const { mutualMatches } = useFetchUsers();
 
+  // Fonction pour ouvrir/fermer le menu (mobile responsive)
   const toggleMenu = () => {
     setIsOpen(!isOpen);
   };
 
+  // Fonction pour se déconnecter
   const handleLogout = async () => {
     try {
       const response = await fetch("/auth/logout", {
@@ -33,6 +36,7 @@ const Navbar: React.FC = () => {
     }
   };
 
+  // Fonction pour gérer le clic dans la navbar pour afficher les messages du premier match
   const handleClickMessages = () => {
     if (mutualMatches.length > 0) {
       const firstUser = mutualMatches[0];
@@ -49,6 +53,7 @@ const Navbar: React.FC = () => {
     }
   };
 
+  // Vérifier si la page actuelle est une page de connexion
   const isConnectionPage = [
     "/connection",
     "/auth/login",

@@ -62,23 +62,29 @@ const createOrder = async (req, res) => {
     });
 };
 
+// Succès de la transaction
 const successPayments = async (req, res) => {
+    // Récupération des données de la requête (ID de paiement, ID du payeur, ID du vendeur)
     const { paymentId, PayerID, sellerId } = req.body;
 
+    // Vérification de la présence des données de paiement
     if (!paymentId || !PayerID || !sellerId) {
         return res.status(400).json({ message: 'Missing paymentId, PayerID, or sellerId' });
     }
 
     console.log('Executing Payment with:', { paymentId, PayerID, sellerId });
 
+    // Exécution du paiement avec l'ID de paiement et l'ID du payeur
     paypal.payment.execute(paymentId, { payer_id: PayerID }, async (error, payment) => {
         if (error) {
             console.error('Error capturing payment:', error.response || error);
+            // En cas d'erreur, on renvoie une erreur 500
             return res.status(500).json({ message: 'Error capturing payment', error });
         }
 
         console.log('Payment Response:', payment);
 
+        // Si le paiement est approuvé, on distribue les paiements
         if (payment.state === 'approved') {
             try {
                 await distributePayments(
@@ -95,8 +101,10 @@ const successPayments = async (req, res) => {
     });
 };
 
+// Distribution des paiements
 const distributePayments = async (payments, res) => {
     try {
+        // Création des promesses de paiement
         const payoutPromises = payments.map(paymentDetail => {
             const payout = {
                 sender_batch_header: {
@@ -115,6 +123,7 @@ const distributePayments = async (payments, res) => {
                 }],
             };
 
+            // Création de la promesse de paiement
             return new Promise((resolve, reject) => {
                 paypal.payout.create(payout, true, (error, payoutResponse) => {
                     if (error) {
@@ -125,10 +134,12 @@ const distributePayments = async (payments, res) => {
             });
         });
 
+        // Résolution de toutes les promesses de paiement
         const results = await Promise.all(payoutPromises);
         console.log('Payout results:', results);
         return res.json({ message: 'Payments distributed successfully', results });
     } catch (error) {
+        // En cas d'erreur, on renvoie une erreur 500
         console.error('Error distributing payments:', error);
         return res.status(500).json({ message: 'Error distributing payments', error });
     }

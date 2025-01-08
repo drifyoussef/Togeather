@@ -20,6 +20,7 @@ const Profile: React.FC = () => {
 
   //console.log(connectedUserId, "ID of current user");
 
+  // Recharger les données utilisateur après modification
   useEffect(() => {
     if (reload) {
       fetchUserData();
@@ -27,6 +28,7 @@ const Profile: React.FC = () => {
     }
   }, [reload]);
 
+  // Récupérer les données utilisateur
   const fetchUserData = () => {
     const token = localStorage.getItem("token");
     fetch(`${process.env.REACT_APP_API_URL}/auth/user`, {
@@ -46,17 +48,23 @@ const Profile: React.FC = () => {
         }
       })
       .catch((error) => {
+        //Erreur lors de la récupération des données utilisateur
         console.error("Error fetching user:", error);
       });
   };
 
+  // Récupérer les données utilisateur lors du chargement du composant
   useEffect(() => {
     fetchUserData();
   }, []);
 
+  // Mettre à jour les données utilisateur
   useEffect(() => {
+    // Token de l'utilisateur connecté
     const token = localStorage.getItem("token");
+    // ID de l'utilisateur connecté
     const connectedUserId = localStorage.getItem("currentUserId");
+    // Si un champ a été mis à jour et que l'utilisateur est connecté
     if (updatedField && connectedUserId && user) {
       const updatedData = {
         userId: connectedUserId,
@@ -72,6 +80,7 @@ const Profile: React.FC = () => {
         passions: inputValues.passions,
       };
 
+      // Mettre à jour les données utilisateur
       fetch(`${process.env.REACT_APP_API_URL}/users/update`, {
         method: "POST",
         headers: {
@@ -92,21 +101,25 @@ const Profile: React.FC = () => {
           console.error("Error updating user:", error);
         })
         .finally(() => {
+          // Recharger les données utilisateur
           setUpdatedField(null);
           setReload(true);
         });
     }
   }, [updatedField, inputValues, user, connectedUserId]);
 
+  // Supprimer le compte utilisateur
   const handleDeleteAccount = async () => {
     const token = localStorage.getItem("token");
     const connectedUserId = localStorage.getItem("currentUserId");
   
+    // Vérifier si l'utilisateur est connecté
     if (!token || !connectedUserId) {
       console.error("User not authenticated");
       return;
     }
   
+    // Demander une confirmation avant de supprimer le compte
     try {
       const result = await Swal.fire({
         title: 'Êtes-vous sûr?',
@@ -118,6 +131,7 @@ const Profile: React.FC = () => {
         confirmButtonText: 'Oui, supprimez-le!'
       });
   
+      // Si l'utilisateur confirme la suppression du compte, lancer la requête de suppression
       if (result.isConfirmed) {
         const response = await fetch(`${process.env.REACT_APP_API_URL}/users/${connectedUserId}`, {
           method: "DELETE",
@@ -127,8 +141,10 @@ const Profile: React.FC = () => {
           },
         });
   
+        // Vérifier si la suppression du compte a réussi
         const data = await response.json();
   
+        // Si la suppression du compte a réussi, afficher une alerte de succès
         if (data.message === 'User deleted successfully') {
           console.log('User deleted successfully, showing Swal...');
           console.log('navigating to /auth/login');
@@ -138,14 +154,17 @@ const Profile: React.FC = () => {
             text: 'Votre compte a été supprimé avec succès',
           });
   
+          // Supprimer le token et l'ID de l'utilisateur connecté du localStorage
           localStorage.removeItem("token");
           localStorage.removeItem("currentUserId");
+          // Rediriger l'utilisateur vers la page de connexion
           navigate('/auth/login');
         } else {
           throw new Error("Failed to delete account");
         }
       }
     } catch (error) {
+      // Erreur lors de la suppression du compte
       console.error("Error deleting account:", error);
       Swal.fire(
         'Erreur!',
@@ -178,6 +197,7 @@ const Profile: React.FC = () => {
     //console.log(`Nouvelle Donnée ${field} a la valeur: ${inputValues[field]}`);
   };
 
+  // Changer l'image de l'utilisateur
   const handleImageUpload = async (file: File) => {
     console.log("File :", file);
     if (!file) {
@@ -198,13 +218,14 @@ const Profile: React.FC = () => {
       );
       const result = await imageResponse.json();
       setImageUrl(result.imageUrl);
-      // Update the user's imageUrl in the backend
+      // Mettre à jour l'image de l'utilisateur dans la base de données
       const token = localStorage.getItem("token");
       const updatedData = {
         userId: connectedUserId,
         imageUrl: result.imageUrl,
       };
 
+      // Mettre à jour les données utilisateur
       await fetch(`${process.env.REACT_APP_API_URL}/users/update`, {
         method: "POST",
         headers: {
@@ -214,12 +235,14 @@ const Profile: React.FC = () => {
         body: JSON.stringify(updatedData),
       });
 
+      // Mettre à jour le champ "imageUrl" dans la base de données
       setUpdatedField("imageUrl");
     } catch (error) {
       console.error("Error uploading image:", error);
     }
   };
 
+  // Gérer le clic sur le bouton d'édition de l'image
   const handleEditClick = () => {
     const fileInput = document.createElement("input");
     fileInput.type = "file";

@@ -13,6 +13,7 @@ import Modal from "react-modal";
 
 const Register: React.FC = () => {
   const navigate = useNavigate();
+  // Ajout des états pour les champs du formulaire
   const [name, setName] = useState<string>("");
   const [firstname, setFirstname] = useState<string>("");
   const [email, setEmail] = useState<string>("");
@@ -31,6 +32,7 @@ const Register: React.FC = () => {
   const [imageFile, setImageFile] = useState<File | null>(null); // Add state for image file
   const [isModalOpen, setIsModalOpen] = useState(false);
 
+  // Fonction pour calculer l'âge à partir de la date de naissance
   const calcAge = useCallback((birthdate: string): number => {
     const today = new Date();
     const birthDate = new Date(birthdate);
@@ -45,6 +47,7 @@ const Register: React.FC = () => {
     return age;
   }, []);
 
+  // Upload de l'image de profil
   const handleImageUpload = async (file: File) => {
     console.log("File :", file);
     if (!file) {
@@ -56,6 +59,7 @@ const Register: React.FC = () => {
     formData.append("file", file);
 
     try {
+      // Upload l'image API
       const imageResponse = await fetch(
         `${process.env.REACT_APP_API_URL}/upload`,
         {
@@ -70,8 +74,10 @@ const Register: React.FC = () => {
     }
   };
 
+  // Gérer la soumission du formulaire
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
+    // Si les conditions ne sont pas acceptées ou l'âge est inférieur à 18 ans ou aucun fichier image n'est sélectionné ne pas soumettre le formulaire
     if (!termsAccepted) {
       setError("Vous devez accepter les conditions d'utilisation.");
       return;
@@ -104,7 +110,7 @@ const Register: React.FC = () => {
 
       const imageUrl = result.imageUrl;
 
-      // Prepare user data with the uploaded image URL
+      // Données utilisateur à envoyer au serveur pour l'incription
       const userData = {
         imageUrl,
         name,
@@ -119,20 +125,23 @@ const Register: React.FC = () => {
         favoriteCategory,
       };
 
-      // Register the user
+      // Inscription de l'utilisateur
       const response = await registerUser(userData);
       if (response) {
         console.log("User registered successfully:", response);
+        // Rediriger l'utilisateur vers la page de connexion
         navigate("/auth/login");
       } else {
         throw new Error("Error registering user");
       }
     } catch (error) {
+      // Gérer les erreurs d'inscription
       console.error("Error registering user:", error);
       setError("An error occurred during registration.");
     }
   };
 
+  // Ouvrir et fermer la modal des conditions d'utilisation
   const openModal = () => {
     setIsModalOpen(true);
   };
@@ -141,10 +150,12 @@ const Register: React.FC = () => {
     setIsModalOpen(false);
   };
 
+  // Gérer le changement de l'input pour la modification des données (RGPD)
   const handleInputChange = (e: ChangeEvent<HTMLTextAreaElement>) => {
     setInputValue(e.target.value);
   };
 
+  // Gérer l'appui sur la touche Entrée pour ajouter une passion
   const handleKeyDown = (e: KeyboardEvent<HTMLTextAreaElement>) => {
     if (e.key === "Enter") {
       e.preventDefault();
@@ -152,6 +163,7 @@ const Register: React.FC = () => {
     }
   };
 
+  // Ajouter une passion à la liste
   const addPassion = (passion: string) => {
     if (passion.trim() !== "" && !passions.includes(passion.trim())) {
       setPassions([...passions, passion.trim()]);
@@ -159,10 +171,12 @@ const Register: React.FC = () => {
     }
   };
 
+  // Supprimer une passion de la liste
   const removePassion = (passion: string) => {
     setPassions(passions.filter((p) => p !== passion));
   };
 
+  // Gérer le clic sur l'icône d'édition pour importer une image de profil
   const handleEditClick = () => {
     const fileInput = document.createElement("input");
     fileInput.type = "file";
@@ -170,8 +184,8 @@ const Register: React.FC = () => {
     fileInput.onchange = (e: any) => {
       const file = e.target.files[0];
       if (file) {
-        setImageFile(file); // Set image file
-        handleImageUpload(file);
+        setImageFile(file); // Mise à jour du fichier image
+        handleImageUpload(file); // Upload de l'image
         const reader = new FileReader();
         reader.onload = (e: any) => {
           setImageUrl(e.target.result);

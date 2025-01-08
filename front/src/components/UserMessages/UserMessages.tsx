@@ -8,15 +8,20 @@ import io from "socket.io-client";
 const socket = io(process.env.REACT_APP_API_URL);
 
 export default function UserMessages() {
+  // Récupérer l'ID de l'utilisateur
   const { id } = useParams();
+  // Récupérer les matchs mutuels
   const { mutualMatches } = useFetchUsers();
   const navigate = useNavigate();
+  // Récupérer l'ID de l'utilisateur connecté
   const connectedUserId = localStorage.getItem("currentUserId");
+  // Récupérer le prénom de l'utilisateur connecté
   const connectedFirstname = localStorage.getItem("firstname");
 
   console.log(connectedUserId, "CONNECTED USER ID FROM USERMESSAGES");
   console.log(connectedFirstname, "CONNECTED FIRSTNAME FROM USERMESSAGES");
 
+  // Définir le type Message
   interface Message {
     _id: string;
     content: string;
@@ -25,14 +30,20 @@ export default function UserMessages() {
     receiver: UserModel;
   }
 
+  // Charger les messages (state par défaut tableau vide: [])
   const [messages, setMessages] = useState<Message[]>([]);
+  // Charger le nouveau message (state par défaut: "")
   const [newMessage, setNewMessage] = useState("");
+  // Charger le rechargement (state par défaut: false)
   const [reload, setReload] = useState(false);
+  // Charger l'utilisateur sélectionné (state par défaut: null)
   const [selectedUser, setSelectedUser] = useState<UserModel | null>(null);
+  // Charger la visibilité du chat (state par défaut: false pour le responsive mobile)
   const [isChatVisible, setIsChatVisible] = useState(false);
 
   console.log(messages, "MESSAGES");
 
+  // Fonction pour récupérer les messages globaux
   const fetchMessages = async () => {
     try {
       const response = await fetch(
@@ -50,6 +61,7 @@ export default function UserMessages() {
     }
   };
 
+  // Utiliser le hook useEffect pour charger les messages
   useEffect(() => {
     if (reload) {
       fetchMessages();
@@ -57,6 +69,7 @@ export default function UserMessages() {
     }
   }, [reload]);
 
+  // Utiliser le hook useEffect pour charger les messages par id
   useEffect(() => {
     const fetchUserMessages = async () => {
       try {
@@ -75,17 +88,21 @@ export default function UserMessages() {
       }
     };
 
+    // Charger les messages de l'utilisateur²
     fetchUserMessages();
 
+    // WebSocket pour recevoir les messages
     socket.on("receiveMessage", (message: any) => {
       setMessages((prevMessages) => [...prevMessages, message]);
     });
 
+    // Nettoyer le socket
     return () => {
       socket.off("receiveMessage");
     };
   }, [id]);
 
+  // Utiliser le hook useEffect pour charger l'utilisateur sélectionné
   useEffect(() => {
     const selectedUserId = localStorage.getItem("selectedUserId");
     if (selectedUserId) {
@@ -96,9 +113,11 @@ export default function UserMessages() {
     }
   }, [mutualMatches]);
 
+  // Fonction pour envoyer un message
   const handleSendMessage = async () => {
     if (newMessage.trim() === "") return;
 
+    // Données du message
     const messageData = {
       content: newMessage,
       senderId: connectedUserId,
@@ -107,6 +126,7 @@ export default function UserMessages() {
     };
 
     try {
+      // Envoi du message à l'API
       const response = await fetch(`${process.env.REACT_APP_API_URL}/messages`, {
         method: "POST",
         headers: {
@@ -129,6 +149,7 @@ export default function UserMessages() {
     }
   };
 
+  // Fonction pour gérer le clic sur un utilisateur
   const handleUserClick = (user: UserModel) => {
     setSelectedUser(user);
     localStorage.setItem("selectedUserId", user._id);
@@ -137,6 +158,7 @@ export default function UserMessages() {
     console.log(setIsChatVisible, "SETISCHATVISIBLE");
   };
 
+  // Fonction pour afficher un message
   const displayMessage = (messageData: any) => {
     const chat = document.querySelector('.chat');
     const messageContainer = document.createElement('div');
@@ -157,24 +179,29 @@ export default function UserMessages() {
     }
   };
 
+  // Fonction pour récupérer le dernier message
   const getLatestMessage = (userId: string) => {
     if (!connectedUserId) {
       console.error("connectedUserId is null or undefined");
       return { content: "", sender: null };
     }
-  
+   
+    // Filtrer les messages de l'utilisateur
     const userMessages = messages.filter(
       (message) =>
         (message.sender && message.sender._id === userId && message.receiver && message.receiver._id === connectedUserId) ||
         (message.sender && message.sender._id === connectedUserId && message.receiver && message.receiver._id === userId)
     );
   
+    // Si aucun message n'est trouvé
     if (userMessages.length === 0) return { content: "", sender: null };
   
+    // Trouver le dernier message
     const latestMessage = userMessages.reduce((latest, current) =>
       new Date(latest.createdAt) > new Date(current.createdAt) ? latest : current
     );
   
+    // Retourner le dernier message
     return { content: latestMessage.content, sender: latestMessage.sender };
   };
 
