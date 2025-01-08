@@ -1,5 +1,6 @@
 import { PayPalButtons } from "@paypal/react-paypal-js";
 import React from "react";
+import Swal from 'sweetalert2';
 
 export default function PaypalPayment() {
   // Créer une commande PayPal
@@ -68,11 +69,23 @@ export default function PaypalPayment() {
       // Extraire les données JSON
       const result = await response.json();
       console.log(result, 'result from onApprove');
+      // Afficher une alerte de paiement réussi
+      Swal.fire({
+        icon: 'success',
+        title: 'Paiement réussi',
+        text: 'Votre paiement a été effectué avec succès!',
+      });
       // Afficher un message de succès
       return result;
     } catch (error) {
       // Gérer les erreurs de la commande PayPal
       console.error("Error capturing order:", error);
+      // Afficher une alerte d'erreur de paiement
+      Swal.fire({
+        icon: 'error',
+        title: 'Échec du paiement',
+        text: 'Une erreur est survenue lors de la capture du paiement.',
+      });
       throw error;
     }
   };
@@ -81,7 +94,14 @@ export default function PaypalPayment() {
     <PayPalButtons
       createOrder={(data: any, actions: any) => createOrder(data, actions)}
       onApprove={(data: any, actions: any) => onApprove(data, actions)}
-      onError={(err) => console.error("PayPal Button Error:", err)} // Add error handling
+      onError={(err) => {
+        console.error("PayPal Button Error:", err);
+        Swal.fire({
+          icon: 'error',
+          title: 'Erreur de paiement',
+          text: 'Une erreur est survenue avec le bouton PayPal.',
+        });
+      }}
     />
   );
 }
