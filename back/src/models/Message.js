@@ -1,5 +1,6 @@
 const mongoose = require('mongoose');
 
+// Création du schéma Message
 const MessageSchema = new mongoose.Schema({
   content: {
     type: String,

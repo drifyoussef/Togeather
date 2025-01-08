@@ -1,42 +1,44 @@
-const express = require('express');
-const mongoose = require('mongoose');
-const cors = require('cors');
-const expressSession = require('express-session');
-const multer = require('multer');
-const path = require('path');
-const { paypalConfig } = require('./src/config/paypalConfig');
-const newUserController = require('./src/controllers/newUser');
-const paypal = require('./src/services/paypal-api.js');
+const express = require('express'); // Import express
+const mongoose = require('mongoose'); // Import mongoose
+const cors = require('cors'); // Import cors
+const expressSession = require('express-session'); // Import express-session
+const multer = require('multer'); // Import multer
+const path = require('path'); // Import path
+const { paypalConfig } = require('./src/config/paypalConfig'); // Import paypalConfig
+const newUserController = require('./src/controllers/newUser'); // Import newUserController
+const paypal = require('./src/services/paypal-api.js'); // Import paypal-api
 const bodyParser = require('body-parser'); // Import body-parser
-const storeUserController = require('./src/controllers/storeUser');
-const loginController = require('./src/controllers/login');
-const loginUserController = require('./src/controllers/loginUser');
-const authMiddleware = require('./src/middlewares/authMiddleware');
-const redirectIfAuthenticatedMiddleware = require('./src/middlewares/redirectIfAuthenticatedMiddleware');
-const logoutController = require('./src/controllers/logout');
-const getUserController = require('./src/controllers/getUser');
-const getUsersController = require('./src/controllers/getUsers');
-const getUserByIdController = require('./src/controllers/getUserById');
-const likeUserController = require('./src/controllers/likeUser');
-const updateUserController = require('./src/controllers/updateUser');
-const messagesRouter = require('./src/routes/messages');
-const User = require('./src/models/User');
-const { createOrder, successPayments } = require('./src/services/paypal-api.js');
+const storeUserController = require('./src/controllers/storeUser'); // Import storeUserController
+const loginController = require('./src/controllers/login'); // Import loginController
+const loginUserController = require('./src/controllers/loginUser'); // Import loginUserController
+const authMiddleware = require('./src/middlewares/authMiddleware'); // Import authMiddleware
+const redirectIfAuthenticatedMiddleware = require('./src/middlewares/redirectIfAuthenticatedMiddleware'); // Import redirectIfAuthenticatedMiddleware
+const logoutController = require('./src/controllers/logout'); // Import logoutController
+const getUserController = require('./src/controllers/getUser'); // Import getUserController
+const getUsersController = require('./src/controllers/getUsers'); // Import getUsersController
+const getUserByIdController = require('./src/controllers/getUserById'); // Import getUserByIdController
+const likeUserController = require('./src/controllers/likeUser'); // Import likeUserController
+const updateUserController = require('./src/controllers/updateUser'); // Import updateUserController
+const messagesRouter = require('./src/routes/messages'); // Import messagesRouter
+const User = require('./src/models/User'); // Import User Model
+const { createOrder, successPayments } = require('./src/services/paypal-api.js'); // Import createOrder and successPayments de paypal-api
 const Message = require('./src/models/Message');
-const http = require('http');
-const socketIo = require('socket.io');
+const http = require('http'); // Import http
+const socketIo = require('socket.io'); // Import socket.io pour les websockets (messages en temps réel)
 const fs = require("fs");
 const appRoot = require('app-root-path');
 const jwt = require('jsonwebtoken');
-const crypto = require('crypto');
-const sharp = require('sharp');
+const crypto = require('crypto'); // Import crypto pour le chiffrement
+const sharp = require('sharp'); // Import sharp pour le redimensionnement d'images
 
+// import de fetch dynamique pour Node.js
 let fetch;
 
 (async () => {
     fetch = (await import('node-fetch')).default;
 
     paypalConfig();
+    // Configuration de express, du serveur et de socket.io
     const app = express();
     const server = http.createServer(app);
     const io = socketIo(server, {
@@ -46,6 +48,7 @@ let fetch;
         }
     });
 
+    // Configuration de socket.io
     io.on('connection', (socket) => {
         console.log('New client connected');
       
@@ -58,10 +61,11 @@ let fetch;
         });
     });
 
-       // Increase the limit for the request body size
+       // Configuration de body-parser pour récupérer les données du body
        app.use(bodyParser.json({ limit: '50mb' }));
        app.use(bodyParser.urlencoded({ limit: '50mb', extended: true }));
 
+    // Configuration de express pour utiliser les middlewares
     app.use(express.json());
     app.use(cors());
     app.use(expressSession({
@@ -70,6 +74,7 @@ let fetch;
         saveUninitialized: false,
     }));
 
+    // Configuration du middleware pour pouvoir utiliser les routes
     global.loggedIn = null;
     app.use('*', (req, res, next) => {
         loggedIn = req.session.userId;
@@ -83,13 +88,22 @@ let fetch;
         res.setHeader("Access-Control-Allow-Credentials", true);
         next();
     });
+    // Route avec middleware pour les messages en temps réel
     app.use('/messages', authMiddleware, messagesRouter);
 
+    // Recupération des routes
+    //Route pour s'enregistrer si la personne est enregistrée la redirection se fait vers la page de connexion 
+    // et la personne est enregistrée dans la base de données
     app.get('/auth/register', redirectIfAuthenticatedMiddleware, newUserController);
+    // Route pour se déconnecter
     app.get('/auth/logout', logoutController);
+    // Route pour se connecter
     app.get('/auth/user', authMiddleware, getUserController);
+    // Route pour récupérer les utilisateurs
     app.get('/auth/users', authMiddleware, getUsersController);
+    // Route pour récupérer un utilisateur par son id
     app.get('/auth/users/:id', authMiddleware, getUserByIdController);
+    // Route pour récuperer les messages
     app.get('/messages', authMiddleware, async (req, res) => {
         try {
             const messages = await Message.find().populate('sender receiver');
@@ -99,6 +113,7 @@ let fetch;
         }
     });
 
+    // Route pour récupérer les messages d'un utilisateur via l'id du destinataire ou de l'expéditeur
     app.get('/messages/:id', authMiddleware, async (req, res) => {
         try {
             const { id } = req.params;
@@ -109,10 +124,13 @@ let fetch;
         }
     });
 
+    // Route par défaut (Hello World)
     app.get('/', function (req, res) {
         res.json({ message: "Hello-world" });
     });
 
+
+    // Route pour avoir les informations d'un restaurant
     app.get('/api/restaurant/:place_id', async (req, res) => {
         try {
             const { place_id } = req.params;
@@ -132,6 +150,7 @@ let fetch;
     });
 
 
+    // Route pour récupérer les restaurants
     app.get('/api/restaurants', async (req, res) => {
         try {
             const { location, radius, keyword } = req.query;
@@ -148,6 +167,7 @@ let fetch;
         }
     });
 
+    // Route pour récupérer les photos d'un restaurant
     app.get('/api/restaurant/photo/:photo_reference', async (req, res) => {
         try {
             const { photo_reference } = req.params;
@@ -170,6 +190,7 @@ let fetch;
     });
 
 
+    // Route pour récupérer les restaurants asiatiques
     app.get('/api/restaurants/asian', async (req, res) => {
         try {
             const { location, radius } = req.query;
@@ -181,6 +202,7 @@ let fetch;
         }
     });
 
+    // Route pour récupérer les restaurants italiens
     app.get('/api/restaurants/italian', async (req, res) => {
         try {
             const { location, radius } = req.query;
@@ -192,6 +214,7 @@ let fetch;
         }
     });
 
+    // Stocker les images dans le dossier uploads
     const storage = multer.diskStorage({
         destination: (req, file, cb) => {
             console.log(path.join(__dirname, 'src/uploads'), "PATH JOIN");
@@ -203,31 +226,36 @@ let fetch;
         }
     });
       
-      // Initialize upload
+    // Initialisation de l'upload avec mutler (limiter la taille des fichiers à 5MB)
     const MAX_FILE_SIZE = 5 * 1024 * 1024; // 5MB
     const upload = multer({ storage: storage });
       
       // Serve static files from the uploads folder
       //app.use('/uploads', express.static(path.join(__dirname, 'src/uploads')));
 
-      // Upload endpoint
+    // Route pour uploader une image
     app.post('/upload', upload.single('file'), async (req, res) => {
       console.log(req.file, "Recieved file");
+      // Si pas de fichier, on renvoie une erreur 400
       if (!req.file) {
         return res.status(400).send('No file uploaded.');
       }
     
+      // Si la taille du fichier dépasse la limite de 5MB, on renvoie une erreur 400
       if (req.file.size > MAX_FILE_SIZE) {
         return res.status(400).send('File size exceeds the maximum limit of 5MB.');
       }
 
+      // Redimensionner l'image pour pas qu'elle soit trop grande
       const resizedFilePath = path.join(path.dirname(req.file.path), `resized-${req.file.filename}`);
     
       try {
+        // Sharp pour redimensionner l'image
         await sharp(req.file.path)
-          .resize(400) // Resize to 400px width, maintaining aspect ratio
-          .toFile(resizedFilePath); // Save with the same filename in the same directory
+          .resize(400) // Redimensionner l'image à 400 pixels de large
+          .toFile(resizedFilePath); // Sauvegarder l'image redimensionnée avec un nouveau nom de fichier (resized- en plus)
     
+        // Réponse avec le chemin de l'image redimensionnée
         res.json({ imageUrl: `uploads/resized-${req.file.filename}` });
       } catch (error) {
         console.error('Error resizing image:', error);
@@ -235,6 +263,7 @@ let fetch;
       }
     });
 
+    // Route pour récupérer une image avec son nom de fichier
     app.get('/uploads/:filename', (req, res) => {
       console.log(path.join(__dirname, `src/uploads/${req.params.filename}`), "PATH JOIN");
       res.sendFile(path.join(__dirname, `src/uploads/${req.params.filename}`));
@@ -244,9 +273,13 @@ let fetch;
     //${process.env.REACT_APP_API_URL}/uploads/file-1733443004501.jpg
 
 
+    // Route pour s'enregistrer
     app.post('/users/register', redirectIfAuthenticatedMiddleware, storeUserController);
+    // Route pour se connecter
     app.post('/users/login', redirectIfAuthenticatedMiddleware, loginUserController);
+    // Route pour liker un utilisateur
     app.post('/auth/users/:id/like', authMiddleware, likeUserController);
+    // Route pour envoyer un message
     app.post('/messages', authMiddleware, async (req, res) => {
         try {
             const { senderId, receiverId, content } = req.body;
@@ -261,13 +294,16 @@ let fetch;
         }
     });
 
+    // Route pour mettre à jour un utilisateur
     app.post('/users/update', authMiddleware, updateUserController);
 
+    // Route pour créer une commande PayPal
     app.post('/create-paypal-order', createOrder);
 
-
+    // Route pour valider un paiement PayPal
     app.post('/successPayments', successPayments);
 
+    // Route pour renvoyer un email de confirmation
     app.post('/resend-confirmation', async (req, res) => {
         const { email } = req.body;
         try {
@@ -286,7 +322,8 @@ let fetch;
             res.status(500).json({ message: 'Error resending confirmation email' });
         }
     });
-    
+
+    // Route pour confirmer l'email
     app.post('/confirm-email', async (req, res) => {
         const { id } = req.body;
         console.log("Recieved ID", id);
@@ -331,13 +368,14 @@ const decrypt = (hash, ignoreHmac = true) => {
 
 //route pour vérifier le token de confirmation d'email
 app.get('/account/verify/:token', async (req, res) => {
+    // token est envoyé dans l'url
     const token = req.params.token;
     console.log("Received token:", token);
     try {
         const decodedToken = Buffer.from(token, 'base64').toString('utf-8');
         console.log("Decoded token:", decodedToken); // Add this line to log the decoded token
 
-         // Assuming the decoded token is a hexadecimal string
+         // Séparer l'IV et le contenu
          const [iv, content] = decodedToken.split(':');
          const hash = {
              iv,
@@ -345,10 +383,13 @@ app.get('/account/verify/:token', async (req, res) => {
          };
          console.log("Parsed hash:", hash); // Log the parsed hash
 
+        // Déchiffrer l'email
         const decryptedEmail = decrypt(hash);
         console.log("Decrypted email:", decryptedEmail); // Log the decrypted email
 
+        // Rechercher l'utilisateur avec l'email déchiffré
         const user = await User.findOne({ emailConfirmationId: `${hash.iv}:${hash.content}` });
+        // Si l'utilisateur n'existe pas, renvoyer une erreur 400
         if (!user) {
             console.log('User not found');
             return res.status(400).json({ message: 'Invalid confirmation ID' });
@@ -356,20 +397,23 @@ app.get('/account/verify/:token', async (req, res) => {
 
         console.log('User found:', user);
 
+        // Si l'utilisateur existe, confirmer l'email
         user.isEmailConfirmed = true;
         user.emailConfirmationId = null;
         await user.save();
         res.status(200).json({ message: 'Email confirmed successfully' });
     } catch (error) {
+        // En cas d'erreur, renvoyer une erreur 500
         console.error('Error confirming email:', error);
         res.status(500).json({ message: 'Error confirming email' });
     }
 });
-    
+    // Route pour annuler un paiement PayPal
     app.get('/cancelPayments', (req, res) => {
         res.send('Payment canceled');
     });
 
+    // Route pour supprimer un utilisateur
     app.delete('/users/:id', authMiddleware, async (req, res) => {
         try {
           const { id } = req.params;
@@ -384,6 +428,7 @@ app.get('/account/verify/:token', async (req, res) => {
         }
       });
 
+    // Connexion au serveur MongoDB
     async function main() {
         try {
             await mongoose.connect('mongodb+srv://youssefdrif1:dDrZdxQ519mc4zMM@togeathercluster.h2rtsua.mongodb.net/?retryWrites=true&w=majority&appName=TogeatherCluster');
@@ -393,6 +438,7 @@ app.get('/account/verify/:token', async (req, res) => {
         }
     }
 
+    // Lancer le serveur
     main()
         .then(() => console.log('Database connection established'))
         .catch(console.error);

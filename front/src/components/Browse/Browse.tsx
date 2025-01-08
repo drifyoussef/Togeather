@@ -10,6 +10,7 @@ import { PiStarFill } from "react-icons/pi";
 import Tacos from "../../../src/images/restaurants/tacos_avenue.jpeg";
 import defaultimage from "../../images/restaurants/default-image.jpg";
 
+// Données des restaurants
 interface Restaurant {
   place_id: string;
   name: string;
@@ -21,12 +22,18 @@ interface Restaurant {
 }
 
 const Browse: React.FC = () => {
+  // Récupérer la catégorie de restaurant
   const { category } = useParams<{ category: string }>();
+  // Naviguer vers une autre page
   const navigate = useNavigate();
+  // Restaurants (initialisé à un tableau vide)
   const [restaurants, setRestaurants] = useState<Restaurant[]>([]);
+  // Catégorie active (initialisé à null)
   const [activeCategory, setActiveCategory] = useState<string | null>(category || null);
+  // Images des restaurants (initialisé à un objet vide)
   const [imageSrcs, setImageSrcs] = useState<{ [key: string]: string }>({});
 
+  // Mettre à jour la catégorie active
   useEffect(() => {
     if (category) {
       setActiveCategory(category);
@@ -34,13 +41,16 @@ const Browse: React.FC = () => {
   }, [category]);
 
   useEffect(() => {
-    const token = localStorage.getItem("token");
-    const location = "46.5151961,-1.778677"; // Coordinates of Leclerc des Sables d'Olonne
-    const radius = 3000; // Radius in meters
+    const token = localStorage.getItem("token"); // Récupérer le token
+    const location = "46.5151961,-1.778677"; // Coordonnées des Sables d'Olonne
+    const radius = 3000; // Rayon de recherche en mètres (3000m = 3km)
 
+    // Fonction pour récupérer les restaurants
     const fetchRestaurants = async () => {
       try {
+        // URL de l'API pour récupérer les restaurants
         let url = `${process.env.REACT_APP_API_URL}/api/restaurants?location=${location}&radius=${radius}`;
+        // Si une catégorie est active alors ajouter un mot-clé à l'URL
         if (activeCategory) {
           const keywordMap: { [key: string]: string } = {
             Asiatique: "chinese",
@@ -55,6 +65,7 @@ const Browse: React.FC = () => {
           url += `&keyword=${keywordMap[activeCategory]}`;
         }
 
+        // Récupérer les restaurants
         const response = await fetch(url, {
           headers: {
             Authorization: `Bearer ${token}`,
@@ -62,22 +73,27 @@ const Browse: React.FC = () => {
           method: "GET",
         });
 
+        // Si une erreur survient alors afficher un message d'erreur
         if (!response.ok) {
           throw new Error(`HTTP error! status: ${response.status}`);
         }
 
-        const data: { results: Restaurant[] } = await response.json(); // Specify the type of `data`
-        setRestaurants(data.results);
+        const data: { results: Restaurant[] } = await response.json(); // Récupérer les données
+        setRestaurants(data.results); // Mettre à jour les restaurants
 
-        const displayedPhotoRefs: string[] = []; // Track displayed photo references
+        const displayedPhotoRefs: string[] = []; // Afficher les références des photos
 
-        // Cache images for each restaurant
+        // Mettre en cache les images des restaurants
         data.results.forEach((restaurant: Restaurant) => {
           if (restaurant.photos && restaurant.photos.length > 0) {
+            // Récupérer la référence de la photo du restaurant (première photo)
             const photoRef = restaurant.photos[0].photo_reference;
-            displayedPhotoRefs.push(photoRef); // Add to the array of displayed references
+            // Ajouter la référence de la photo à la liste des photos affichées
+            displayedPhotoRefs.push(photoRef);
+            // Récupérer l'image en cache
             const cachedImage = localStorage.getItem(photoRef);
 
+            // Si l'image est en cache alors l'ajouter à l'état
             if (cachedImage) {
               setImageSrcs((prev) => ({ ...prev, [restaurant.place_id]: cachedImage }));
             } else {
@@ -86,13 +102,14 @@ const Browse: React.FC = () => {
           }
         });
 
-        // Remove unused images from local storage
+        // Supprimer les images non utilisées du cache
         removeUnusedImages(displayedPhotoRefs);
       } catch (error) {
         console.error("Error fetching restaurants: ", error);
       }
     };
 
+    // Fonction pour récupérer l'image du restaurant
     const fetchImage = async (photoRef: string, placeId: string) => {
       try {
         const photoResponse = await fetch(
@@ -101,12 +118,12 @@ const Browse: React.FC = () => {
         const photoData = await photoResponse.json();
         const imageSrc = `data:image/jpeg;base64,${photoData.base64Image}`;
 
-        // Check storage limits
+        // Limite de stockage de 5 Mo
         const currentStorageSize = JSON.stringify(localStorage).length;
         const newItemSize = photoRef.length + imageSrc.length;
 
         if (currentStorageSize + newItemSize > 5 * 1024 * 1024) { // 5MB limit
-          // Optionally, clear some old items
+          // Supprimer les images non utilisées du cache
           removeUnusedImages(Object.keys(imageSrcs));
         }
 
@@ -117,9 +134,10 @@ const Browse: React.FC = () => {
       }
     };
 
+    // Fonction pour supprimer les images non utilisées du cache
     const removeUnusedImages = (displayedPhotoRefs: string[]) => {
       Object.keys(localStorage).forEach((key) => {
-        // Remove items that start with "AdCG" and are not displayed
+        // Supprimer les images non utilisées du cache (clés commençant par "AdCG" et non affichées)
         if (key.startsWith("AdCG") && !displayedPhotoRefs.includes(key)) {
           localStorage.removeItem(key);
         }
@@ -127,19 +145,23 @@ const Browse: React.FC = () => {
     };
 
     fetchRestaurants();
-  }, [activeCategory, imageSrcs]); // Added imageSrcs to the dependency array
+  }, [activeCategory, imageSrcs]); // Déclencher l'effet si la catégorie active ou les images des restaurants changent
 
+  // Trier les restaurants par note décroissante
   const sortedRestaurants = [...restaurants].sort(
     (a, b) => b.rating - a.rating
   );
 
+  // Afficher les 4 premiers restaurants triés
   const displayRestaurants = sortedRestaurants.slice(0, 4);
 
+  // Gérer le clic sur une catégorie
   const handleCategoryClick = (category: string) => {
     setActiveCategory(category);
     navigate(`/browse/${category}`);
   };
 
+  // Gérer le clic sur un identifiant (restaurant)
   const handlePlaceIDClick = (place_id: string) => {
     navigate(`/browse/${category}/${place_id}`);
   };

@@ -16,9 +16,9 @@ import Premium from './components/Premium/Premium';
 import Success from "./components/Success/Success";
 import Cancel from "./components/Cancel/Cancel";
 import ConfirmEmail from "./components/ConfirmEmail/ConfirmEmail";
-//import AuthMiddleware from "./components/AuthMiddleware/AuthMiddleware";
 
 
+// Composant principal de l'application (contient les routes)
 function App() {
   return (
     <Router>
