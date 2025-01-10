@@ -64,7 +64,7 @@
 }
 
 .icon-heart {
-  color: #ff0077;
+  color: #AD0051;
 }
 
 .icon-category {
@@ -85,7 +85,7 @@
 }
 
 .active .circle {
-  background-color: #ff0077;
+  background-color: #AD0051;
 }
 
 .active .icon-category {
@@ -94,7 +94,7 @@
 
 .active .p-category {
   font-weight: bold;
-  color: #ff0077;
+  color: #AD0051;
 }
 
 @media (max-width: 768px) {

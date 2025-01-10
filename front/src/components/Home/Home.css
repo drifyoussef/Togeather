@@ -73,7 +73,7 @@
     font-weight: 400;
     font-style: normal;
     font-size: 32px;
-    color: #FF0077;
+    color: #AD0051;
     margin-top: 32px;
     margin-left: 64px;
 }
@@ -83,20 +83,20 @@
     font-weight: 400;
     font-style: normal;
     font-size: 16px;
-    color: #FF0077;
+    color: #AD0051;
     margin-left: 64px;
     margin-top: 16px;
 }
 
 .p3-home{
-    color: #FF0077;
+    color: #AD0051;
     margin-left: 96px;
     margin-bottom: 16px;
     font-size: 32px;
 }
 
 .p-match {
-    color: #FF0077;
+    color: #AD0051;
     margin-left: 96px;
     font-size: 32px;
 }
@@ -140,7 +140,7 @@
 }
 
 .active .circle {
-  background-color: #ff0077;
+  background-color: #AD0051;
 }
 
 .active .icon-category {
@@ -149,7 +149,7 @@
 
 .active .p-category {
   font-weight: bold;
-  color: #ff0077;
+  color: #AD0051;
 }
 
 .loading-users {
@@ -159,7 +159,7 @@
 
 .icon-heart-home{
     border-radius: 50px;
-    background-color: #FF0077;
+    background-color: #AD0051;
     font-size: 16px!important;
     color: #fff!important;
     padding: 4PX;

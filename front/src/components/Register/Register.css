@@ -47,7 +47,7 @@ button {
   padding: 10px;
   border: none;
   border-radius: 4px;
-  background-color: #FF0077;
+  background-color: #AD0051;
   color: white;
   font-size: 16px;
   cursor: pointer;
@@ -73,7 +73,7 @@ input[type="radio"] {
   appearance: none;
   width: 20px;
   height: 20px;
-  border: 2px solid #FF0077;
+  border: 2px solid #AD0051;
   border-radius: 50%;
   outline: none;
   cursor: pointer;
@@ -86,7 +86,7 @@ input[type="radio"]:checked::before {
   width: 12px;
   height: 12px;
   border-radius: 50%;
-  background-color: #FF0077;
+  background-color: #AD0051;
   position: absolute;
   top: 50%;
   left: 50%;
@@ -94,7 +94,7 @@ input[type="radio"]:checked::before {
 }
 
 input[type="radio"]:hover {
-  border-color: #FF0077;
+  border-color: #AD0051;
 }
 
 .favoriteCategory{
@@ -102,7 +102,7 @@ input[type="radio"]:hover {
 }
 
 .passionTag{
-  background-color: #FF0077;
+  background-color: #AD0051;
   color: #fff;
   width: fit-content;
   padding: 8px;
@@ -160,12 +160,12 @@ input[type="radio"]:hover {
 }
 
 .edit-button {
-  color: #FF0077;
+  color: #AD0051;
   transition: color 0.3s ease;
 }
 
 .edit-button-container:hover {
-  background-color: #FF0077;
+  background-color: #AD0051;
   .edit-button {
     color: white;
   }
@@ -214,7 +214,7 @@ label[name="name"], label[name="firstname"], label[name="email"], label[name="pa
 }
 
 ::-webkit-scrollbar-thumb {
-  background-color: #FF0077;
+  background-color: #AD0051;
   border-radius: 6px;
   border: 3px solid #fff;
 }

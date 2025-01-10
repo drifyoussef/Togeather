@@ -23,7 +23,7 @@
   font-weight: 400;
   font-style: normal;
   font-size: 32px;
-  color: #ff0077;
+  color: #AD0051;
 }
 
 .p2-connection {
@@ -31,12 +31,12 @@
   font-weight: 400;
   font-style: normal;
   font-size: 16px;
-  color: #ff0077;
+  color: #AD0051;
   margin-top: 8px;
 }
 
 .connection {
-  color: #ff0077;
+  color: #AD0051;
   margin-left: 64px;
   margin-top: 32px;
   font-size: 20px;
@@ -68,7 +68,7 @@
   "Oxygen", "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue",
   sans-serif;
   background: none;
-  color: #FF0077;
+  color: #AD0051;
   margin-top: 0;
   width: fit-content;
   padding: 0;
@@ -76,7 +76,7 @@
   background-color: #fff;
   font-size: 24px;
   cursor: pointer;
-  border-bottom: 4px solid #FF0077;
+  border-bottom: 4px solid #AD0051;
   transition: background-color 0.3s, color 0.3s, border-bottom 0.3s;
 }
 
@@ -91,7 +91,7 @@
 .user-icon,
 .restaurant-icon,
 .premium-icon {
-  color: #ff0077;
+  color: #AD0051;
   font-size: 64px;
 }
 

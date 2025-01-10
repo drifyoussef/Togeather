@@ -2,7 +2,7 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
-  background-color: #FF0077;
+  background-color: #AD0051;
   padding: 1rem;
   /* height: 99px; on the figma the height of the navbar is 99px */ 
 }
@@ -85,7 +85,7 @@
     position: absolute;
     top: 90px;
     left: 0;
-    background-color: #FF0077;
+    background-color: #AD0051;
     z-index: 1000;
   }
 

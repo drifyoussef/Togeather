@@ -1,5 +1,5 @@
 .card {
-    outline: 2px solid #FF0077;
+    outline: 2px solid #AD0051;
     border-radius: 15px;
     box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
     width: 163px;
@@ -18,7 +18,7 @@
 .card:hover {
     transform: scale(1.07);
     cursor: pointer;
-    outline: 3px solid #FF0077;
+    outline: 3px solid #AD0051;
 }  
   
 .card-image {
