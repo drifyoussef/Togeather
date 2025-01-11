@@ -1,5 +1,6 @@
 .div-register {
   display: flex;
+  zoom: 0.9;
   justify-content: center;
   align-items: center;
   margin-top: 32px;
