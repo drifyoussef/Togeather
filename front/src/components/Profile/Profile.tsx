@@ -297,10 +297,12 @@ const Profile: React.FC = () => {
           {user ? (
             <div className="div-informations-container">
               <div className="divFirstname">
-                <label>Prénom :</label>
+                <label htmlFor="prenom">Prénom :</label>
                 {isEditing.firstname ? (
                   <input
                     type="text"
+                    id="prenom"
+                    name="prenom"
                     value={inputValues.firstname}
                     onChange={(e) => handleChange(e, "firstname")}
                     onBlur={() => handleSave("firstname")}
@@ -316,10 +318,12 @@ const Profile: React.FC = () => {
                 )}
               </div>
               <div className="divName">
-                <label>Nom :</label>
+                <label htmlFor="nom">Nom :</label>
                 {isEditing.name ? (
                   <input
                     type="text"
+                    id="nom"
+                    name="nom"
                     value={inputValues.name}
                     onChange={(e) => handleChange(e, "name")}
                     onBlur={() => handleSave("name")}
@@ -335,10 +339,12 @@ const Profile: React.FC = () => {
                 )}
               </div>
               <div className="divMail">
-                <label>Email :</label>
+                <label htmlFor="email">Email :</label>
                 {isEditing.email ? (
                   <input
                     type="text"
+                    id="email"
+                    name="email"
                     value={inputValues.email}
                     onChange={(e) => handleChange(e, "email")}
                     onBlur={() => handleSave("email")}
@@ -354,10 +360,12 @@ const Profile: React.FC = () => {
                 )}
               </div>
               <div className="divGender">
-                <label>Genre :</label>
+                <label htmlFor="genre">Genre :</label>
                 {isEditing.userGender ? (
                   <input
                     type="text"
+                    id="genre"
+                    name="genre"
                     value={inputValues.userGender}
                     onChange={(e) => handleChange(e, "userGender")}
                     onBlur={() => handleSave("userGender")}
@@ -373,10 +381,12 @@ const Profile: React.FC = () => {
                 )}
               </div>
               <div className="divFavGender">
-                <label>Préférence :</label>
+                <label htmlFor="preference">Préférence :</label>
                 {isEditing.preferredGender ? (
                   <input
                     type="text"
+                    id="preference"
+                    name="preference"
                     value={inputValues.preferredGender}
                     onChange={(e) => handleChange(e, "preferredGender")}
                     onBlur={() => handleSave("preferredGender")}
@@ -392,10 +402,12 @@ const Profile: React.FC = () => {
                 )}
               </div>
               <div className="divFavFood">
-                <label>Nourriture favorite :</label>
+                <label htmlFor="nourriture_favorite">Nourriture favorite :</label>
                 {isEditing.favoriteCategory ? (
                   <input
                     type="text"
+                    id="nourriture_favorite"
+                    name="nourriture_favorite"
                     value={inputValues.favoriteCategory}
                     onChange={(e) => handleChange(e, "favoriteCategory")}
                     onBlur={() => handleSave("favoriteCategory")}
@@ -411,10 +423,12 @@ const Profile: React.FC = () => {
                 )}
               </div>
               <div className="divAge">
-                <label>Age :</label>
+                <label htmlFor="age">Age :</label>
                 {isEditing.age ? (
                   <input
                     type="text"
+                    id="age"
+                    name="age"
                     value={inputValues.age}
                     onChange={(e) => handleChange(e, "age")}
                     onBlur={() => handleSave("age")}
@@ -430,10 +444,12 @@ const Profile: React.FC = () => {
                 )}
               </div>
               <div className="divJob">
-                <label>Mêtier :</label>
+                <label htmlFor="metier">Mêtier :</label>
                 {isEditing.job ? (
                   <input
                     type="text"
+                    id="metier"
+                    name="metier"
                     value={inputValues.job}
                     onChange={(e) => handleChange(e, "job")}
                     onBlur={() => handleSave("job")}
@@ -449,10 +465,12 @@ const Profile: React.FC = () => {
                 )}
               </div>
               <div className="divPassions">
-                <label>Passions :</label>
+                <label htmlFor="passions">Passions :</label>
                 {isEditing.passions ? (
                   <input
                     type="text"
+                    id="passions"
+                    name="passions"
                     value={inputValues.passions}
                     onChange={(e) => handleChange(e, "passions")}
                     onBlur={() => handleSave("passions")}

@@ -339,7 +339,7 @@ const Register: React.FC = () => {
         <div>
           <p className="genderLabel">Genre:</p>
           <div className="labelInputs">
-            <label>
+            <label htmlFor="homme">
               Homme
               <input
                 type="radio"
@@ -349,7 +349,7 @@ const Register: React.FC = () => {
                 required
               />
             </label>
-            <label>
+            <label htmlFor="femme">
               Femme
               <input
                 type="radio"
@@ -365,7 +365,7 @@ const Register: React.FC = () => {
         <div>
           <p className="genderLabel">Genre que vous souhaitez voir:</p>
           <div className="labelInputsSeen">
-            <label>
+            <label htmlFor="homme">
               Homme
               <input
                 type="radio"
@@ -375,7 +375,7 @@ const Register: React.FC = () => {
                 required
               />
             </label>
-            <label>
+            <label htmlFor="femme">
               Femme
               <input
                 type="radio"
@@ -385,7 +385,7 @@ const Register: React.FC = () => {
                 required
               />
             </label>
-            <label>
+            <label htmlFor="both">
               Les deux
               <input
                 type="radio"
@@ -402,6 +402,8 @@ const Register: React.FC = () => {
           <div className="terms-div">
             <input
               type="checkbox"
+              id="terms"
+              name="terms"
               checked={termsAccepted}
               onChange={(e) => setTermsAccepted(e.target.checked)}
             />

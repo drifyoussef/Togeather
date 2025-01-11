@@ -94,20 +94,22 @@ const Login: React.FC = () => {
   return (
     <div className="div-login">
       <form id="loginForm" onSubmit={handleSubmit}>
-        <label>
+        <label htmlFor="email">
           Email:
           <input
             type="email"
+            id="email"
             name="email"
             value={email}
             onChange={(e) => setEmail(e.target.value)}
             required
           />
         </label>
-        <label>
+        <label htmlFor="password">
           Mot de passe:
           <input
             type="password"
+            id="password"
             name="password"
             value={password}
             onChange={(e) => setPassword(e.target.value)}

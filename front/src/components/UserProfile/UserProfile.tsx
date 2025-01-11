@@ -125,27 +125,27 @@ const UserProfile: React.FC = () => {
       <h1>{user.firstname} {user.name}</h1>
       <div>
         <div className="divGender">
-          <label>Genre :</label>
+          <label htmlFor='genre'>Genre :</label>
           <p>{user.userGender}</p>
         </div>
         <div className="divFavGender">
-          <label>Préférence :</label>
+          <label htmlFor='preference'>Préférence :</label>
           <p>{getGenderSubcategory(user.preferredGender)}</p>
         </div>
         <div className="divFavFood">
-          <label>Nourriture favorite :</label>
+          <label htmlFor='nourriture_favorite'>Nourriture favorite :</label>
           <p>{user.favoriteCategory}</p>
         </div>
         <div className="divAge">
-          <label>Age :</label>
+          <label htmlFor='age'>Age :</label>
           <p>{user.age} ans</p>
         </div>
         <div className="divJob">
-          <label>Mêtier :</label>
+          <label htmlFor='metier'>Mêtier :</label>
           <p>{user.job || "Veuillez indiquer votre métier"}</p>
         </div>
         <div className="divPassions">
-          <label>Passions :</label>
+          <label htmlFor='passions'>Passions :</label>
           <p>{user.passions || "Veuillez indiquer vos passions"}</p>
         </div>
       </div>
