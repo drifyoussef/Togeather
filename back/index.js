@@ -30,6 +30,9 @@ const appRoot = require('app-root-path');
 const jwt = require('jsonwebtoken');
 const crypto = require('crypto'); // Import crypto pour le chiffrement
 const sharp = require('sharp'); // Import sharp pour le redimensionnement d'images
+const swaggerJsdoc = require('swagger-jsdoc'); // Import swagger-jsdoc
+const swaggerUi = require('swagger-ui-express'); // Import swagger-ui-express
+
 
 // import de fetch dynamique pour Node.js
 let fetch;
@@ -65,6 +68,27 @@ let fetch;
        app.use(bodyParser.json({ limit: '50mb' }));
        app.use(bodyParser.urlencoded({ limit: '50mb', extended: true }));
 
+    // Swagger setup
+    const swaggerOptions = {
+        swaggerDefinition: {
+            openapi: '3.0.0',
+            info: {
+                title: 'Togeather API',
+                version: '1.0.0',
+                description: 'Documentation API pour le site web Togeather',
+            },
+            servers: [
+                {
+                    url: `${process.env.REACT_APP_API_URL}`,
+                },
+            ],
+        },
+        apis: ['./index.js'], // Path to the API docs
+    };
+    
+    const swaggerDocs = swaggerJsdoc(swaggerOptions);
+    app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocs));
+
     // Configuration de express pour utiliser les middlewares
     app.use(express.json());
     app.use(cors());
@@ -94,16 +118,107 @@ let fetch;
     // Recupération des routes
     //Route pour s'enregistrer si la personne est enregistrée la redirection se fait vers la page de connexion 
     // et la personne est enregistrée dans la base de données
+    /**
+    * @swagger
+    * /auth/register:
+    *   get:
+    *     summary: Enregistre un nouvel utilisateur
+    *     tags: [Auth]
+    *     responses:
+    *       200:
+    *         description: Registration page
+    *       302:
+    *         description: Redirect if already authenticated
+    *       500:
+    *         description: Internal server error
+    */
     app.get('/auth/register', redirectIfAuthenticatedMiddleware, newUserController);
     // Route pour se déconnecter
+    /**
+ * @swagger
+ * /auth/logout:
+ *   get:
+ *     summary: Déconnecte l'utilisateur
+ *     tags: [Auth]
+ *     responses:
+ *       200:
+ *         description: Successful logout
+ *       500:
+ *         description: Internal server error
+ */
     app.get('/auth/logout', logoutController);
     // Route pour se connecter
+    /**
+    * @swagger
+    * /auth/user:
+    *   get:
+    *     summary: Récupère l'utilisateur connecté
+    *     tags: [Auth]
+    *     responses:
+    *       200:
+    *         description: Authenticated user retrieved successfully
+    *       401:
+    *         description: Unauthorized
+    *       500:
+    *         description: Internal server error
+    */
     app.get('/auth/user', authMiddleware, getUserController);
     // Route pour récupérer les utilisateurs
+    /**
+    * @swagger
+    * /auth/users:
+    *   get:
+    *     summary: Récupère tous les utilisateurs
+    *     tags: [Auth]
+    *     responses:
+    *       200:
+    *         description: Users retrieved successfully
+    *       401:
+    *         description: Unauthorized
+    *       500:
+    *         description: Internal server error
+    */
     app.get('/auth/users', authMiddleware, getUsersController);
     // Route pour récupérer un utilisateur par son id
+    /**
+    * @swagger
+    * /auth/users/{id}:
+    *   get:
+    *     summary: Récupère un utilisateur par son id
+    *     tags: [Auth]
+    *     parameters:
+    *       - in: path
+    *         name: id
+    *         schema:
+    *           type: string
+    *         required: true
+    *         description: User ID
+    *     responses:
+    *       200:
+    *         description: User retrieved successfully
+    *       401:
+    *         description: Unauthorized
+    *       404:
+    *         description: User not found
+    *       500:
+    *         description: Internal server error
+    */
     app.get('/auth/users/:id', authMiddleware, getUserByIdController);
     // Route pour récuperer les messages
+    /**
+     * @swagger
+     * /messages:
+     *   get:
+     *     summary: Récupère tous les messages
+     *     tags: [Messages]
+     *     responses:
+     *       200:
+     *         description: Messages retrieved successfully
+     *       401:
+     *         description: Unauthorized
+     *       500:
+     *         description: Internal server error
+     */
     app.get('/messages', authMiddleware, async (req, res) => {
         try {
             const messages = await Message.find().populate('sender receiver');
@@ -114,6 +229,27 @@ let fetch;
     });
 
     // Route pour récupérer les messages d'un utilisateur via l'id du destinataire ou de l'expéditeur
+    /**
+     * @swagger
+     * /messages/{id}:
+     *   get:
+     *     summary: Récupère les messages d'un utilisateur via son id ou l'id du destinataire
+     *     tags: [Messages]
+     *     parameters:
+     *       - in: path
+     *         name: id
+     *         schema:
+     *           type: string
+     *         required: true
+     *         description: User ID
+     *     responses:
+     *       200:
+     *         description: Messages retrieved successfully
+     *       401:
+     *         description: Unauthorized
+     *       500:
+     *         description: Internal server error
+     */
     app.get('/messages/:id', authMiddleware, async (req, res) => {
         try {
             const { id } = req.params;
@@ -125,6 +261,16 @@ let fetch;
     });
 
     // Route par défaut (Hello World)
+    /**
+     * @swagger
+     * /:
+     *   get:
+     *     summary: Default route
+     *     tags: [Default]
+     *     responses:
+     *       200:
+     *         description: Hello-world message
+     */
     app.get('/', function (req, res) {
         res.json({ message: "Hello-world" });
     });
@@ -150,6 +296,37 @@ let fetch;
     });
 
 
+       /**
+    * @swagger
+    * /api/restaurants:
+    *   get:
+    *     summary: Réccupère les restaurants
+    *     tags: [Restaurants]
+    *     parameters:
+    *       - in: query
+    *         name: location
+    *         schema:
+    *           type: string
+    *         required: true
+    *         description: Location coordinates
+    *       - in: query
+    *         name: radius
+    *         schema:
+    *           type: integer
+    *         required: true
+    *         description: Search radius
+    *       - in: query
+    *         name: keyword
+    *         schema:
+    *           type: string
+    *         required: false
+    *         description: Search keyword
+    *     responses:
+    *       200:
+    *         description: Successful retrieval of restaurants
+    *       500:
+    *         description: Internal server error
+    */
     // Route pour récupérer les restaurants
     app.get('/api/restaurants', async (req, res) => {
         try {
@@ -234,6 +411,39 @@ let fetch;
       //app.use('/uploads', express.static(path.join(__dirname, 'src/uploads')));
 
     // Route pour uploader une image
+    /**
+    * @swagger
+    * /upload:
+    *   post:
+    *     summary: Upload une image
+    *     tags: [Upload]
+    *     requestBody:
+    *       required: true
+    *       content:
+    *         multipart/form-data:
+    *           schema:
+    *             type: object
+    *             properties:
+    *               file:
+    *                 type: string
+    *                 format: binary
+    *                 description: The image file to upload
+    *     responses:
+    *       200:
+    *         description: Image uploaded and resized successfully
+    *         content:
+    *           application/json:
+    *             schema:
+    *               type: object
+    *               properties:
+    *                 imageUrl:
+    *                   type: string
+    *                   description: URL of the resized image
+    *       400:
+    *         description: No file uploaded or file size exceeds the limit
+    *       500:
+    *         description: Error processing image
+    */
     app.post('/upload', upload.single('file'), async (req, res) => {
       console.log(req.file, "Recieved file");
       // Si pas de fichier, on renvoie une erreur 400
@@ -264,6 +474,27 @@ let fetch;
     });
 
     // Route pour récupérer une image avec son nom de fichier
+    /**
+    * @swagger
+    * /uploads/{filename}:
+    *   get:
+    *     summary: Récupère une image par son nom de fichier
+    *     tags: [Upload]
+    *     parameters:
+    *       - in: path
+    *         name: filename
+    *         schema:
+    *           type: string
+    *         required: true
+    *         description: The name of the file to retrieve
+    *     responses:
+    *       200:
+    *         description: File retrieved successfully
+    *       404:
+    *         description: File not found
+    *       500:
+    *         description: Internal server error
+    */
     app.get('/uploads/:filename', (req, res) => {
       console.log(path.join(__dirname, `src/uploads/${req.params.filename}`), "PATH JOIN");
       res.sendFile(path.join(__dirname, `src/uploads/${req.params.filename}`));
@@ -274,12 +505,142 @@ let fetch;
 
 
     // Route pour s'enregistrer
+    /**
+     * @swagger
+     * /users/register:
+     *   post:
+     *     summary: Enregistre un nouvel utilisateur
+     *     tags: [Users]
+     *     requestBody:
+     *       required: true
+     *       content:
+     *         application/json:
+     *           schema:
+     *             type: object
+     *             properties:
+     *               name:
+     *                 type: string
+     *               firstname:
+     *                 type: string
+     *               email:
+     *                 type: string
+     *               password:
+     *                 type: string
+     *               age:
+     *                 type: integer
+     *               job:
+     *                 type: string
+     *               passions:
+     *                 type: array
+     *                 items:
+     *                   type: string
+     *               userGender:
+     *                 type: string
+     *               preferredGender:
+     *                 type: string
+     *               favoriteCategory:
+     *                 type: string
+     *     responses:
+     *       201:
+     *         description: User registered successfully
+     *       400:
+     *         description: Bad request
+     *       500:
+     *         description: Internal server error
+     */
     app.post('/users/register', redirectIfAuthenticatedMiddleware, storeUserController);
     // Route pour se connecter
+    /**
+    * @swagger
+    * /users/login:
+    *   post:
+    *     summary: Connecte un utilisateur
+    *     tags: [Users]
+    *     requestBody:
+    *       required: true
+    *       content:
+    *         application/json:
+    *           schema:
+    *             type: object
+    *             properties:
+    *               email:
+    *                 type: string
+    *               password:
+    *                 type: string
+    *     responses:
+    *       200:
+    *         description: Successful login
+    *         content:
+    *           application/json:
+    *             schema:
+    *               type: object
+    *               properties:
+    *                 message:
+    *                   type: string
+    *                 token:
+    *                   type: string
+    *                 userId:
+    *                   type: string
+    *                 firstname:
+    *                   type: string
+    *       401:
+    *         description: Invalid email or password
+    *       500:
+    *         description: Internal server error
+    */
     app.post('/users/login', redirectIfAuthenticatedMiddleware, loginUserController);
     // Route pour liker un utilisateur
+    /**
+     * @swagger
+     * /auth/users/{id}/like:
+     *   post:
+     *     summary: Like un utilisateur
+     *     tags: [Auth]
+     *     parameters:
+     *       - in: path
+     *         name: id
+     *         schema:
+     *           type: string
+     *         required: true
+     *         description: User ID
+     *     responses:
+     *       200:
+     *         description: User liked successfully
+     *       400:
+     *         description: Bad request
+     *       500:
+     *         description: Internal server error
+     */
     app.post('/auth/users/:id/like', authMiddleware, likeUserController);
     // Route pour envoyer un message
+    /**
+     * @swagger
+     * /messages:
+     *   post:
+     *     summary: Envoyer un message
+     *     tags: [Messages]
+     *     requestBody:
+     *       required: true
+     *       content:
+     *         application/json:
+     *           schema:
+     *             type: object
+     *             properties:
+     *               senderId:
+     *                 type: string
+     *                 description: ID of the sender
+     *               receiverId:
+     *                 type: string
+     *                 description: ID of the receiver
+     *               content:
+     *                 type: string
+     *                 description: Content of the message
+     *     responses:
+     *       200:
+     *         description: Message sent successfully
+     *       500:
+     *         description: Internal server error
+     */
     app.post('/messages', authMiddleware, async (req, res) => {
         try {
             const { senderId, receiverId, content } = req.body;
@@ -295,11 +656,100 @@ let fetch;
     });
 
     // Route pour mettre à jour un utilisateur
+    /**
+     * @swagger
+     * /users/update:
+     *   put:
+     *     summary: Met à jour les informations d'un utilisateur
+     *     tags: [Users]
+     *     requestBody:
+     *       required: true
+     *       content:
+     *         application/json:
+     *           schema:
+     *             type: object
+     *             properties:
+     *               name:
+     *                 type: string
+     *               firstname:
+     *                 type: string
+     *               email:
+     *                 type: string
+     *               age:
+     *                 type: integer
+     *               job:
+     *                 type: string
+     *               passions:
+     *                 type: array
+     *                 items:
+     *                   type: string
+     *               userGender:
+     *                 type: string
+     *               preferredGender:
+     *                 type: string
+     *               favoriteCategory:
+     *                 type: string
+     *     responses:
+     *       200:
+     *         description: User information updated successfully
+     *       400:
+     *         description: Bad request
+     *       500:
+     *         description: Internal server error
+     */
     app.post('/users/update', authMiddleware, updateUserController);
 
     // Route pour créer une commande PayPal
+    /**
+    * @swagger
+    * /create-paypal-order:
+    *   post:
+    *     summary: Créer une commande PayPal
+    *     tags: [PayPal]
+    *     requestBody:
+    *       required: true
+    *       content:
+    *         application/json:
+    *           schema:
+    *             type: object
+    *             properties:
+    *               amount:
+    *                 type: number
+    *                 description: The amount for the order
+    *     responses:
+    *       201:
+    *         description: PayPal order created successfully
+    *       400:
+    *         description: Bad request
+    *       500:
+    *         description: Internal server error
+    */
     app.post('/create-paypal-order', createOrder);
 
+    /**
+    * @swagger
+    * /successPayments:
+    *   post:
+    *     summary: Valider un paiement PayPal
+    *     tags: [PayPal]
+    *     requestBody:
+    *       required: true
+    *       content:
+    *         application/json:
+    *           schema:
+    *             type: object
+    *             properties:
+    *               orderId:
+    *                 type: string
+    *                 description: The ID of the PayPal order
+    *     responses:
+    *       200:
+    *         description: PayPal payment validated successfully
+    *       400:
+    *         description: Bad request
+    *       500:
+    *         description: Internal server error
+    */
     // Route pour valider un paiement PayPal
     app.post('/successPayments', successPayments);
 
@@ -324,6 +774,31 @@ let fetch;
     });
 
     // Route pour confirmer l'email
+    /**
+    * @swagger
+    * /confirm-email:
+    *   post:
+    *     summary: Confirmer l'email d'un utilisateur
+    *     tags: [Email]
+    *     requestBody:
+    *       required: true
+    *       content:
+    *         application/json:
+    *           schema:
+    *             type: object
+    *             properties:
+    *               email:
+    *                 type: string
+    *               confirmationCode:
+    *                 type: string
+    *     responses:
+    *       200:
+    *         description: Email confirmed successfully
+    *       400:
+    *         description: Bad request
+    *       500:
+    *         description: Internal server error
+    */
     app.post('/confirm-email', async (req, res) => {
         const { id } = req.body;
         console.log("Recieved ID", id);
@@ -367,6 +842,27 @@ const decrypt = (hash, ignoreHmac = true) => {
 };
 
 //route pour vérifier le token de confirmation d'email
+/**
+ * @swagger
+ * /account/verify/{token}:
+ *   get:
+ *     summary: Vérifie le token de confirmation d'email
+ *     tags: [Email]
+ *     parameters:
+ *       - in: path
+ *         name: token
+ *         schema:
+ *           type: string
+ *         required: true
+ *         description: Verification token
+ *     responses:
+ *       200:
+ *         description: Email verified successfully
+ *       400:
+ *         description: Invalid token
+ *       500:
+ *         description: Internal server error
+ */
 app.get('/account/verify/:token', async (req, res) => {
     // token est envoyé dans l'url
     const token = req.params.token;
@@ -409,11 +905,44 @@ app.get('/account/verify/:token', async (req, res) => {
     }
 });
     // Route pour annuler un paiement PayPal
+    /**
+     * @swagger
+     * /cancelPayments:
+     *   get:
+     *     summary: Annule un paiement PayPal
+     *     tags: [PayPal]
+     *     responses:
+     *       200:
+     *         description: Payment canceled
+     *       500:
+     *         description: Internal server error
+     */
     app.get('/cancelPayments', (req, res) => {
         res.send('Payment canceled');
     });
 
     // Route pour supprimer un utilisateur
+    /**
+     * @swagger
+     * /users/{id}:
+     *   delete:
+     *     summary: Supprime un utilisateur grâce à son id
+     *     tags: [Users]
+     *     parameters:
+     *       - in: path
+     *         name: id
+     *         schema:
+     *           type: string
+     *         required: true
+     *         description: User ID
+     *     responses:
+     *       200:
+     *         description: User deleted successfully
+     *       404:
+     *         description: User not found
+     *       500:
+     *         description: Internal server error
+     */
     app.delete('/users/:id', authMiddleware, async (req, res) => {
         try {
           const { id } = req.params;
