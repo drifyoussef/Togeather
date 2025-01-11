@@ -2,12 +2,11 @@ import React, { useState, useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import "./Browse.css";
 import { BiSolidSushi } from "react-icons/bi";
-import { FaPizzaSlice, FaHamburger, FaIceCream, FaHeart } from "react-icons/fa";
+import { FaPizzaSlice, FaHamburger, FaIceCream } from "react-icons/fa";
 import { GiChickenOven, GiFrenchFries } from "react-icons/gi";
 import { LuSandwich } from "react-icons/lu";
 import { RiDrinks2Fill } from "react-icons/ri";
 import { PiStarFill } from "react-icons/pi";
-import Tacos from "../../../src/images/restaurants/tacos_avenue.jpeg";
 import defaultimage from "../../images/restaurants/default-image.jpg";
 
 // Données des restaurants
@@ -227,28 +226,6 @@ const Browse: React.FC = () => {
                     </p>
                   </div>
                   <p className="browse-restaurant-review">{restaurant.rating}</p>
-                </div>
-              </div>
-            </div>
-          ))}
-        </div>
-      </div>
-      <div>
-        <div className="header-container">
-          <h1 className="header-container-title">Les coups de coeurs de la semaine</h1>
-          <FaHeart className="icon-title icon-heart" />
-        </div>
-        <div className="browse-container">
-          {[...Array(4)].map((_, index) => (
-            <div className="browse-card" key={index}>
-              <img src={Tacos} alt="" className="browse-image" />
-              <div className="browse-details">
-                <div className="browse-h2">
-                  <div>
-                    <h2 className="browse-name">Nom de restaurant {index + 1}</h2>
-                    <p className="open-status">Ouvert</p>
-                  </div>
-                  <p className="browse-restaurant-review">5.0</p>
                 </div>
               </div>
             </div>

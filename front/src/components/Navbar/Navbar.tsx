@@ -63,7 +63,7 @@ const Navbar: React.FC = () => {
   return (
     <nav className={`navbar ${isConnectionPage ? "navbar-connection" : ""}`}>
       <div className="navbar-logo">
-        <NavLink to={isConnectionPage ? "/connection" : "/"}><img src={Logo} alt="" className="home-navbar" /></NavLink>
+        <NavLink to={isConnectionPage ? "/connection" : "/"}><img src={Logo} alt="Home" className="home-navbar" /></NavLink>
       </div>
         <RxHamburgerMenu onClick={toggleMenu} className="navbar-toggle"/>
       <ul className={isOpen ? "navbar-links active" : "navbar-links"}>
