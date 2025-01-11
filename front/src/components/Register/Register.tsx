@@ -407,7 +407,7 @@ const Register: React.FC = () => {
               checked={termsAccepted}
               onChange={(e) => setTermsAccepted(e.target.checked)}
             />
-            <p className="accept-terms">
+            <label htmlFor="terms" className="accept-terms">
               {" "}
               J'accepte les{" "}
               <span
@@ -420,7 +420,7 @@ const Register: React.FC = () => {
               >
                 conditions d'utilisation
               </span>
-            </p>
+            </label>
           </div>
         </div>
 
