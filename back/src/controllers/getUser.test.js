@@ -1,13 +1,35 @@
-const getUser = require('./getUser'); // Adjust the path as necessary
+process.env.SECRET_KEY = 'your-secret-key-in-hex-format';
+const request = require('supertest');
+const express = require('express');
+const mongoose = require('mongoose');
+const User = require('../models/User');
+const getUser = require('./getUser');
 
-test('should return user data for a valid user ID', async () => {
-	const userId = 1;
-	const expectedUser = { id: 1, name: 'John Doe' }; // Example expected user data
-	const user = await getUser(userId);
-	expect(user).toEqual(expectedUser);
+jest.mock('../models/User');
+
+const app = express();
+app.use(express.json());
+
+app.get('/auth/user', (req, res) => {
+	req.user = { _id: '12345' }; // Mock user ID
+	getUser(req, res);
 });
 
-test('should throw an error for an invalid user ID', async () => {
-	const userId = -1;
-	await expect(getUser(userId)).rejects.toThrow('User not found');
+describe('GET /auth/user', () => {
+	beforeAll(() => {
+		mongoose.connect = jest.fn();
+	});
+
+	afterEach(() => {
+		jest.clearAllMocks();
+	});
+
+	it('should return 500 if there is a server error', async () => {
+
+		const res = await request(app).get('/auth/user');
+
+		expect(res.statusCode).toEqual(500);
+		expect(res.body).toEqual({ message: 'Error fetching user.' });
+		expect(User.findById).toHaveBeenCalledWith('12345');
+	});
 });
