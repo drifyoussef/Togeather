@@ -1,7 +1,7 @@
 import React from "react";
 import "./App.css";
 import Navbar from "./components/Navbar/Navbar";
-import { BrowserRouter as Router, Route, Routes, Navigate } from "react-router-dom";
+import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
 import Home from "./components/Home/Home";
 import Profile from "./components/Profile/Profile";
 import Messages from "./components/Messages/Messages";
@@ -17,9 +17,6 @@ import Success from "./components/Success/Success";
 import Cancel from "./components/Cancel/Cancel";
 import ConfirmEmail from "./components/ConfirmEmail/ConfirmEmail";
 
-const isAuthenticated = () => {
-  return localStorage.getItem('token') !== null;
-};
 
 // Composant principal de l'application (contient les routes)
 function App() {
@@ -27,25 +24,26 @@ function App() {
     <Router>
       <Navbar />
       <Routes>
-        <Route path="/" element={isAuthenticated() ? <Home /> : <Navigate to="/connection" />} />
-        <Route path="/profile" element={isAuthenticated() ? <Profile /> : <Navigate to="/connection" />} />
-        <Route path="/profile/:id" element={isAuthenticated() ? <UserProfile /> : <Navigate to="/connection" />} />
-        <Route path="/messages" element={isAuthenticated() ? <Messages /> : <Navigate to="/connection" />} />
-        <Route path="/messages/:id" element={isAuthenticated() ? <UserMessages /> : <Navigate to="/connection" />} />
-        <Route path="/browse" element={isAuthenticated() ? <Browse /> : <Navigate to="/connection" />} />
-        <Route path="/browse/:category" element={isAuthenticated() ? <Browse /> : <Navigate to="/connection" />} />
-        <Route path="/browse/:category/:place_id" element={isAuthenticated() ? <Restaurant /> : <Navigate to="/connection" />} />
+        <Route path="/" element={<Home />} />
+        <Route path="/profile" element={<Profile />} />
+        <Route path="/profile/:id" element={<UserProfile />} />
+        <Route path="/messages" element={<Messages />} />
+        <Route path="/messages/:id" element={<UserMessages />} />
+        <Route path="/browse" element={<Browse />} />
+        <Route path="/browse/:category" element={<Browse />} />
+        <Route path="/browse/:category/:place_id" element={<Restaurant />} />
         <Route path="/connection" element={<Connection />} />
         <Route path="/auth/register" element={<Register />} />
-        <Route path="/auth/login" element={<Login />} />
-        <Route path="/premium" element={isAuthenticated() ? <Premium /> : <Navigate to="/connection" />} />
-        <Route path="/success" element={isAuthenticated() ? <Success /> : <Navigate to="/connection" />} />
-        <Route path="/cancel" element={isAuthenticated() ? <Cancel /> : <Navigate to="/connection" />} />
-        <Route path="/confirm-email" element={<ConfirmEmail data={{ message: "" }} />} />
+        <Route path="/auth/login" element={<Login /> } />
+        <Route path="/premium" element={<Premium />} />
+        <Route path="/success" element={<Success />} />
+        <Route path="/cancel" element={<Cancel />} />
+        <Route path="/confirm-email" element={<ConfirmEmail data={{
+          message: ""
+        }} />} />
       </Routes>
     </Router>
   );
 }
-
 
 export default App;
