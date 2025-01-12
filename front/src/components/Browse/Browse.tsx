@@ -57,6 +57,7 @@ const Browse: React.FC = () => {
       };
 
       let url = `${process.env.REACT_APP_API_URL}/api/restaurants?location=${location}&radius=${radius}&keyword=${keywordMap[category]}`;
+      console.log(`Fetching restaurants with URL: ${url}`);
 
       const response = await fetch(url, {
         headers: {
@@ -70,6 +71,7 @@ const Browse: React.FC = () => {
       }
 
       const data: { results: Restaurant[] } = await response.json();
+      console.log(`API response data:`, data);
 
       // Trier les restaurants par note décroissante et limiter les résultats à 4 restaurants
       const sortedRestaurants = data.results.sort((a, b) => b.rating - a.rating).slice(0, 4);
