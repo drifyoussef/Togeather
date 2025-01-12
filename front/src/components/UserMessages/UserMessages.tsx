@@ -105,7 +105,7 @@ export default function UserMessages() {
   // Utiliser le hook useEffect pour charger l'utilisateur sélectionné
   useEffect(() => {
     const selectedUserId = localStorage.getItem("selectedUserId");
-    if (selectedUserId) {
+    if (selectedUserId && mutualMatches) {
       const user = mutualMatches.find((user) => user._id === selectedUserId);
       if (user) {
         setSelectedUser(user);
@@ -249,12 +249,12 @@ export default function UserMessages() {
               .map((message) => (
                 <div
                   key={message._id}
-                  className={`message ${message.sender._id === connectedUserId ? "right" : "left"}`}
+                  className={`message ${message.sender && message.sender._id === connectedUserId ? "right" : "left"}`}
                 >
-                  <div className="avatar">{message.sender._id === connectedUserId ? (connectedFirstname ? connectedFirstname.charAt(0) : "U") : (selectedUser ? selectedUser.firstname.charAt(0) : "U")}</div>
+                  <div className="avatar">{message.sender && message.sender._id === connectedUserId ? (connectedFirstname ? connectedFirstname.charAt(0) : "U") : (selectedUser ? selectedUser.firstname.charAt(0) : "U")}</div>
                   <div className="bubble">
                     <p className="user-message">{message.content}</p>
-                    <span className="time">Message de {message.sender.firstname} à {new Date(message.createdAt).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}</span>
+                    <span className="time">Message de {message.sender && message.sender.firstname} à {new Date(message.createdAt).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}</span>
                   </div>
                 </div>
               ))}
