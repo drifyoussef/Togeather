@@ -55,7 +55,7 @@ button {
 }
 
 button:hover {
-  background-color: #a5004d;
+  background-color: #470021;
 }
 
 .labelInputs, .labelInputsSeen{
@@ -227,7 +227,7 @@ label[name="name"], label[name="firstname"], label[name="email"], label[name="pa
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background-color: #a5004d;
+  background-color: #470021;
   cursor: pointer;
 }
 

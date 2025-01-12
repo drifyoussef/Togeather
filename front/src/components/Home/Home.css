@@ -130,6 +130,10 @@
     animation: rotate360 0.5s ease-in-out;
 }
 
+.div1, .div2, .div3, .div4, .div5, .div6, .div7, .div8{
+    margin-top: 4px;
+}
+
 @keyframes rotate360 {
     0% {
         transform: rotate(0deg);

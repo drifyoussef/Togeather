@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
-import defaultimage from "../../images/restaurants/default-image.jpg";
 import { PiStarFill } from "react-icons/pi";
 import { FaHome, FaPhoneAlt } from "react-icons/fa";
 import "./Restaurant.css";
@@ -15,7 +14,6 @@ interface RestaurantDetailsProps {
   rating: number;
   formatted_address: string;
   formatted_phone_number: string;
-  photos?: { photo_reference: string }[];
   website?: string; // Marqué comme optionnel
   user_ratings_total: string;
 }
@@ -27,7 +25,6 @@ const Restaurant: React.FC = () => {
   const [restaurant, setRestaurant] = useState<RestaurantDetailsProps | null>(
     null
   );
-  const [imageSrcs, setImageSrcs] = useState<string[]>([defaultimage]);
 
   useEffect(() => {
     const token = localStorage.getItem("token");
@@ -50,31 +47,6 @@ const Restaurant: React.FC = () => {
         setRestaurant(data.result);
 
         console.log("data:", data);
-
-        // Mettre en cache les images pour éviter de les recharger
-        if (data.result.photos && data.result.photos.length > 0) {
-          const photos = data.result.photos.slice(0, 3); // Limiter à 3 photos
-          const photoPromises = photos.map(async (photo: any) => {
-            const cachedImage = localStorage.getItem(photo.photo_reference);
-
-            if (cachedImage) {
-              return cachedImage;
-            } else {
-              const photoResponse = await fetch(
-                `${process.env.REACT_APP_API_URL}/api/restaurant/photo/${photo.photo_reference}`
-              );
-              const photoData = await photoResponse.json();
-
-              const base64Image = `data:image/jpeg;base64,${photoData.base64Image}`;
-              localStorage.setItem(photo.photo_reference, base64Image);
-              return base64Image;
-            }
-          });
-
-          // Récupérer les sources des images
-          const imageSrcs = await Promise.all(photoPromises);
-          setImageSrcs(imageSrcs);
-        }
       } catch (error) {
         console.error("Error fetching restaurant details:", error);
       }
@@ -89,18 +61,6 @@ const Restaurant: React.FC = () => {
 
   return (
     <div className="div-container">
-      <div className="div-images-restaurant">
-        {imageSrcs.map((src, index) => (
-          <img
-            key={index}
-            src={src}
-            alt={`${index + 1}`}
-            onError={(e) => {
-              e.currentTarget.src = defaultimage; // Image par défaut en cas d'erreur
-            }}
-          />
-        ))}
-      </div>
       <div className="restaurant-informations">
         <h1 className="restaurant-name">{restaurant.name}</h1>
         <p className="restaurant-status">

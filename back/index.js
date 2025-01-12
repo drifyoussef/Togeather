@@ -329,19 +329,24 @@ let fetch;
     */
     // Route pour récupérer les restaurants
     app.get('/api/restaurants', async (req, res) => {
-        try {
-            const { location, radius, keyword } = req.query;
-            let url = `https://maps.googleapis.com/maps/api/place/nearbysearch/json?location=${location}&radius=${radius}&type=restaurant`;
-            if (keyword) {
-                url += `&keyword=${keyword}`;
-            }
-            url += `&key=${process.env.GOOGLE_API_KEY}`;
-            const response = await fetch(url);
-            const data = await response.json();
-            res.json(data);
-        } catch (error) {
-            res.status(500).json({ error: error.message });
+    try {
+        const { location, radius, keyword } = req.query;
+        let url = `https://maps.googleapis.com/maps/api/place/nearbysearch/json?location=${location}&radius=${radius}&type=restaurant`;
+        if (keyword) {
+            url += `&keyword=${keyword}`;
         }
+        url += `&key=${process.env.GOOGLE_API_KEY}`;
+
+        const response = await fetch(url);
+        const data = await response.json();
+
+        // Limiter les résultats à 4 restaurants
+        const limitedResults = data.results.slice(0, 4);
+
+        res.json({ results: limitedResults });
+    } catch (error) {
+        res.status(500).json({ error: error.message });
+    }
     });
 
     // Route pour récupérer les photos d'un restaurant

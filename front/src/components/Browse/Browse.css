@@ -23,6 +23,14 @@
   padding: 8px;
   background: #bbb;
   border-radius: 50px;
+  width: 24Px;
+  height: 24PX;
+  align-content: center;
+  text-align-last: center;
+}
+
+.divAsiatique, .divPizza, .divPoulet, .divSandwich, .divBurger, .divGlaces, .divBoissons, .divMexicain {
+  margin-top: 4px;
 }
 
 .view-details {
@@ -95,6 +103,17 @@
 .active .p-category {
   font-weight: bold;
   color: #AD0051;
+}
+
+@media only screen and (max-width: 1440px) {
+
+  .divAsiatique{
+    margin-left: 16px;
+  }
+
+  .divBoissons{
+  margin-right: 16px;
+  }
 }
 
 @media (max-width: 768px) {

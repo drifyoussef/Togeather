@@ -50,6 +50,7 @@ const Navbar: React.FC = () => {
         title: "Il y a un problème...",
         text: "Vous n'avez pas de matchs pour le moment",
       });
+      navigate("/");
     }
   };
 

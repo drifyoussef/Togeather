@@ -311,10 +311,10 @@ const Register: React.FC = () => {
             <option value="Pizza">Pizza</option>
             <option value="Poulet">Poulet</option>
             <option value="Sandwich">Sandwich</option>
+            <option value="Mexicain">Mexicain</option>
             <option value="Burger">Burger</option>
             <option value="Glaces">Glaces</option>
             <option value="Boissons">Boissons</option>
-            <option value="Fast Food">Fast Food</option>
           </select>
         </label>
         <label htmlFor="passionInput">Quels sont vos passions?</label>
