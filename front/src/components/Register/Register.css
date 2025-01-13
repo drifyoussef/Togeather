@@ -208,6 +208,10 @@ input[type="radio"]:hover {
     display: block;
 }
 
+.div-register {
+  zoom: 1;
+}
+
 label[name="name"], label[name="firstname"], label[name="email"], label[name="password"] {
     margin-top: 8px;
 }
