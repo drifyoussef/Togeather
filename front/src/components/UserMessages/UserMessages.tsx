@@ -217,7 +217,9 @@ export default function UserMessages() {
               onClick={() => handleUserClick(user)}
             >
               <div className="header-match-box">
-                <div className="circle-match">{user.firstname.charAt(0)}</div>
+              {selectedUser && (
+                <img className="profile-picture" src={`${process.env.REACT_APP_API_URL}/${selectedUser.imageUrl}`} alt={`${selectedUser.firstname} ${selectedUser.name}`} />
+              )}
                 <div className="header-text">
                   <p>
                     {user.firstname}, {user.age} ans
@@ -237,7 +239,7 @@ export default function UserMessages() {
         <div className="messages">
           {selectedUser && (
             <div className="header-messages">
-              <div className="circle-match">{selectedUser.firstname.charAt(0)}</div>
+              <img className="profile-picture" src={`${process.env.REACT_APP_API_URL}/${selectedUser.imageUrl}`} alt={`${selectedUser.firstname} ${selectedUser.name}`} />
               <p className="header-conversation">
                 Conversation avec {selectedUser.firstname}
               </p>
@@ -270,20 +272,6 @@ export default function UserMessages() {
             <button className="send-message" onClick={(e) => { handleSendMessage(); setReload(true) }}>Envoyer</button>
             </div>
       </div>
-      )}
-      {selectedUser && (
-        <div className="profile-match">
-          <div className="header-profile-match">
-            <div className="header-match-profile">
-            <img className="profile-picture" src={`${process.env.REACT_APP_API_URL}/${selectedUser.imageUrl}`} alt={`${selectedUser.firstname} ${selectedUser.name}`} />
-              <div className="header-text-profile">
-                <p>{selectedUser.firstname} {selectedUser.name}, {selectedUser.age} ans</p>
-                <p>Catégorie de nourriture préferée : {selectedUser.favoriteCategory}</p>
-              </div>
-            </div>
-            <p className="profile-bio"></p>
-          </div>
-        </div>
       )}
     </div>
   );

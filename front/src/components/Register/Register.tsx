@@ -320,6 +320,7 @@ const Register: React.FC = () => {
         <label htmlFor="passionInput">Quels sont vos passions?</label>
         <textarea
           id="passionInput"
+          className="passionInput"
           value={inputValue}
           onChange={handleInputChange}
           onKeyDown={handleKeyDown}

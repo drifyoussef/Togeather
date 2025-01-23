@@ -202,7 +202,21 @@ input[type="radio"]:hover {
   object-fit: cover;
 }
 
-@media only screen and (max-width: 320px), only screen and (max-width: 375px), only screen and (max-width: 425px)  {
+@media only screen and (min-height: 568px) and (max-height: 812px) {
+
+  .register-form {
+    width: 400px;
+    height: 530px;
+    overflow-y: scroll;
+  }
+
+  .passionInput {
+    min-height: fit-content;
+  }
+
+}
+
+@media only screen and (max-width: 320px), only screen and (max-width: 375px), only screen and (max-width: 425px) {
 
   .name-firstname-div, .email-password-div {
     display: block;
@@ -240,8 +254,12 @@ label[name="name"], label[name="firstname"], label[name="email"], label[name="pa
 
 .register-form {
   width: 230px;
-  height: 400px; /* Valeur que j'ai changée */
-  overflow-y: scroll; /* Valeur que j'ai changée */
+  height: 400px;
+  overflow-y: scroll;
+}
+
+.passionInput {
+  min-height: fit-content;
 }
   
 }
