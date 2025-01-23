@@ -5,8 +5,8 @@ const AuthMiddleware: React.FC<{ children: React.ReactNode }> = ({ children }) =
 
   // Si l'utilisateur n'est pas authentifié alors afficher une alerte et rediriger vers la page de connexion
   if (!isAuthenticated) {
-    localStorage.setItem("showSwal", "true");
-      window.location.href = '/auth/login';
+    localStorage.setItem("showSwal", "true");    
+    window.location.href = '/connection'; //V2 changement ici vers la bonne page pour effectuer ensuite connexion
   }
 
   return <>{children}</>;

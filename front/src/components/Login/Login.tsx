@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import "./Login.css";
 import { useNavigate } from "react-router-dom";
 import Swal from "sweetalert2";
+import { log } from "node:console";
 
 const Login: React.FC = () => {
   // Email et mot de passe
@@ -26,19 +27,22 @@ const Login: React.FC = () => {
       console.error('Error:', err);
     }
   };
+// V2 supression de ce bloque qui n'a pas d'utilité visible et  qui provoque le messsage d'erreur qui n'est pas appelé de manière approprié
 
-  // Afficher une alerte si l'utilisateur n'est pas connecté
-  useEffect(() => {
-    const showSwal = localStorage.getItem("showSwal");
-    if (showSwal === "true") {
-      Swal.fire({
-        icon: "error",
-        title: "Il y a un problème...",
-        text: `Vous devez être connecté pour avoir acces a cette page !`,
-      });
-      localStorage.removeItem("showSwal");
-    }
-  }, [email]);
+  // // Afficher une alerte si l'utilisateur n'est pas connecté 
+  // useEffect(() => {
+  //   const showSwal = localStorage.getItem("showSwal");
+  //   console.log("je suis le message d erreur dans login");
+    
+  //   if (showSwal === "true") {
+  //     Swal.fire({
+  //       icon: "error",
+  //       title: "Il y a un problème...",
+  //       text: `Vous devez être connecté pour avoir acces a cette page !`,
+  //     });
+  //     localStorage.removeItem("showSwal");
+  //   }
+  // }, [email]);
 
   // Gérer la soumission du formulaire
   const handleSubmit = async (event: any) => {
