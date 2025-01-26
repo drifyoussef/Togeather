@@ -18,8 +18,8 @@ export default function UserMessages() {
   // Récupérer le prénom de l'utilisateur connecté
   const connectedFirstname = localStorage.getItem("firstname");
 
-  console.log(connectedUserId, "CONNECTED USER ID FROM USERMESSAGES");
-  console.log(connectedFirstname, "CONNECTED FIRSTNAME FROM USERMESSAGES");
+  //console.log(connectedUserId, "CONNECTED USER ID FROM USERMESSAGES");
+  //console.log(connectedFirstname, "CONNECTED FIRSTNAME FROM USERMESSAGES");
 
   // Définir le type Message
   interface Message {
@@ -41,7 +41,7 @@ export default function UserMessages() {
   // Charger la visibilité du chat (state par défaut: false pour le responsive mobile)
   const [isChatVisible, setIsChatVisible] = useState(false);
 
-  console.log(messages, "MESSAGES");
+  //console.log(messages, "MESSAGES");
 
   // Fonction pour récupérer les messages globaux
   const fetchMessages = async () => {
@@ -155,7 +155,7 @@ export default function UserMessages() {
     localStorage.setItem("selectedUserId", user._id);
     navigate(`/messages/${user._id}`);
     setIsChatVisible(true); // Show chat-container on user click
-    console.log(setIsChatVisible, "SETISCHATVISIBLE");
+    //console.log(setIsChatVisible, "SETISCHATVISIBLE");
   };
 
   // Fonction pour afficher un message

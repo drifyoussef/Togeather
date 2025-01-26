@@ -1,7 +1,6 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import "./Login.css";
 import { useNavigate } from "react-router-dom";
-import Swal from "sweetalert2";
 
 const Login: React.FC = () => {
   // Email et mot de passe
@@ -26,19 +25,6 @@ const Login: React.FC = () => {
       console.error('Error:', err);
     }
   };
-
-  // Afficher une alerte si l'utilisateur n'est pas connecté
-  useEffect(() => {
-    const showSwal = localStorage.getItem("showSwal");
-    if (showSwal === "true") {
-      Swal.fire({
-        icon: "error",
-        title: "Il y a un problème...",
-        text: `Vous devez être connecté pour avoir acces a cette page !`,
-      });
-      localStorage.removeItem("showSwal");
-    }
-  }, [email]);
 
   // Gérer la soumission du formulaire
   const handleSubmit = async (event: any) => {
@@ -68,7 +54,7 @@ const Login: React.FC = () => {
         // Connexion réussie
         const successData = await response.json();
         //console.log('successdata', successData);
-        console.log('Login successful:', successData.message);
+        //console.log('Login successful:', successData.message);
         if (successData.token) {
           // Créer un token et le stocke dans le localStorage
           localStorage.setItem('token', successData.token);
@@ -76,7 +62,7 @@ const Login: React.FC = () => {
           localStorage.setItem('currentUserId', successData.userId);
           // Stocker le prénom de l'utilisateur dans le localStorage
           localStorage.setItem('firstname', successData.firstname);
-          console.log('userId from login', successData.userId);
+          //console.log('userId from login', successData.userId);
           // Rediriger l'utilisateur vers la page d'accueil
           navigate('/');
         } else {

@@ -8,7 +8,7 @@ export default function Messages() {
   // Récupérer les matchs mutuels
   const { mutualMatches } = useFetchUsers();
   const navigate = useNavigate();
-  console.log(mutualMatches.map((user) => user._id));
+  //console.log(mutualMatches.map((user) => user._id));
   // Définir le type Message
   interface Message {
     _id: string;

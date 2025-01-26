@@ -16,7 +16,7 @@ const UserProfile: React.FC = () => {
   // Fonction pour liker un utilisateur
   const likeUser = () => {
     const token = localStorage.getItem("token");
-    console.log('token when like user', token);
+    //console.log('token when like user', token);
     const currentUserId = localStorage.getItem("currentUserId");
 
     fetch(`${process.env.REACT_APP_API_URL}/auth/users/${id}/like`, {
@@ -40,7 +40,7 @@ const UserProfile: React.FC = () => {
   // Fonction pour unliker un utilisateur
   const unlikeUser = () => {
     const token = localStorage.getItem("token");
-    console.log('token when unlike user', token);
+    //console.log('token when unlike user', token);
     const currentUserId = localStorage.getItem("currentUserId");
 
     fetch(`${process.env.REACT_APP_API_URL}/auth/users/${id}/like`, {
@@ -65,7 +65,7 @@ const UserProfile: React.FC = () => {
   useEffect(() => {
     const token = localStorage.getItem('token');
     const currentUserId = localStorage.getItem('currentUserId');
-    console.log(currentUserId, 'currentUserId from UserProfile');
+    //console.log(currentUserId, 'currentUserId from UserProfile');
     if (id && currentUserId) {
       fetch(`${process.env.REACT_APP_API_URL}/auth/users/${id}`, {
         headers: {
@@ -79,7 +79,7 @@ const UserProfile: React.FC = () => {
           setLiked(data.likedBy.includes(currentUserId));   // Explicitly set liked state
 
           if (data.message) {
-            console.log(data.message);
+            //console.log(data.message);
           }
         })
         .catch((error) => {
@@ -90,7 +90,7 @@ const UserProfile: React.FC = () => {
 
   // log de l'état du like
   useEffect(() => {
-    console.log('Rendering with liked state:', liked);
+    //console.log('Rendering with liked state:', liked);
   }, [liked]);
 
   // Afficher un message de chargement si l'utilisateur n'est pas encore chargé

@@ -13,15 +13,15 @@ export const registerUser = async (userData) => {
         // Si la réponse n'est pas ok, on renvoie une erreur
         if (!response.ok) {
             const error = await response.json();
-            throw new Error(error.message || 'Error registering user');
+            throw new Error(error.message || 'Erreur lors de l\'enregistrement');
         }
 
         // Sinon, on renvoie les données de la réponse
         const data = await response.json();
-        console.log('REPONSE DU REGISTER:', data); // Log the response to check if the token is present
+        //console.log('REPONSE DU REGISTER:', data); // Log the response to check if the token is present
         return data;
     } catch (error) {
-        console.error('Error registering user:', error);
+        console.error('Erreur lors de l\'enregistrement', error);
         throw error;
     }
 };

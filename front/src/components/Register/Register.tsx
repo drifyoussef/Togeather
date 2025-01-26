@@ -27,7 +27,6 @@ const Register: React.FC = () => {
   const [job, setJob] = useState<string>("");
   const [inputValue, setInputValue] = useState<string>("");
   const [passions, setPassions] = useState<string[]>([]);
-  const [updatedField, setUpdatedField] = useState<string | null>(null);
   const [imageUrl, setImageUrl] = useState<string>(""); // Add state for image URL
   const [imageFile, setImageFile] = useState<File | null>(null); // Add state for image file
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -49,7 +48,7 @@ const Register: React.FC = () => {
 
   // Upload de l'image de profil
   const handleImageUpload = async (file: File) => {
-    console.log("File :", file);
+    //console.log("File :", file);
     if (!file) {
       console.error("No file selected");
       return;
@@ -106,7 +105,7 @@ const Register: React.FC = () => {
         }
       );
       const result = await imageResponse.json();
-      console.log(result, "result");
+      //console.log(result, "result");
 
       const imageUrl = result.imageUrl;
 
@@ -128,7 +127,7 @@ const Register: React.FC = () => {
       // Inscription de l'utilisateur
       const response = await registerUser(userData);
       if (response) {
-        console.log("User registered successfully:", response);
+        //console.log("User registered successfully:", response);
         // Rediriger l'utilisateur vers la page de connexion
         navigate("/auth/login");
       } else {

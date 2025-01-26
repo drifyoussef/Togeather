@@ -46,7 +46,7 @@ const Restaurant: React.FC = () => {
         const data = await response.json();
         setRestaurant(data.result);
 
-        console.log("data:", data);
+        //console.log("data:", data);
       } catch (error) {
         console.error("Error fetching restaurant details:", error);
       }

@@ -15,12 +15,12 @@ const ConfirmEmail: React.FC<{ data: { message: string } }> = ({ data }) => {
     const queryParams = new URLSearchParams(location.search);
     const token = queryParams.get('token');
 
-    console.log('Query Params:', queryParams.toString());
-    console.log('Token from ConfirmEmail:', token);
+    //console.log('Query Params:', queryParams.toString());
+    //console.log('Token from ConfirmEmail:', token);
 
     // Vérifier si le token est présent
     if (token) {
-      console.log('Token found, making fetch request...');
+      //console.log('Token found, making fetch request...');
       fetch(`${process.env.REACT_APP_API_URL}/account/verify/${token}`, {
         method: 'GET',
         headers: {
@@ -28,15 +28,15 @@ const ConfirmEmail: React.FC<{ data: { message: string } }> = ({ data }) => {
         },
       })
         .then(response => {
-          console.log('Response status:', response.status);
+          //console.log('Response status:', response.status);
           return response.json();
         })
         .then(data => {
-          console.log('Data from confirm email:', data);
+          //console.log('Data from confirm email:', data);
           if (data.message === 'Email confirmed successfully') {
             // Afficher une alerte de succès de confirmation de l'email
-            console.log('Email confirmed successfully, showing Swal...');
-              console.log('navigating to /auth/login');
+            //console.log('Email confirmed successfully, showing Swal...');
+              //console.log('navigating to /auth/login');
               Swal.fire({
                 icon: 'success',
                 title: 'Succès',
@@ -45,7 +45,7 @@ const ConfirmEmail: React.FC<{ data: { message: string } }> = ({ data }) => {
               navigate('/auth/login');
           } else {
             // Alerte d'erreur de confirmation de l'email
-            console.log('Email confirmation failed, showing error Swal...');
+            //console.log('Email confirmation failed, showing error Swal...');
             Swal.fire({
               icon: 'error',
               title: 'Erreur',
@@ -64,7 +64,7 @@ const ConfirmEmail: React.FC<{ data: { message: string } }> = ({ data }) => {
         });
     } else {
       // Aucun token trouvé dans l'URL
-      console.log('No token found in the URL');
+      //console.log('No token found in the URL');
       console.error('No token found in the URL');
     }
   }, [location, navigate]);

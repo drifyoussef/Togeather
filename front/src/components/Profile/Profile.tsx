@@ -44,7 +44,7 @@ const Profile: React.FC = () => {
         } else {
           setUser(data);
           setImageUrl(data.imageUrl);
-          console.log(data.imageUrl, "DATA IMAGE URL");
+          //console.log(data.imageUrl, "DATA IMAGE URL");
         }
       })
       .catch((error) => {
@@ -146,8 +146,8 @@ const Profile: React.FC = () => {
   
         // Si la suppression du compte a réussi, afficher une alerte de succès
         if (data.message === 'User deleted successfully') {
-          console.log('User deleted successfully, showing Swal...');
-          console.log('navigating to /auth/login');
+          //console.log('User deleted successfully, showing Swal...');
+          //console.log('navigating to /auth/login');
           Swal.fire({
             icon: 'success',
             title: 'Succès',
@@ -199,7 +199,7 @@ const Profile: React.FC = () => {
 
   // Changer l'image de l'utilisateur
   const handleImageUpload = async (file: File) => {
-    console.log("File :", file);
+    //console.log("File :", file);
     if (!file) {
       console.error("No file selected");
       return;

@@ -42,7 +42,7 @@ const Navbar: React.FC = () => {
       const firstUser = mutualMatches[0];
       localStorage.setItem("selectedUserId", firstUser._id);
       navigate(`/messages/${firstUser._id}`);
-      console.log(firstUser._id, "firstUser ID");
+      //console.log(firstUser._id, "firstUser ID");
     } else {
       console.error("No mutual matches found");
       Swal.fire({

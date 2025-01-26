@@ -72,7 +72,7 @@ const successPayments = async (req, res) => {
         return res.status(400).json({ message: 'Missing paymentId, PayerID, or sellerId' });
     }
 
-    console.log('Executing Payment with:', { paymentId, PayerID, sellerId });
+    //console.log('Executing Payment with:', { paymentId, PayerID, sellerId });
 
     // Exécution du paiement avec l'ID de paiement et l'ID du payeur
     paypal.payment.execute(paymentId, { payer_id: PayerID }, async (error, payment) => {
@@ -82,7 +82,7 @@ const successPayments = async (req, res) => {
             return res.status(500).json({ message: 'Error capturing payment', error });
         }
 
-        console.log('Payment Response:', payment);
+        //console.log('Payment Response:', payment);
 
         // Si le paiement est approuvé, on distribue les paiements
         if (payment.state === 'approved') {

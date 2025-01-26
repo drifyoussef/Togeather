@@ -17,9 +17,9 @@ export const useFetchUsers = () => {
   useEffect(() => {
     // Récupérer le token et l'ID de l'utilisateur actuel
     const token = localStorage.getItem("token");
-    console.log(token, 'token from useFetchUsers');
-    const currentUserId = localStorage.getItem("currentUserId");
-    console.log(currentUserId, 'currentUserId from useFetchUsers');
+    //console.log(token, 'token from useFetchUsers');
+    //const currentUserId = localStorage.getItem("currentUserId");
+    //console.log(currentUserId, 'currentUserId from useFetchUsers');
 
     // Récupérer le chemin actuel
     const currentPath = window.location.pathname;

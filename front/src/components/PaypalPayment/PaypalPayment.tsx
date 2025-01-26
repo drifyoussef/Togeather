@@ -28,15 +28,15 @@ export default function PaypalPayment() {
           sellerId: sellerId, // Inclure l'ID du vendeur dans le corps de la requête
         }),
       });
-      console.log(data, 'data from createOrder');
-      console.log(actions, 'actions from createOrder');
+      //console.log(data, 'data from createOrder');
+      //console.log(actions, 'actions from createOrder');
       // Vérifier si la réponse est OK
       if (!response.ok) {
         throw new Error(`Error: ${response.statusText}`);
       }
       // Extraire les données JSON
       const order = await response.json();
-      console.log(order, 'order from createOrder');
+      //console.log(order, 'order from createOrder');
       localStorage.setItem('paymentId', order.paymentId); // Récupérer le paymentId et le stocker dans le localStorage
       return order.token; // retourner le token de commande
     } catch (error) {
@@ -48,7 +48,7 @@ export default function PaypalPayment() {
   // Approuver la commande PayPal
   const onApprove = async (data: any, actions: any) => {
     try {
-      console.log("onApprove data:", data); // Add logging
+      //console.log("onApprove data:", data); // Add logging
       const paymentId = localStorage.getItem('paymentId'); // Récupérer le paymentId du localStorage
       // Approuver la commande PayPal avec l'appel d'API
       const response = await fetch(`${process.env.REACT_APP_API_URL}/successPayments`, {
@@ -68,7 +68,7 @@ export default function PaypalPayment() {
       }
       // Extraire les données JSON
       const result = await response.json();
-      console.log(result, 'result from onApprove');
+      //console.log(result, 'result from onApprove');
       // Afficher une alerte de paiement réussi
       Swal.fire({
         icon: 'success',
