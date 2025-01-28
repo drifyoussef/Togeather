@@ -16,6 +16,7 @@ import Premium from './components/Premium/Premium';
 import Success from "./components/Success/Success";
 import Cancel from "./components/Cancel/Cancel";
 import ConfirmEmail from "./components/ConfirmEmail/ConfirmEmail";
+import About from "./components/About/About";
 
 
 // Composant principal de l'application (contient les routes)
@@ -25,6 +26,7 @@ function App() {
       <Navbar />
       <Routes>
         <Route path="/" element={<Home />} />
+        <Route path="/about" element={<About />} />
         <Route path="/profile" element={<Profile />} />
         <Route path="/profile/:id" element={<UserProfile />} />
         <Route path="/messages" element={<Messages />} />

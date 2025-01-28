@@ -72,6 +72,11 @@ const Navbar: React.FC = () => {
           <>
            <li>
               <NavLink
+                to={isConnectionPage ? "/connection" : "/"} className={({ isActive }) => (isActive ? "active" : "")}>Accueil
+              </NavLink>
+           </li>
+           <li>
+              <NavLink
                 to="/premium"
                 className={({ isActive }) => (isActive ? "active" : "")}
               >
@@ -100,6 +105,14 @@ const Navbar: React.FC = () => {
                 className={({ isActive }) => (isActive ? "active" : "")}
               >
                 Mon profil
+              </NavLink>
+            </li>
+            <li>
+              <NavLink
+                to="/about"
+                className={({ isActive }) => (isActive ? "active" : "")}
+              >
+                A propos
               </NavLink>
             </li>
             <li>

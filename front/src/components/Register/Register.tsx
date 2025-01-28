@@ -78,7 +78,7 @@ const Register: React.FC = () => {
     event.preventDefault();
     // Si les conditions ne sont pas acceptées ou l'âge est inférieur à 18 ans ou aucun fichier image n'est sélectionné ne pas soumettre le formulaire
     if (!termsAccepted) {
-      setError("Vous devez accepter les conditions d'utilisation.");
+      setError("Vous devez accepter la politique de confidentialité.");
       return;
     }
     const age = calcAge(birthdate);
@@ -88,6 +88,7 @@ const Register: React.FC = () => {
     }
 
     if (!imageFile) {
+      setError("Vous devez ajouter une image de profil.");
       console.error("No file selected");
       return;
     }
@@ -140,7 +141,7 @@ const Register: React.FC = () => {
     }
   };
 
-  // Ouvrir et fermer la modal des conditions d'utilisation
+  // Ouvrir et fermer la modal de la politique de confidentialité
   const openModal = () => {
     setIsModalOpen(true);
   };
@@ -409,7 +410,7 @@ const Register: React.FC = () => {
             />
             <label htmlFor="terms" className="accept-terms">
               {" "}
-              J'accepte les{" "}
+              J'accepte la{" "}
               <span
                 onClick={openModal}
                 style={{
@@ -418,7 +419,7 @@ const Register: React.FC = () => {
                   cursor: "pointer",
                 }}
               >
-                conditions d'utilisation
+                politique de confidentialité
               </span>
             </label>
           </div>
@@ -432,7 +433,7 @@ const Register: React.FC = () => {
       <Modal
         isOpen={isModalOpen}
         onRequestClose={closeModal}
-        contentLabel="Conditions d'utilisation"
+        contentLabel="politique de confidentialité"
         style={{
           content: {
             top: "50%",
@@ -446,12 +447,12 @@ const Register: React.FC = () => {
           },
         }}
       >
-        <h2>Conditions d'utilisation</h2>
+        <h2>Politique de confidentialité</h2>
         <div>
           <p>
             Bienvenue sur Togeather. En utilisant
-            le site web Togeather, vous acceptez les présentes conditions d'utilisation.
-            Veuillez les lire attentivement.
+            le site web Togeather, vous acceptez la présente politique de confidentialité.
+            Veuillez la lire attentivement.
           </p>
           <div>
             <p className="keypoint-terms">1. Collecte et utilisation des données</p>
@@ -544,10 +545,9 @@ const Register: React.FC = () => {
             </p>
           </div>
           <div>
-            <p className="keypoint-terms">6. Modification des conditions</p>
+            <p className="keypoint-terms">6. Modification de la politique</p>
             <p>
-              Nous nous réservons le droit de modifier les présentes conditions
-              d'utilisation à tout moment. Les utilisateurs seront informés de
+              Nous nous réservons le droit de modifier la présente politique de confidentialité à tout moment. Les utilisateurs seront informés de
               tout changement significatif via leur adresse email ou une
               notification sur le site Togeather.
             </p>
@@ -555,8 +555,8 @@ const Register: React.FC = () => {
           <div>
             <p className="keypoint-terms">7. Contact</p>
             <p>
-              Pour toute question ou préoccupation concernant ces conditions
-              d'utilisation, vous pouvez nous contacter à : imredzcsgo@gmail.com.
+              Pour toute question ou préoccupation concernant cette politique de
+              confidentialité, vous pouvez nous contacter à : imredzcsgo@gmail.com.
             </p>
           </div>
         </div>

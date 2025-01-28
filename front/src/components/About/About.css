@@ -1,0 +1,47 @@
+/* Conteneur principal */
+.about-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    max-width: 800px;
+    margin: auto;
+    height: 100%;
+    background-color: #fff;
+  }
+  
+  /* Contenu */
+  .about-content {
+    max-width: 800px;
+    background: #fff;
+    border-radius: 10px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    padding: 20px 30px;
+  }
+  
+  .main-title {
+    font-size: 24px;
+    color: #AD0051;
+    margin-bottom: 20px;
+  }
+  
+  .section-title {
+    font-size: 18px;
+    color: #333;
+    margin-bottom: 10px;
+  }
+  
+  .section-text {
+    font-size: 16px;
+    color: #555;
+    line-height: 1.6;
+    margin-bottom: 20px;
+  }
+  
+  .footer {
+    margin-top: 30px;
+    font-size: 14px;
+    color: #555555;
+    text-align: center;
+  }
+  

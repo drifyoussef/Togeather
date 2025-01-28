@@ -19,6 +19,7 @@ export default function Connexion() {
         <p className="p2-connection">Mangeons ensemble</p>
       </div>
       <div className="content-container">
+        <p className="p3-connection">Togeather est un site de rencontre amicale permettant de sociabiliser autour d'un repas à proximité de votre localisation !</p>
         <div className="icons-container">
           <div className="message-container-connexion">
             <FaMessage className="message-icon" />

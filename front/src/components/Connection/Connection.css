@@ -35,6 +35,11 @@
   margin-top: 8px;
 }
 
+.p3-connection {
+  font-size: 16px;
+  margin-left: 64px;
+}
+
 .connection {
   color: #AD0051;
   margin-left: 64px;
@@ -141,6 +146,14 @@
 
 .connection-button {
   font-size: 18px;
+}
+
+.p3-connection {
+  font-size: 12px;
+  margin-bottom: 32px;
+  margin-top: 32px;
+  margin-left: 64px;
+  margin-right: 64px;
 }
 
 }

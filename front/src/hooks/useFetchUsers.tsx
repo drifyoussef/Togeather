@@ -31,7 +31,8 @@ export const useFetchUsers = () => {
     if (!token && currentPath !== '/auth/login' && currentPath !== '/auth/register' && currentPath !== '/connection' && currentPath !== '/confirm-email') {
       console.error("Token not found");
       localStorage.setItem("showSwal", "true");
-      navigate('/auth/login');
+      // Rediriger vers la page de connexion au lieu de /auth/login
+      navigate('/connection');
       return;
     }
 
