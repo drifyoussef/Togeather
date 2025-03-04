@@ -434,18 +434,6 @@ const Register: React.FC = () => {
         isOpen={isModalOpen}
         onRequestClose={closeModal}
         contentLabel="politique de confidentialité"
-        style={{
-          content: {
-            top: "50%",
-            left: "50%",
-            right: "auto",
-            bottom: "auto",
-            marginRight: "-50%",
-            transform: "translate(-50%, -50%)",
-            width: "75%",
-            height: "75%",
-          },
-        }}
       >
         <h2>Politique de confidentialité</h2>
         <div>

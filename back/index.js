@@ -11,8 +11,10 @@ const bodyParser = require('body-parser'); // Import body-parser
 const storeUserController = require('./src/controllers/storeUser'); // Import storeUserController
 const loginController = require('./src/controllers/login'); // Import loginController
 const loginUserController = require('./src/controllers/loginUser'); // Import loginUserController
+const loginAdminController = require('./src/controllers/loginAdmin'); // Import loginAdminController
 const authMiddleware = require('./src/middlewares/authMiddleware'); // Import authMiddleware
 const redirectIfAuthenticatedMiddleware = require('./src/middlewares/redirectIfAuthenticatedMiddleware'); // Import redirectIfAuthenticatedMiddleware
+const adminMiddleware = require('./src/middlewares/adminMiddleware'); // Import adminMiddleware
 const logoutController = require('./src/controllers/logout'); // Import logoutController
 const getUserController = require('./src/controllers/getUser'); // Import getUserController
 const getUsersController = require('./src/controllers/getUsers'); // Import getUsersController
@@ -105,9 +107,14 @@ let fetch;
         next();
     });
     //Définition des CORS Middleware 
+    const allowedOrigins = [process.env.ORIGIN, process.env.BACKOFFICE];
+
     app.use(function (req, res, next) {
+        const origin = req.headers.origin;
+        if (allowedOrigins.includes(origin)) {
+            res.setHeader("Access-Control-Allow-Origin", origin);
+        }
         res.setHeader("Access-Control-Allow-Headers", "X-Requested-With,content-type, Accept,Authorization,Origin");
-        res.setHeader("Access-Control-Allow-Origin", process.env.ORIGIN);
         res.setHeader("Access-Control-Allow-Methods", "GET, POST, OPTIONS, PUT, PATCH, DELETE");
         res.setHeader("Access-Control-Allow-Credentials", true);
         next();
@@ -396,6 +403,15 @@ let fetch;
         }
     });
 
+    app.get('/admin/users', authMiddleware, adminMiddleware, async (req, res) => {
+        try {
+          const users = await User.find();
+          res.json(users);
+        } catch (error) {
+          res.status(500).json({ message: 'Error fetching users' });
+        }
+      });
+
     // Stocker les images dans le dossier uploads
     const storage = multer.diskStorage({
         destination: (req, file, cb) => {
@@ -616,6 +632,8 @@ let fetch;
      *       500:
      *         description: Internal server error
      */
+    app.post('/auth/admin/login', redirectIfAuthenticatedMiddleware, loginAdminController);
+
     app.post('/auth/users/:id/like', authMiddleware, likeUserController);
     // Route pour envoyer un message
     /**

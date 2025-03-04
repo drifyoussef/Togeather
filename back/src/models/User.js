@@ -44,6 +44,7 @@ const UserSchema = new Schema({
   isMutual: { type: Boolean, default: false }, // like mutuel
   previews: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Preview' }],
   messages: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Message' }], // Messages des utilisateurs
+  isAdmin: { type: Boolean, default: false }, // Booléen pour savoir si l'utilisateur est un administrateur
 });
 
 UserSchema.plugin(uniqueValidator);

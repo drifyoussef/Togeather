@@ -69,3 +69,26 @@
     padding: 16px;
   }
 }
+
+@media screen and (max-width: 600px) {
+
+ .premium-container{
+    justify-content: flex-start!important;
+ }
+}
+
+@media screen and (min-width: 768px) and (max-width: 1024px) and (min-height: 1024px) and (max-height: 1368px) {
+
+  .premium-container{
+     justify-content: flex-start!important;
+     padding: 16px!important;
+  }
+}
+
+@media screen and (min-width: 1020px) and (max-width: 1030px) and (min-height: 590px) and (max-height: 610px) {
+
+  .premium-container{
+     justify-content: flex-start!important;
+     padding: 16px!important;
+  }
+}

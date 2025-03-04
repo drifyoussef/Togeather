@@ -435,7 +435,7 @@
     }
 }
 
-@media only screen and (min-height: 600px) and (max-height: 812px) {
+@media only screen and (min-height: 600px) and (max-height: 799px) {
 
     .circle { 
         width: 60px !important;
@@ -487,6 +487,26 @@
 }
 
 @media only screen and (min-width: 1000px) and (max-width: 1024px) and (min-height: 590px) and (max-height: 610px) {
+    .p3-home{
+        margin-bottom: 4px;
+    }
+
+    .div-card{
+        padding-top: 4px !important;
+        padding-bottom: 4px !important;
+    }
+
+    .card{
+        width: 130px!important;
+        height: 190px !important;
+    }
+
+    .category{
+        margin-top: 8px !important;
+    }
+}
+
+@media only screen and (min-width: 1250) and (max-width: 1350px) and (min-height: 750px) and (max-height: 850px) {
     .p3-home{
         margin-bottom: 4px;
     }

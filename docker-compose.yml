@@ -26,6 +26,19 @@ services:
     depends_on:
       - backend
     mem_limit: 4g
+  
+  backoffice:
+    build:
+      context: ./backoffice
+      dockerfile: Dockerfile
+    container_name: backoffice
+    ports:
+      - "3001:3001"
+    environment:
+      - NODE_ENV=development
+    depends_on:
+      - backend
+    mem_limit: 4g
 
 volumes:
   backend-data:

@@ -1,0 +1,52 @@
+.dashboard {
+    display: flex;
+    height: 100vh;
+  }
+  
+  .sidebar {
+    width: 150px;
+    background-color: #440020;
+    color: white;
+    padding: 20px;
+  }
+  
+  .sidebar h2 {
+    margin-top: 0;
+  }
+  
+  .sidebar ul {
+    list-style-type: none;
+    padding: 0;
+  }
+  
+  .sidebar ul li {
+    margin: 15px 0;
+  }
+  
+  .sidebar ul li a {
+    color: white;
+    text-decoration: none;
+  }
+  
+  .main-content {
+    flex-grow: 1;
+    padding: 20px;
+    background-color: #ecf0f1;
+  }
+  
+  .main-content h1 {
+    margin-top: 0;
+  }
+
+  .chart-container{
+    width: 400px;
+  }
+
+  .charts-div{
+    display: flex;
+    gap: 16px;
+  }
+
+  .header-stats{
+    margin: 0;
+  }

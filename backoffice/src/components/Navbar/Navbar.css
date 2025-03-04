@@ -1,0 +1,102 @@
+.navbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background-color: #AD0051;
+    padding: 1rem;
+    /* height: 99px; on the figma the height of the navbar is 99px */ 
+  }
+  
+  .navbar-logo a {
+    color: white;
+    text-decoration: none;
+    font-size: 1.5rem;
+  }
+  
+  .menu-icon {
+    display: none;
+  }
+  
+  .navbar-links {
+    list-style: none;
+    display: flex;
+    gap: 1rem;
+  }
+  
+  .navbar-links li {
+    display: inline;
+  }
+  
+  .navbar-links a {
+    color: white;
+    text-decoration: none;
+    font-size: 1rem;
+  }
+  
+  .navbar-links a.active {
+    text-decoration: underline;
+  }
+  
+  .navbar-links a:hover {
+    text-decoration: underline;
+  }
+  
+  .navbar-links .logout-button {
+    background: none;
+    border: none;
+    color: inherit;
+    cursor: pointer;
+    font: inherit;
+    outline: inherit;
+    padding: 0;
+    margin: 0;
+    display: inline-block;
+    text-decoration: none;
+    color: #fff;
+  }
+  
+  .navbar-links .logout-button:hover,
+  .navbar-links .logout-button:focus,
+  .navbar-links .logout-button.active {
+    text-decoration: underline;
+  }
+  
+  .navbar-toggle {
+    display: none;
+  }
+  
+  .home-navbar{
+    width: 50px;
+  }
+  
+  
+  @media (max-width: 768px) {
+    .navbar-toggle {
+      display: block;
+      color: white;
+      cursor: pointer;
+      font-size: 24px;
+    }
+  
+    .navbar-links {
+      display: none;
+      flex-direction: column;
+      width: 100%;
+      position: absolute;
+      top: 90px;
+      left: 0;
+      background-color: #AD0051;
+      z-index: 1000;
+    }
+  
+    .navbar-links.active {
+      display: flex;
+    }
+  
+    .navbar-links li {
+      text-align: center;
+      width: 100%;
+      padding: 1rem 0;
+    }
+  }
+  
