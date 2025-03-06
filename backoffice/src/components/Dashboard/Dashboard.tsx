@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import "./Dashboard.css";
 import { useFetchUsers } from "../../hooks/useFetchUsers.tsx";
+import { redirect } from "react-router-dom";
 
 export default function Dashboard() {
   const { preferredGender, mutualMatches } = useFetchUsers();
@@ -42,6 +43,7 @@ export default function Dashboard() {
         });
     } else {
       console.error("No token found in localStorage");
+      redirect("/auth/admin/login");
     }
   }, [token, preferredGender, mutualMatches]);
 
