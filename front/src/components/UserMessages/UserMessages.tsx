@@ -114,40 +114,56 @@ export default function UserMessages() {
   }, [mutualMatches]);
 
   // Fonction pour envoyer un message
-  const handleSendMessage = async () => {
-    if (newMessage.trim() === "") return;
+const handleSendMessage = async () => {
+  if (newMessage.trim() === "") return;
 
-    // Données du message
-    const messageData = {
-      content: newMessage,
-      senderId: connectedUserId,
-      sender: { _id: connectedUserId },
-      receiverId: id,
-    };
-
-    try {
-      // Envoi du message à l'API
-      const response = await fetch(`${process.env.REACT_APP_API_URL}/messages`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${localStorage.getItem("token")}`,
-        },
-        body: JSON.stringify(messageData),
-      });
-
-      if (response.ok) {
-        const newMessageData = await response.json();
-        socket.emit("sendMessage", newMessageData);
-        setNewMessage("");
-        displayMessage(newMessageData);
-      } else {
-        console.error("Failed to send message");
-      }
-    } catch (error) {
-      console.error("Error sending message:", error);
-    }
+  // Données du message
+  const messageData = {
+    content: newMessage,
+    senderId: connectedUserId,
+    sender: { _id: connectedUserId },
+    receiverId: id,
   };
+
+  try {
+    // Envoi du message à l'API
+    const response = await fetch(`${process.env.REACT_APP_API_URL}/messages`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${localStorage.getItem("token")}`,
+      },
+      body: JSON.stringify(messageData),
+    });
+
+    if (response.ok) {
+      const newMessageData = await response.json();
+      socket.emit("sendMessage", newMessageData);
+
+      // Met à jour l'état des messages
+      setMessages((prevMessages) => [...prevMessages, newMessageData]);
+
+      // Set le message à vide (input)
+      setNewMessage("");
+    } else {
+      console.error("Failed to send message");
+    }
+  } catch (error) {
+    console.error("Error sending message:", error);
+  }
+};
+
+// Utiliser le hook useEffect pour écouter les messages reçus
+useEffect(() => {
+  socket.on("receiveMessage", (message: any) => {
+    setMessages((prevMessages) => [...prevMessages, message]);
+  });
+
+  // Nettoyer le socket à la fin de l'effet
+  return () => {
+    socket.off("receiveMessage");
+  };
+}, []);
 
   // Fonction pour gérer le clic sur un utilisateur
   const handleUserClick = (user: UserModel) => {
@@ -159,6 +175,8 @@ export default function UserMessages() {
   };
 
   // Fonction pour afficher un message
+
+  /*
   const displayMessage = (messageData: any) => {
     const chat = document.querySelector('.chat');
     const messageContainer = document.createElement('div');
@@ -178,6 +196,7 @@ export default function UserMessages() {
       chat.appendChild(messageContainer);
     }
   };
+  */
 
   // Fonction pour récupérer le dernier message
   const getLatestMessage = (userId: string) => {
@@ -248,15 +267,22 @@ export default function UserMessages() {
           <div className="chat-container">
             {messages
               .sort((a, b) => new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime())
-              .map((message) => (
+              .map((message, index) => (
                 <div
-                  key={message._id}
+                  key={`${message._id}-${index}`} // Ensure unique keys by combining _id and index
                   className={`message ${message.sender && message.sender._id === connectedUserId ? "right" : "left"}`}
                 >
-                  <div className="avatar">{message.sender && message.sender._id === connectedUserId ? (connectedFirstname ? connectedFirstname.charAt(0) : "U") : (selectedUser ? selectedUser.firstname.charAt(0) : "U")}</div>
+                  <div className="avatar">
+                    {message.sender && message.sender._id === connectedUserId
+                      ? (connectedFirstname ? connectedFirstname.charAt(0) : "U")
+                      : (selectedUser ? selectedUser.firstname.charAt(0) : "U")}
+                  </div>
                   <div className="bubble">
                     <p className="user-message">{message.content}</p>
-                    <span className="time">Message de {message.sender && message.sender.firstname} à {new Date(message.createdAt).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}</span>
+                    <span className="time">
+                      Message de {message.sender && message.sender.firstname} à{" "}
+                      {new Date(message.createdAt).toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" })}
+                    </span>
                   </div>
                 </div>
               ))}

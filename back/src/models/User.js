@@ -45,6 +45,9 @@ const UserSchema = new Schema({
   previews: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Preview' }],
   messages: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Message' }], // Messages des utilisateurs
   isAdmin: { type: Boolean, default: false }, // Booléen pour savoir si l'utilisateur est un administrateur
+  isBanned: { type: Boolean, default: false }, // Booléen pour savoir si l'utilisateur est banni
+  banReason: { type: String, required: false }, // Raison du bannissement
+  banEnd: { type: Date, required: false }, // Date de fin du bannissement
 });
 
 UserSchema.plugin(uniqueValidator);

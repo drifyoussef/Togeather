@@ -40,10 +40,11 @@
 .chart-container{
   width: 400px;
 }
-.charts-div{
-  display: flex;
-  gap: 16px;
+
+.ban-button{
+  margin: 0;
 }
+
 .header-stats{
   margin: 0;
 }
@@ -72,4 +73,9 @@ p {
 
 .p-bold {
   font-weight: bold;
+}
+
+.user-length{
+  margin-bottom: 16px;
+  margin-top: 16px;
 }

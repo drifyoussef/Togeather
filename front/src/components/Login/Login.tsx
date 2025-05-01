@@ -45,6 +45,14 @@ const Login: React.FC = () => {
       if (!response.ok) {
         const errorData = await response.json();
         setError(errorData.message);
+
+        //Rediriger l'utilisateur si il est banni
+        if (response.status === 403) {
+          console.log('User is banned:', errorData.message);
+          navigate('/banned');
+          return;
+        }
+
         if (errorData.emailNotConfirmed) {
           // Erreur lors de la connexion de l'utilisateur (email non confirmé)
           setEmailNotConfirmed(true);

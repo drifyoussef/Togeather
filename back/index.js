@@ -169,7 +169,21 @@ let fetch;
     *       500:
     *         description: Internal server error
     */
-    app.get('/auth/user', authMiddleware, getUserController);
+    app.get('/auth/user', authMiddleware, getUserController, async (req, res) => {
+        try {
+          const user = await User.findById(req.user.id).select('-password');
+          if (!user) {
+            return res.status(404).json({ message: 'User not found' });
+          }
+          if (user.isBanned) {
+            return res.status(403).json({ message: 'User is banned' });
+          }
+          res.status(200).json(user);
+        } catch (error) {
+          console.error('Error fetching user:', error);
+          res.status(500).json({ message: 'Error fetching user' });
+        }
+      });
     // Route pour récupérer les utilisateurs
     /**
     * @swagger
@@ -978,7 +992,25 @@ app.get('/account/verify/:token', async (req, res) => {
           console.error('Error deleting user:', error);
           res.status(500).json({ message: 'Error deleting user' });
         }
-      });
+    });
+
+    app.post('/auth/users/ban', authMiddleware, async (req, res) => {
+        try {
+            const { id, isBanned } = req.body;
+            const user = await User.findById(id);
+            if (!user) {
+                return res.status(404).json({ message: 'User not found' });
+            }
+            user.isBanned = isBanned;
+            console.log(`User ${id} isBanned status updated to:`, isBanned);
+            await user.save();
+            res.status(200).json({ message: `User ${isBanned ? 'banned' : 'unbanned'} successfully` });
+        } catch (error) {
+            console.error('Error checking if user is banned:', error);
+            res.status(500).json({ message: 'Error checking if user is banned' });
+        }
+    }
+    );
 
     // Connexion au serveur MongoDB
     async function main() {

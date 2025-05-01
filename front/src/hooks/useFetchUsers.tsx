@@ -27,12 +27,29 @@ export const useFetchUsers = () => {
     //console.log("Current Path:", currentPath);
     //console.log("Token:", token);
 
-    // Si le token n'est pas trouvé et que le chemin actuel n'est pas '/auth/login' ou '/auth/register' ou '/connection' ou '/confirm-email' alors afficher une erreur
+    // Si le token n'est pas trouvé et que le chemin actuel n'est pas autorisé
     if (!token && currentPath !== '/auth/login' && currentPath !== '/auth/register' && currentPath !== '/connection' && currentPath !== '/confirm-email') {
       console.error("Token not found");
       localStorage.setItem("showSwal", "true");
-      // Rediriger vers la page de connexion au lieu de /auth/login
-      navigate('/connection');
+
+      // Vérifier si l'utilisateur est banni avant de rediriger
+      fetch(`${process.env.REACT_APP_API_URL}/auth/user`, {
+        headers: { Authorization: `Bearer ${token}` },
+        method: "GET",
+      })
+        .then((response) => {
+          if (response.status === 403) {
+            console.error("User is banned");
+            navigate('/banned'); // Rediriger vers la page bannie
+          } else {
+            navigate('/connection'); // Rediriger vers la page de connexion
+          }
+        })
+        .catch((error) => {
+          console.error("Error fetching user:", error);
+          navigate('/connection'); // Rediriger vers la page de connexion en cas d'erreur
+        });
+
       return;
     }
 

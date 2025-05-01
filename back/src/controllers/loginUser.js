@@ -3,9 +3,10 @@ const User = require('../models/User');
 const jwt = require("jsonwebtoken")
 const path = require("path");
 const appRoot = require('app-root-path');
-const fs = require("fs")
+const fs = require("fs");
 
 module.exports = async (req, res) => {
+
     // Récupération des données du formulaire
     const { email, password } = req.body;
     console.log(req.body);
@@ -18,6 +19,13 @@ module.exports = async (req, res) => {
 
         if (userFind) {
             console.log('User found:', userFind); 
+
+            // Vérification si l'utilisateur est banni
+            if (userFind.isBanned) {
+                console.error('User is banned');
+                return res.status(403).json({ message: 'Utilisateur banni LOGIN USER CONTROLLER 403 STATUS' });
+            }
+
             // Vérification du mot de passe
             const same = await bcrypt.compare(password, userFind.password);
 

@@ -15,4 +15,7 @@ export interface UserModel {
   image?: string;
   isMutual?: boolean;
   isEmailConfirmed: boolean;
+  isBanned: boolean;
+  banReason: string;
+  banEnd: Date;
 }
