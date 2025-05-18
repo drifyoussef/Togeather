@@ -184,6 +184,28 @@ let fetch;
           res.status(500).json({ message: 'Error fetching user' });
         }
       });
+
+    app.get('/me', async (req, res) => {
+    try {
+        const token = req.headers.authorization?.split(' ')[1];
+        if (!token) {
+            return res.status(401).json({ message: 'Access denied. No token provided.' });
+        }
+
+        const decryptedEmail = decryptToken(token); // Reuse the decryption logic
+        const user = await User.findOne({ email: decryptedEmail });
+
+        if (!user) {
+            return res.status(404).json({ message: 'User not found' });
+        }
+
+        res.status(200).json(user);
+    } catch (error) {
+        console.error('Error verifying token:', error);
+        res.status(500).json({ message: 'Server error' });
+    }
+});
+
     // Route pour récupérer les utilisateurs
     /**
     * @swagger
@@ -996,15 +1018,19 @@ app.get('/account/verify/:token', async (req, res) => {
 
     app.post('/auth/users/ban', authMiddleware, async (req, res) => {
         try {
-            const { id, isBanned } = req.body;
+            const { id, isBanned, banReason, banEnd } = req.body;
+            console.log("Data received from frontend:", id, isBanned, banReason, banEnd);
             const user = await User.findById(id);
             if (!user) {
                 return res.status(404).json({ message: 'User not found' });
             }
             user.isBanned = isBanned;
+            user.banReason = isBanned ? banReason || null : null; // Assurez-vous que banReason est null si non défini
+            user.banEnd = isBanned ? (banEnd ? new Date(banEnd) : null) : null; // Convertir banEnd en Date ou null
             console.log(`User ${id} isBanned status updated to:`, isBanned);
             await user.save();
             res.status(200).json({ message: `User ${isBanned ? 'banned' : 'unbanned'} successfully` });
+            console.log("User after save:", user);
         } catch (error) {
             console.error('Error checking if user is banned:', error);
             res.status(500).json({ message: 'Error checking if user is banned' });

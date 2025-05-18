@@ -3,6 +3,8 @@ import { DataGrid, GridRenderCellParams } from "@mui/x-data-grid";
 import "./Dashboard.css";
 import { useFetchUsers } from "../../hooks/useFetchUsers.tsx";
 import { redirect } from "react-router-dom";
+import Swal from "sweetalert2";
+
 
 export default function Dashboard() {
   const { preferredGender, mutualMatches } = useFetchUsers();
@@ -18,6 +20,8 @@ export default function Dashboard() {
     favoriteCategory: string;
     userGender: string;
     isBanned: boolean;
+    banReason: string;
+    banEnd: Date;
   }
 
   const [users, setUsers] = useState<User[]>([]);
@@ -50,7 +54,7 @@ export default function Dashboard() {
   }, [token, preferredGender, mutualMatches]);
   
 
-  const toggleBan = (userId: string, isBanned: boolean) => {
+  const toggleBan = (userId: string, isBanned: boolean, banReason: string, banEnd: Date) => {
     console.log(`User ${userId} is now ${isBanned ? "banned" : "unbanned"}`);
     const token = localStorage.getItem("token");
   
@@ -60,7 +64,7 @@ export default function Dashboard() {
         Authorization: `Bearer ${token}`,
         "Content-Type": "application/json",
       },
-      body: JSON.stringify({ id: userId, isBanned }),
+      body: JSON.stringify({ id: userId, isBanned, banReason, banEnd }),
     })
       .then((response) => {
         if (!response.ok) {
@@ -94,12 +98,49 @@ export default function Dashboard() {
       headerName: "Bannir/Débannir",
       width: 100,
       renderCell: (params: GridRenderCellParams<User>) => (
-        <button
-          className="ban-button"
-          onClick={() => toggleBan(params.row._id, !params.row.isBanned)}
-        >
-          {params.row.isBanned ? "Débannir" : "Bannir"}
-        </button>
+         <button
+      className="ban-button"
+      onClick={() => {
+        Swal.fire({
+          title: `Voulez-vous ${params.row.isBanned ? "débannir" : "bannir"} ${params.row.firstname} ?`,
+          html: !params.row.isBanned
+            ? `
+              <label for="banReason">Raison du bannissement :</label>
+              <input id="banReason" class="swal2-input" placeholder="Entrez la raison du bannissement">
+              <label for="banEnd">Date de fin du bannissement :</label>
+              <input id="banEnd" type="date" class="swal2-input">
+            `
+            : "",
+          showCancelButton: true,
+          confirmButtonText: "Oui",
+          cancelButtonText: "Non",
+          preConfirm: () => {
+            if (!params.row.isBanned) {
+              const banReason = (document.getElementById("banReason") as HTMLInputElement)?.value;
+              const banEnd = (document.getElementById("banEnd") as HTMLInputElement)?.value;
+
+              if (!banReason || !banEnd) {
+                Swal.showValidationMessage("Veuillez remplir tous les champs !");
+                return null;
+              }
+
+              return { banReason, banEnd };
+            }
+            return {};
+          },
+        }).then((result) => {
+          if (result.isConfirmed) {
+            const { banReason, banEnd } = result.value || {};
+            toggleBan(params.row._id, !params.row.isBanned, banReason, banEnd);
+            Swal.fire(
+              `${params.row.firstname} a été ${params.row.isBanned ? "débanni" : "banni"} !`
+            );
+          }
+        });
+      }}
+    >
+      {params.row.isBanned ? "Débannir" : "Bannir"}
+    </button>
       ),
     }
   ];
@@ -108,7 +149,7 @@ export default function Dashboard() {
   return (
     <div className="dashboard">
       <aside className="sidebar">
-        <h2>Sidebar</h2>
+        <h2>Togeather</h2>
         <ul>
           <li>
             <a href="#overview">Overview</a>

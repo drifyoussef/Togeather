@@ -1,7 +1,7 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import "./App.css";
 import Navbar from "./components/Navbar/Navbar";
-import { BrowserRouter as Router, Route, Routes, useNavigate } from "react-router-dom";
+import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
 import Home from "./components/Home/Home";
 import Profile from "./components/Profile/Profile";
 import Messages from "./components/Messages/Messages";
@@ -43,7 +43,8 @@ function App() {
           <Route path="/success" element={<Success />} />
           <Route path="/cancel" element={<Cancel />} />
           <Route path="/confirm-email" element={<ConfirmEmail data={{ message: "" }} />} />
-          {user && <Route path="/banned" element={<Banned user={user} />} />}
+          {/* {user && <Route path="/banned" element={<Banned user={user} />} />} */}
+          <Route path="/banned" element={<Banned user={user as any} />} />
       </Routes>
     </>
   );

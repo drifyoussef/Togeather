@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import "./Login.css";
 import { useNavigate } from "react-router-dom";
+import Swal from "sweetalert2";
 
 const Login: React.FC = () => {
   // Email et mot de passe
@@ -46,12 +47,16 @@ const Login: React.FC = () => {
         const errorData = await response.json();
         setError(errorData.message);
 
-        //Rediriger l'utilisateur si il est banni
-        if (response.status === 403) {
-          console.log('User is banned:', errorData.message);
-          navigate('/banned');
-          return;
-        }
+         // Vérifier si l'utilisateur est banni et rediriger
+       if (response.status === 403) {
+        Swal.fire({
+          icon: 'error',
+          title: 'Vous êtes banni',
+          text: `Raison: ${errorData.banReason}`,
+          footer: `Date de fin du banissement: ${new Date(errorData.banEnd).toLocaleDateString()}`,
+        });
+        return;
+      }
 
         if (errorData.emailNotConfirmed) {
           // Erreur lors de la connexion de l'utilisateur (email non confirmé)

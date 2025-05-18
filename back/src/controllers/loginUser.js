@@ -22,8 +22,11 @@ module.exports = async (req, res) => {
 
             // Vérification si l'utilisateur est banni
             if (userFind.isBanned) {
-                console.error('User is banned');
-                return res.status(403).json({ message: 'Utilisateur banni LOGIN USER CONTROLLER 403 STATUS' });
+                return res.status(403).json({
+                    message: 'Vous êtes banni',
+                    banReason: userFind.banReason,
+                    banEnd: userFind.banEnd,
+                });
             }
 
             // Vérification du mot de passe
