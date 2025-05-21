@@ -23,6 +23,10 @@ services:
       - "3000:3000"
     environment:
       - NODE_ENV=development
+      - CHOKIDAR_USEPOLLING=true
+    volumes:
+      - ./front:/usr/src/app
+      - /usr/src/app/node_modules
     depends_on:
       - backend
     mem_limit: 4g
