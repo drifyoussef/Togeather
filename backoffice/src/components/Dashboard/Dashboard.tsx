@@ -108,7 +108,7 @@ export default function Dashboard() {
               <label for="banReason">Raison du bannissement :</label>
               <input id="banReason" class="swal2-input" placeholder="Entrez la raison du bannissement">
               <label for="banEnd">Date de fin du bannissement :</label>
-              <input id="banEnd" type="date" class="swal2-input">
+              <input id="banEnd" type="datetime-local" class="swal2-input">
             `
             : "",
           showCancelButton: true,
