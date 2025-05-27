@@ -128,6 +128,12 @@ const Login: React.FC = () => {
         {error && <p className="error">{error}</p>}
         <button type="submit">Se connecter</button>
       </form>
+      <div className="no-account">
+        <p>Pas encore de compte ?</p>
+        <button onClick={() => {
+              navigate("/auth/register");
+            }} className="create-account">Je m'inscris</button>
+      </div>
       {emailNotConfirmed && (
         <div>
           <button

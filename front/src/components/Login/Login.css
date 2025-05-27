@@ -72,6 +72,26 @@ button:hover {
   background: #470021;
 }
 
+.no-account {
+  display: flex;
+  gap: 8px;
+  margin-top: 16px;
+}
+
+.create-account {
+  margin: 0;
+  width: fit-content;
+  padding: 0;
+  background: transparent;
+  color: #AD0051;
+  text-decoration: underline;
+}
+
+.create-account:hover {
+  color: #470021;
+  background: transparent;
+}
+
 @media only screen and (max-width: 320px), only screen and (max-width: 375px), only screen and (max-width: 425px)  {
 
 form{
