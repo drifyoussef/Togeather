@@ -1,9 +1,13 @@
 import React from "react";
 import "./Connection.css";
 import { FaArrowRightLong } from "react-icons/fa6";
+import { useNavigate } from "react-router-dom";
 import connectionBackground from "../../images/connection_background.jpeg";
 
 export default function Connexion() {
+  
+  const navigate = useNavigate();
+
   return (
     <div>
       <div className="top-container">
@@ -19,7 +23,9 @@ export default function Connexion() {
             Discutez avec des personnes pour faire des rencontres amicales
           </p>
           <div className="bottom-container">
-            <button className="start-button">
+            <button onClick={() => {
+              navigate("/auth/login");
+            }} className="start-button">
               Commencer
               <FaArrowRightLong />
             </button>
