@@ -124,7 +124,12 @@ export default function Dashboard() {
                 return null;
               }
 
-              return { banReason, banEnd };
+              // Convertit la date locale en ISO (UTC)
+              const banEndDate = new Date(banEnd);
+              // Pour la France, pas besoin de forcer le fuseau, new Date(banEnd) prend la locale du navigateur
+              const banEndISO = banEndDate.toISOString();
+
+              return { banReason, banEnd: banEndISO };
             }
             return {};
           },

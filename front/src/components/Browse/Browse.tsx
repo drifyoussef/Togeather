@@ -108,7 +108,7 @@ const Browse: React.FC = () => {
   };
 
   return (
-    <div>
+    <div className="browse-div">
       <div>
         <p className="p1-home">Let's eat together</p>
         <p className="p2-home">Mangeons ensemble</p>

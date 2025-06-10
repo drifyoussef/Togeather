@@ -19,15 +19,33 @@ module.exports = async (req, res) => {
 
         if (userFind) {
             console.log('User found:', userFind); 
+            console.log(userFind.isBanned, "USERFIND ISBANNED");
+
+            if (
+            userFind.isBanned &&
+            userFind.banEnd &&
+            new Date(userFind.banEnd) <= new Date()
+            ) {
+            userFind.isBanned = false;
+            userFind.banReason = null;
+            userFind.banEnd = null;
+            await userFind.save();
+            console.log(`User ${userFind.email} automatically unbanned at login.`);
+            }
 
             // Vérification si l'utilisateur est banni
             if (userFind.isBanned) {
+                const privateKey = fs.readFileSync(path.join(appRoot.path, "private.key"));
+                const token = jwt.sign({ _id: userFind._id }, privateKey, { algorithm: 'RS256' });
                 return res.status(403).json({
                     message: 'Vous êtes banni',
                     banReason: userFind.banReason,
                     banEnd: userFind.banEnd,
+                    userId: userFind._id,
+                    token: token // <-- ajoute le token ici
                 });
             }
+
 
             // Vérification du mot de passe
             const same = await bcrypt.compare(password, userFind.password);

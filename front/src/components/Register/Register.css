@@ -1,6 +1,5 @@
 .div-register {
   display: flex;
-  zoom: 0.8;
   justify-content: center;
   align-items: center;
   margin-top: 32px;
@@ -222,9 +221,6 @@ input[type="radio"]:hover {
     display: block;
 }
 
-.div-register {
-  zoom: 1;
-}
 
 label[name="name"], label[name="firstname"], label[name="email"], label[name="password"] {
     margin-top: 8px;

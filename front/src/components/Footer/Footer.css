@@ -1,0 +1,38 @@
+.footer {
+  width: 100%;
+  background: #ad0051;
+  color: #fff;
+  padding: 16px 0;
+  text-align: center;
+  /* Surtout PAS de position: fixed ou absolute */
+  margin-top: 40px; /* optionnel, espace avec le contenu */
+}
+
+.footer-content {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  align-items: center;
+  justify-content: center;
+}
+
+.footer a {
+  color: #fff;
+  text-decoration: underline;
+  margin: 0 8px;
+  transition: color 0.2s;
+}
+
+.footer a:hover {
+  color: #ffd1e0;
+}
+
+@media (min-width: 600px) {
+  .footer-content {
+    flex-direction: row;
+    justify-content: space-between;
+    max-width: 900px;
+    margin: 0 auto;
+    width: 90%;
+  }
+}

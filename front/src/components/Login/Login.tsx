@@ -52,18 +52,31 @@ const Login: React.FC = () => {
 
         // Vérifier si l'utilisateur est banni et rediriger
         if (response.status === 403) {
+          const banDate = new Date(errorData.banEnd);
+          const now = new Date();
+
+          if (banDate <= now) {
+            return;
+          }
+
+          // Sinon, le ban est encore actif
+          const formattedDate = `${banDate.toLocaleDateString("fr-FR", {
+            timeZone: "Europe/Paris",
+          })} à ${banDate.toLocaleTimeString("fr-FR", {
+            hour: "2-digit",
+            minute: "2-digit",
+            timeZone: "Europe/Paris",
+          })}`;
           Swal.fire({
             icon: "error",
             title: "Vous êtes banni",
             text: `Raison: ${errorData.banReason}`,
-            footer: `Date de fin du banissement: ${new Date(
-              errorData.banEnd
-            ).toLocaleDateString()}`,
+            footer: `Date de fin du banissement: ${formattedDate}`,
             customClass: {
               confirmButton: "my-swal-confirm",
               cancelButton: "my-swal-cancel",
             },
-            buttonsStyling: false, // Important: disables default SweetAlert2 styles
+            buttonsStyling: false,
           });
           return;
         }
@@ -130,9 +143,14 @@ const Login: React.FC = () => {
       </form>
       <div className="no-account">
         <p>Pas encore de compte ?</p>
-        <button onClick={() => {
-              navigate("/auth/register");
-            }} className="create-account">Je m'inscris</button>
+        <button
+          onClick={() => {
+            navigate("/auth/register");
+          }}
+          className="create-account"
+        >
+          Je m'inscris
+        </button>
       </div>
       {emailNotConfirmed && (
         <div>

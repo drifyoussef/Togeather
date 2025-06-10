@@ -18,6 +18,7 @@ import Cancel from "./components/Cancel/Cancel";
 import ConfirmEmail from "./components/ConfirmEmail/ConfirmEmail";
 import About from "./components/About/About";
 import Banned from "./components/Banned/Banned";
+import Footer from "./components/Footer/Footer";
 import { UserModel } from './models/User.model';
 
 function App() {
@@ -46,6 +47,7 @@ function App() {
           {/* {user && <Route path="/banned" element={<Banned user={user} />} />} */}
           <Route path="/banned" element={<Banned user={user as any} />} />
       </Routes>
+      <Footer />
     </>
   );
 }

@@ -6,6 +6,10 @@
   align-items: center;
 }
 
+.browse-div {
+  height: calc(100vh - 64px);
+}
+
 .browse-image {
   width: 288px;
   height: 130px;
