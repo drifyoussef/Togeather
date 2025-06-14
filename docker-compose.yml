@@ -3,6 +3,7 @@ services:
     build:
       context: ./back
       dockerfile: Dockerfile
+    image: togeather-backend:latest
     container_name: backend
     ports:
       - "4000:4000"
@@ -12,12 +13,11 @@ services:
       - backend-data:/usr/src/app/src/uploads
     mem_limit: 4g
 
-
-
   frontend:
     build:
       context: ./front
       dockerfile: Dockerfile
+    image: togeather-frontend:latest
     container_name: frontend
     ports:
       - "3000:3000"
@@ -35,6 +35,7 @@ services:
     build:
       context: ./backoffice
       dockerfile: Dockerfile
+    image: togeather-backoffice:latest
     container_name: backoffice
     ports:
       - "3001:3001"

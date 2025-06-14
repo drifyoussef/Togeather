@@ -1,4 +1,3 @@
-console.log("NODE STARTED");
 const express = require("express"); // Import express
 const mongoose = require("mongoose"); // Import mongoose
 const cors = require("cors"); // Import cors

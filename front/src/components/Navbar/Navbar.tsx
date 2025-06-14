@@ -108,14 +108,6 @@ const Navbar: React.FC = () => {
               </NavLink>
             </li>
             <li>
-              <NavLink
-                to="/about"
-                className={({ isActive }) => (isActive ? "active" : "")}
-              >
-                A propos
-              </NavLink>
-            </li>
-            <li>
               <button onClick={handleLogout} className="logout-button">
                 Se déconnecter
               </button>

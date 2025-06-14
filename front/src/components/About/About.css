@@ -8,6 +8,7 @@
     margin: auto;
     background-color: #fff;
     margin-top: 16px;
+    height: inherit;
   }
   
   /* Contenu */
