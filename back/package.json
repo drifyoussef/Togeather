@@ -6,8 +6,8 @@
   "type": "commonjs",
   "scripts": {
     "test": "jest",
-    "start": "nodemon index.js --legacy-watch",
-    "dev": "nodemon index.js --legacy-watch"
+    "start": "nodemon index.js",
+    "dev": "nodemon index.js"
   },
   "keywords": [],
   "author": "",
