@@ -62,6 +62,10 @@ UserSchema.pre('save', async function (next) {
 
 // Configuration de l'algorithme de chiffrement et de la clé secrète
 const algorithm = 'aes-256-cbc';
+console.log('SECRET_KEY:', process.env.SECRET_KEY);
+if (!process.env.SECRET_KEY) {
+  throw new Error('SECRET_KEY is not defined in environment variables');
+}
 const secretKey = Buffer.from(process.env.SECRET_KEY, 'hex');
 
 // Fonction pour chiffrer le html dans le mail de confirmation
