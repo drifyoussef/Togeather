@@ -95,6 +95,9 @@ let fetch;
   const swaggerDocs = swaggerJsdoc(swaggerOptions);
   app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerDocs));
 
+
+  //Définition des CORS Middleware
+  const allowedOrigins = [process.env.ORIGIN, process.env.BACKOFFICE];
   // Configuration de express pour utiliser les middlewares
   app.use(express.json());
   app.use(cors({
@@ -122,25 +125,7 @@ let fetch;
     loggedIn = req.session.userId;
     next();
   });
-  //Définition des CORS Middleware
-  const allowedOrigins = [process.env.ORIGIN, process.env.BACKOFFICE];
 
-  app.use(function (req, res, next) {
-    const origin = req.headers.origin;
-    if (allowedOrigins.includes(origin)) {
-      res.setHeader("Access-Control-Allow-Origin", origin);
-    }
-    res.setHeader(
-      "Access-Control-Allow-Headers",
-      "X-Requested-With,content-type, Accept,Authorization,Origin"
-    );
-    res.setHeader(
-      "Access-Control-Allow-Methods",
-      "GET, POST, OPTIONS, PUT, PATCH, DELETE"
-    );
-    res.setHeader("Access-Control-Allow-Credentials", true);
-    next();
-  });
   // Route avec middleware pour les messages en temps réel
   app.use("/messages", authMiddleware, messagesRouter);
 
