@@ -1,10 +1,10 @@
 import React from "react";
-import "./About.css";
+import "./Cgu.css";
 
-const About: React.FC = () => {
+const Cgu: React.FC = () => {
   return (
-    <div className="about-container">
-      <div className="about-content">
+    <div className="cgu-container">
+      <div className="cgu-content">
         <h1 className="main-title">Conditions Générales d'Utilisation (CGU)</h1>
         
         <section className="section">
@@ -28,29 +28,10 @@ const About: React.FC = () => {
           </p>
           <p className="section-text">Ce site web propose également un service premium permettant de liker des profils en illimité.</p>
         </section>
-
-        <h1 className="main-title">Conditions Générales de Vente (CGV)</h1>
-
-        <section className="section">
-          <h2 className="section-title">1. Objet</h2>
-          <p className="section-text">
-            Les présentes Conditions Générales de Vente (CGV) régissent les modalités de vente des services proposés sur la plateforme "Togeather".
-          </p>
-        </section>
-
-        <section className="section">
-          <h2 className="section-title">2. Prix</h2>
-          <p className="section-text">
-            Les prix des services sont indiqués en euros et incluent toutes les taxes applicables.
-          </p>
-        </section>
-
-        <footer className="footer">
           <p>© {new Date().getFullYear()} Togeather. Tous droits réservés.</p>
-        </footer>
       </div>
     </div>
   );
 };
 
-export default About;
+export default Cgu;

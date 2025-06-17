@@ -16,7 +16,8 @@ import Premium from './components/Premium/Premium';
 import Success from "./components/Success/Success";
 import Cancel from "./components/Cancel/Cancel";
 import ConfirmEmail from "./components/ConfirmEmail/ConfirmEmail";
-import About from "./components/About/About";
+import Cgu from "./components/Cgu/Cgu";
+import Cgv from "./components/Cgv/Cgv";
 import Banned from "./components/Banned/Banned";
 import Footer from "./components/Footer/Footer";
 import { UserModel } from './models/User.model';
@@ -29,7 +30,8 @@ function App() {
       <Navbar />
       <Routes>
           <Route path="/" element={<Home />} />
-          <Route path="/about" element={<About />} />
+          <Route path="/cgu" element={<Cgu />} />
+          <Route path="/cgv" element={<Cgv />} />
           <Route path="/profile" element={<Profile />} />
           <Route path="/profile/:id" element={<UserProfile />} />
           <Route path="/messages" element={<Messages />} />

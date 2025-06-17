@@ -4,9 +4,7 @@
   height: calc(100vh - 64px);
   display: flex;
 }
-
 .top-container {
-  position: absolute;
   margin-top: 32px;
   margin-left: 64px;
 }
@@ -236,7 +234,6 @@
     height: auto;
     padding: 0;
     gap: 0;
-    margin-top: 24PX;
   }
   .content-container, .image-container {
     width: fit-content;
@@ -293,7 +290,6 @@
     flex-direction: row;
     padding: 0;
     gap: 24px;
-    margin-top: 24px;
     align-items: center;
   }
   .content-container {
@@ -316,12 +312,11 @@
     max-width: 380px;
     height: 240px;
   }
-  .top-container {
+   .top-container {
     margin-left: 32px;
     margin-top: 24px;
-    position: absolute;
-    text-align: left;
   }
+  
   .text-meeting-connection {
     font-size: 32px;
   }
