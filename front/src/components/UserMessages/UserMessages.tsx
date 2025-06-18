@@ -174,6 +174,17 @@ useEffect(() => {
     //console.log(setIsChatVisible, "SETISCHATVISIBLE");
   };
 
+  useEffect(() => {
+  const isMobile = window.innerWidth <= 768; // adapte le breakpoint si besoin
+  if (id) {
+    if (!isMobile) {
+      setIsChatVisible(true); // Desktop : ouvre direct la conversation
+    } else {
+      setIsChatVisible(false); // Mobile : affiche d'abord la box-match
+    }
+  }
+}, [id]);
+
   // Fonction pour afficher un message
 
   /*
@@ -222,6 +233,7 @@ useEffect(() => {
   
     // Retourner le dernier message
     return { content: latestMessage.content, sender: latestMessage.sender };
+    
   };
 
   return (
