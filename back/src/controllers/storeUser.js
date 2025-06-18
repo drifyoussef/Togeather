@@ -9,9 +9,13 @@ module.exports = async (req, res) => {
         res.redirect('/')
     } catch (error) {
         console.log(JSON.stringify(error));
-        const validationErrors = Object.keys(error.errors).map(key => error.errors[key].message)
-        //req.flash.valdationErrors = validationErrors
-        req.flash('validationErrors', validationErrors)
+        // Gestion de l'unicité de l'email
+        if (error.code === 11000 && error.keyPattern && error.keyPattern.email) {
+            // Erreur d'unicité sur l'email
+            return res.status(400).json({ message: "Cette adresse mail est déjà associée à un compte." });
+        }
+       const validationErrors = Object.keys(error.errors || {}).map(key => error.errors[key].message)
+        res.status(400).json({ message: validationErrors.join(', ') || "Erreur lors de l'inscription." });
         //req.session.validationErrors = validationErrors;
         res.redirect('/auth/register');
         console.log(`Create User error ${error}`);
