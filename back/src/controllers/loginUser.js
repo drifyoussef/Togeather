@@ -53,7 +53,7 @@ module.exports = async (req, res) => {
             // Vérification de l'email
             if(userFind.isEmailConfirmed === false){
                 console.error('Email not confirmed');
-                await userFind.resendConfirmationEmail();
+                //await userFind.resendConfirmationEmail();
                 res.status(401).json({ message: 'Email non confirmé', emailNotConfirmed: true });
                 return;
             }
