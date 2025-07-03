@@ -204,6 +204,18 @@
     cursor: pointer;
 }
 
+.delete-message-icon {
+    color: #fff;
+    cursor: pointer;
+    font-size: 20px;
+    margin-left: 10px;
+    transition: color 0.3s ease;
+}
+
+.delete-message-icon:hover {
+    color: #AD0051;
+}
+
 @media only screen and (max-width: 320px), only screen and (max-width: 375px){
     .send-message {
         padding: 0px;

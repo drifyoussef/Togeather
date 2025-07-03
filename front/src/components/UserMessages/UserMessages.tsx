@@ -3,6 +3,7 @@ import "./UserMessages.css";
 import { useFetchUsers } from "../../hooks/useFetchUsers";
 import { UserModel } from "../../models/User.model";
 import { useNavigate, useParams } from "react-router-dom";
+import { MdDelete } from "react-icons/md";
 import io from "socket.io-client";
 
 const socket = io(process.env.REACT_APP_API_URL);
@@ -88,7 +89,7 @@ export default function UserMessages() {
       }
     };
 
-    // Charger les messages de l'utilisateur²
+    // Charger les messages de l'utilisateur
     fetchUserMessages();
 
     // WebSocket pour recevoir les messages
@@ -107,6 +108,8 @@ export default function UserMessages() {
     const selectedUserId = localStorage.getItem("selectedUserId");
     if (selectedUserId && mutualMatches) {
       const user = mutualMatches.find((user) => user._id === selectedUserId);
+      //console.log("selectedUserId :", selectedUserId);
+      //console.log("selectedUser :", user?.firstname);
       if (user) {
         setSelectedUser(user);
       }
@@ -236,6 +239,59 @@ useEffect(() => {
     
   };
 
+
+ const handleDeleteConversation = async (userId: string) => {
+  try {
+    const token = localStorage.getItem("token");
+    const response = await fetch(
+      `${process.env.REACT_APP_API_URL}/conversations/${userId}`,
+      {  
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+        method: "DELETE",
+      }
+    );
+    if (response.ok) {
+      // Mets à jour la liste des matchs (retire le match supprimé)
+      const updatedMatches = mutualMatches.filter(
+        (user) => user._id !== userId
+      );
+      // Met à jour le state des matchs mutuels
+      setSelectedUser(null);
+      // Met à jour le state des matchs mutuels
+      setIsChatVisible(false);
+      localStorage.removeItem("selectedUserId");
+      // Met à jour les matchs mutuels
+      console.log(updatedMatches, "UPDATED MATCHES AFTER DELETION");
+      //console.log(mutualMatches, "MUTUAL MATCHES AFTER DELETION");
+      // Redirige vers la page des messages
+      navigate("/messages");
+      // Mets à jour les messages (retire ceux liés à ce user)
+      setMessages((prev) =>
+        prev.filter(
+          (msg) =>
+            !(
+              (msg.sender && msg.sender._id === userId) ||
+              (msg.receiver && msg.receiver._id === userId)
+            )
+        )
+      );
+      // Si la conversation était ouverte, ferme-la
+      if (selectedUser && selectedUser._id === userId) {
+        setSelectedUser(null);
+        setIsChatVisible(false);
+        localStorage.removeItem("selectedUserId");
+        navigate("/messages");
+      }
+    } else {
+      console.error("Erreur lors de la suppression de la conversation");
+    }
+  } catch (error) {
+    console.error("Erreur lors de la suppression de la conversation:", error);
+  }
+};
+
   return (
     <div className="div-matches">
       <div className={`box-match ${isChatVisible ? "hidden" : ""}`}>
@@ -261,7 +317,13 @@ useEffect(() => {
               </div>
               <p className="latest-message">
                   {latestMessage.sender ? `${latestMessage.sender.firstname}: ${latestMessage.content}` : ""}
-                </p>
+              </p>
+              <div>
+                <MdDelete
+                  className="delete-message-icon"
+                  onClick={() => handleDeleteConversation(user._id)}
+                />
+              </div>
             </div>
           );
         })}

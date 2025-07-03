@@ -318,6 +318,45 @@ let fetch;
     }
   });
 
+  // Suppression de la conversation et du match entre deux utilisateurs
+  app.delete("/conversations/:userId", authMiddleware, async (req, res) => {
+    const userId = req.user._id; // utilisateur connecté
+    const otherUserId = req.params.userId;
+
+    console.log("userId", userId);
+    console.log("otherUserId", otherUserId);
+
+    try {
+      // Supprimer tous les messages entre les deux utilisateurs
+      await Message.deleteMany({
+        $or: [
+          { sender: userId, receiver: otherUserId },
+          { sender: otherUserId, receiver: userId }
+        ]
+      });
+
+      // Supprimer le match dans les deux sens
+      await User.updateOne(
+        { _id: userId },
+        { $pull: { mutualMatches: otherUserId } }
+      );
+      await User.updateOne(
+        { _id: otherUserId },
+        { $pull: { mutualMatches: userId } }
+      );
+
+      console.log('DELETE match', {userId});
+      console.log('DELETE match', {otherUserId});
+
+      res.status(200).json({ message: "Conversation et match supprimés." });
+    } catch (error) {
+      res.status(500).json({ message: "Erreur lors de la suppression." });
+    }
+  });
+
+
+
+
   // Route par défaut (Hello World)
   /**
    * @swagger
