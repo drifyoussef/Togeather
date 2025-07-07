@@ -93,6 +93,16 @@ const UserProfile: React.FC = () => {
     //console.log('Rendering with liked state:', liked);
   }, [liked]);
 
+ useEffect(() => {
+  const handleForceUnlike = () => {
+    setLiked(false);
+    setReload(r => !r); // force le refetch de l'utilisateur
+  };
+  window.addEventListener("forceUnlike", handleForceUnlike);
+  console.log("Event listener for forceUnlike added");
+  return () => window.removeEventListener("forceUnlike", handleForceUnlike);
+}, []);
+
   // Afficher un message de chargement si l'utilisateur n'est pas encore chargé
   if (!user) return <p>Chargement...</p>;
 

@@ -117,56 +117,59 @@ export default function UserMessages() {
   }, [mutualMatches]);
 
   // Fonction pour envoyer un message
-const handleSendMessage = async () => {
-  if (newMessage.trim() === "") return;
+  const handleSendMessage = async () => {
+    if (newMessage.trim() === "") return;
 
-  // Données du message
-  const messageData = {
-    content: newMessage,
-    senderId: connectedUserId,
-    sender: { _id: connectedUserId },
-    receiverId: id,
+    // Données du message
+    const messageData = {
+      content: newMessage,
+      senderId: connectedUserId,
+      sender: { _id: connectedUserId },
+      receiverId: id,
+    };
+
+    try {
+      // Envoi du message à l'API
+      const response = await fetch(
+        `${process.env.REACT_APP_API_URL}/messages`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${localStorage.getItem("token")}`,
+          },
+          body: JSON.stringify(messageData),
+        }
+      );
+
+      if (response.ok) {
+        const newMessageData = await response.json();
+        socket.emit("sendMessage", newMessageData);
+
+        // Met à jour l'état des messages
+        setMessages((prevMessages) => [...prevMessages, newMessageData]);
+
+        // Set le message à vide (input)
+        setNewMessage("");
+      } else {
+        console.error("Failed to send message");
+      }
+    } catch (error) {
+      console.error("Error sending message:", error);
+    }
   };
 
-  try {
-    // Envoi du message à l'API
-    const response = await fetch(`${process.env.REACT_APP_API_URL}/messages`, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${localStorage.getItem("token")}`,
-      },
-      body: JSON.stringify(messageData),
+  // Utiliser le hook useEffect pour écouter les messages reçus
+  useEffect(() => {
+    socket.on("receiveMessage", (message: any) => {
+      setMessages((prevMessages) => [...prevMessages, message]);
     });
 
-    if (response.ok) {
-      const newMessageData = await response.json();
-      socket.emit("sendMessage", newMessageData);
-
-      // Met à jour l'état des messages
-      setMessages((prevMessages) => [...prevMessages, newMessageData]);
-
-      // Set le message à vide (input)
-      setNewMessage("");
-    } else {
-      console.error("Failed to send message");
-    }
-  } catch (error) {
-    console.error("Error sending message:", error);
-  }
-};
-
-// Utiliser le hook useEffect pour écouter les messages reçus
-useEffect(() => {
-  socket.on("receiveMessage", (message: any) => {
-    setMessages((prevMessages) => [...prevMessages, message]);
-  });
-
-  // Nettoyer le socket à la fin de l'effet
-  return () => {
-    socket.off("receiveMessage");
-  };
-}, []);
+    // Nettoyer le socket à la fin de l'effet
+    return () => {
+      socket.off("receiveMessage");
+    };
+  }, []);
 
   // Fonction pour gérer le clic sur un utilisateur
   const handleUserClick = (user: UserModel) => {
@@ -178,15 +181,15 @@ useEffect(() => {
   };
 
   useEffect(() => {
-  const isMobile = window.innerWidth <= 768; // adapte le breakpoint si besoin
-  if (id) {
-    if (!isMobile) {
-      setIsChatVisible(true); // Desktop : ouvre direct la conversation
-    } else {
-      setIsChatVisible(false); // Mobile : affiche d'abord la box-match
+    const isMobile = window.innerWidth <= 768; // adapte le breakpoint si besoin
+    if (id) {
+      if (!isMobile) {
+        setIsChatVisible(true); // Desktop : ouvre direct la conversation
+      } else {
+        setIsChatVisible(false); // Mobile : affiche d'abord la box-match
+      }
     }
-  }
-}, [id]);
+  }, [id]);
 
   // Fonction pour afficher un message
 
@@ -218,79 +221,88 @@ useEffect(() => {
       console.error("connectedUserId is null or undefined");
       return { content: "", sender: null };
     }
-   
+
     // Filtrer les messages de l'utilisateur
     const userMessages = messages.filter(
       (message) =>
-        (message.sender && message.sender._id === userId && message.receiver && message.receiver._id === connectedUserId) ||
-        (message.sender && message.sender._id === connectedUserId && message.receiver && message.receiver._id === userId)
+        (message.sender &&
+          message.sender._id === userId &&
+          message.receiver &&
+          message.receiver._id === connectedUserId) ||
+        (message.sender &&
+          message.sender._id === connectedUserId &&
+          message.receiver &&
+          message.receiver._id === userId)
     );
-  
+
     // Si aucun message n'est trouvé
     if (userMessages.length === 0) return { content: "", sender: null };
-  
+
     // Trouver le dernier message
     const latestMessage = userMessages.reduce((latest, current) =>
-      new Date(latest.createdAt) > new Date(current.createdAt) ? latest : current
+      new Date(latest.createdAt) > new Date(current.createdAt)
+        ? latest
+        : current
     );
-  
+
     // Retourner le dernier message
     return { content: latestMessage.content, sender: latestMessage.sender };
-    
   };
 
-
- const handleDeleteConversation = async (userId: string) => {
-  try {
-    const token = localStorage.getItem("token");
-    const response = await fetch(
-      `${process.env.REACT_APP_API_URL}/conversations/${userId}`,
-      {  
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-        method: "DELETE",
-      }
-    );
-    if (response.ok) {
-      // Mets à jour la liste des matchs (retire le match supprimé)
-      const updatedMatches = mutualMatches.filter(
-        (user) => user._id !== userId
+  const handleDeleteConversation = async (userId: string) => {
+    try {
+      const token = localStorage.getItem("token");
+      const response = await fetch(
+        `${process.env.REACT_APP_API_URL}/conversations/${userId}`,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+          method: "DELETE",
+        }
       );
-      // Met à jour le state des matchs mutuels
-      setSelectedUser(null);
-      // Met à jour le state des matchs mutuels
-      setIsChatVisible(false);
-      localStorage.removeItem("selectedUserId");
-      // Met à jour les matchs mutuels
-      console.log(updatedMatches, "UPDATED MATCHES AFTER DELETION");
-      //console.log(mutualMatches, "MUTUAL MATCHES AFTER DELETION");
-      // Redirige vers la page des messages
-      navigate("/messages");
-      // Mets à jour les messages (retire ceux liés à ce user)
-      setMessages((prev) =>
-        prev.filter(
-          (msg) =>
-            !(
-              (msg.sender && msg.sender._id === userId) ||
-              (msg.receiver && msg.receiver._id === userId)
-            )
-        )
-      );
-      // Si la conversation était ouverte, ferme-la
-      if (selectedUser && selectedUser._id === userId) {
+      if (response.ok) {
+        // Mets à jour la liste des matchs (retire le match supprimé)
+        const updatedMatches = mutualMatches.filter(
+          (user) => user._id !== userId
+        );
+        // Met à jour le state des matchs mutuels
         setSelectedUser(null);
+        // Met à jour le state des matchs mutuels
         setIsChatVisible(false);
         localStorage.removeItem("selectedUserId");
-        navigate("/messages");
+        // Met à jour les matchs mutuels
+        console.log(updatedMatches, "UPDATED MATCHES AFTER DELETION");
+        // Met à jour le state du like dans le userProfile
+        if (window.location.pathname === `/profile/${userId}`) {
+          // Utilise un event custom ou un state global/context pour notifier UserProfile
+          window.dispatchEvent(new CustomEvent("forceUnlike"));
+          console.log("FORCE UNLIKE DISPATCHED (userMessages.tsx)");
+        }
+        // Mets à jour les messages (retire ceux liés à ce user)
+        setMessages((prev) =>
+          prev.filter(
+            (msg) =>
+              !(
+                (msg.sender && msg.sender._id === userId) ||
+                (msg.receiver && msg.receiver._id === userId)
+              )
+          )
+        );
+        // Si la conversation était ouverte, ferme-la
+        if (selectedUser && selectedUser._id === userId) {
+          setSelectedUser(null);
+          setIsChatVisible(false);
+          localStorage.removeItem("selectedUserId");
+          //navigate("/messages");
+        }
+      } else {
+        console.error("Erreur lors de la suppression de la conversation");
       }
-    } else {
-      console.error("Erreur lors de la suppression de la conversation");
+    } catch (error) {
+      console.error("Erreur lors de la suppression de la conversation:", error);
     }
-  } catch (error) {
-    console.error("Erreur lors de la suppression de la conversation:", error);
-  }
-};
+  };
 
   return (
     <div className="div-matches">
@@ -299,24 +311,31 @@ useEffect(() => {
           const latestMessage = getLatestMessage(user._id);
           return (
             <div
-              className={`match-box ${selectedUser && selectedUser._id === user._id ? "selected" : ""}`}
+              className={`match-box ${
+                selectedUser && selectedUser._id === user._id ? "selected" : ""
+              }`}
               key={user._id}
               onClick={() => handleUserClick(user)}
             >
               <div className="header-match-box">
-              {selectedUser && (
-                <img className="profile-picture" src={`${process.env.REACT_APP_API_URL}/${selectedUser.imageUrl}`} alt={`${selectedUser.firstname} ${selectedUser.name}`} />
-              )}
+                {selectedUser && (
+                  <img
+                    className="profile-picture"
+                    src={`${process.env.REACT_APP_API_URL}/${selectedUser.imageUrl}`}
+                    alt={`${selectedUser.firstname} ${selectedUser.name}`}
+                  />
+                )}
                 <div className="header-text">
                   <p>
                     {user.firstname}, {user.age} ans
                   </p>
                   <p>{user.job}</p>
                 </div>
-                
               </div>
               <p className="latest-message">
-                  {latestMessage.sender ? `${latestMessage.sender.firstname}: ${latestMessage.content}` : ""}
+                {latestMessage.sender
+                  ? `${latestMessage.sender.firstname}: ${latestMessage.content}`
+                  : ""}
               </p>
               <div>
                 <MdDelete
@@ -332,7 +351,11 @@ useEffect(() => {
         <div className="messages">
           {selectedUser && (
             <div className="header-messages">
-              <img className="profile-picture" src={`${process.env.REACT_APP_API_URL}/${selectedUser.imageUrl}`} alt={`${selectedUser.firstname} ${selectedUser.name}`} />
+              <img
+                className="profile-picture"
+                src={`${process.env.REACT_APP_API_URL}/${selectedUser.imageUrl}`}
+                alt={`${selectedUser.firstname} ${selectedUser.name}`}
+              />
               <p className="header-conversation">
                 Conversation avec {selectedUser.firstname}
               </p>
@@ -340,22 +363,37 @@ useEffect(() => {
           )}
           <div className="chat-container">
             {messages
-              .sort((a, b) => new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime())
+              .sort(
+                (a, b) =>
+                  new Date(a.createdAt).getTime() -
+                  new Date(b.createdAt).getTime()
+              )
               .map((message, index) => (
                 <div
                   key={`${message._id}-${index}`} // Ensure unique keys by combining _id and index
-                  className={`message ${message.sender && message.sender._id === connectedUserId ? "right" : "left"}`}
+                  className={`message ${
+                    message.sender && message.sender._id === connectedUserId
+                      ? "right"
+                      : "left"
+                  }`}
                 >
                   <div className="avatar">
                     {message.sender && message.sender._id === connectedUserId
-                      ? (connectedFirstname ? connectedFirstname.charAt(0) : "U")
-                      : (selectedUser ? selectedUser.firstname.charAt(0) : "U")}
+                      ? connectedFirstname
+                        ? connectedFirstname.charAt(0)
+                        : "U"
+                      : selectedUser
+                      ? selectedUser.firstname.charAt(0)
+                      : "U"}
                   </div>
                   <div className="bubble">
                     <p className="user-message">{message.content}</p>
                     <span className="time">
                       Message de {message.sender && message.sender.firstname} à{" "}
-                      {new Date(message.createdAt).toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" })}
+                      {new Date(message.createdAt).toLocaleTimeString([], {
+                        hour: "2-digit",
+                        minute: "2-digit",
+                      })}
                     </span>
                   </div>
                 </div>
@@ -369,9 +407,17 @@ useEffect(() => {
               value={newMessage}
               onChange={(e) => setNewMessage(e.target.value)}
             />
-            <button className="send-message" onClick={(e) => { handleSendMessage(); setReload(true) }}>Envoyer</button>
-            </div>
-      </div>
+            <button
+              className="send-message"
+              onClick={(e) => {
+                handleSendMessage();
+                setReload(true);
+              }}
+            >
+              Envoyer
+            </button>
+          </div>
+        </div>
       )}
     </div>
   );

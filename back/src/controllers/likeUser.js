@@ -44,9 +44,16 @@ module.exports = async (req, res) => {
     // Vérifier si les utilisateurs sont mutuellement likés
     const isMutual = updatedUser.likedBy.includes(currentUserId) && updatedCurrentUser.likedBy.includes(id);
 
-    // Mettre à jour le statut de like mutuel
-    await User.findByIdAndUpdate(currentUserId, { isMutual: isMutual });
-    await User.findByIdAndUpdate(id, { isMutual: isMutual });
+    // Gérer le tableau mutualMatches
+    if (isMutual) {
+      // Ajoute chacun dans le mutualMatches de l'autre
+      await User.findByIdAndUpdate(currentUserId, { $addToSet: { mutualMatches: id } });
+      await User.findByIdAndUpdate(id, { $addToSet: { mutualMatches: currentUserId } });
+    } else {
+      // Retire chacun du mutualMatches de l'autre
+      await User.findByIdAndUpdate(currentUserId, { $pull: { mutualMatches: id } });
+      await User.findByIdAndUpdate(id, { $pull: { mutualMatches: currentUserId } });
+    }
 
     // Répondre avec un message de succès et les informations mises à jour
     res.status(200).json({

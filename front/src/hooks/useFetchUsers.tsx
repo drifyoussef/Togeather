@@ -11,6 +11,7 @@ export const useFetchUsers = () => {
   const [filteredUsers, setFilteredUsers] = useState<UserModel[]>([]);
   // Recupérer les likes mutuels (les utilisateurs qui ont matché)
   const [mutualMatches, setMutualMatches] = useState<UserModel[]>([]);
+  const [currentUser, setCurrentUser] = useState<UserModel | null>(null);
   // Naviguer vers une autre page
   const navigate = useNavigate();
 
@@ -64,6 +65,7 @@ export const useFetchUsers = () => {
           console.error(data.message);
         } else {
           setPreferredGender(data.preferredGender);
+          setCurrentUser(data);
         }
       })
       .catch((error) => {
@@ -110,6 +112,27 @@ export const useFetchUsers = () => {
       setMutualMatches(mutualMatches);
     }
   }, [preferredGender, users]);
+
+  useEffect(() => {
+  if (currentUser && users.length > 0) {
+    // Filtrer les utilisateurs qui sont dans mutualMatches du currentUser
+    const mutualMatches = users.filter((user) =>
+      currentUser.mutualMatches?.includes(user._id)
+    );
+    setMutualMatches(mutualMatches);
+
+    // Filtrage par genre préféré (optionnel)
+    let filtered: UserModel[] = [];
+    if (currentUser.preferredGender === "both") {
+      filtered = users;
+    } else {
+      filtered = users.filter(
+        (user) => user.userGender === currentUser.preferredGender
+      );
+    }
+    setFilteredUsers(filtered);
+  }
+}, [currentUser, users]);
 
   return { users, preferredGender, mutualMatches, filteredUsers };
 };

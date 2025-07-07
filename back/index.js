@@ -1,4 +1,4 @@
-require('dotenv').config(); // Load environment variables from .env file
+require("dotenv").config(); // Load environment variables from .env file
 const express = require("express"); // Import express
 const mongoose = require("mongoose"); // Import mongoose
 const cors = require("cors"); // Import cors
@@ -95,21 +95,22 @@ let fetch;
   const swaggerDocs = swaggerJsdoc(swaggerOptions);
   app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerDocs));
 
-
   //Définition des CORS Middleware
   const allowedOrigins = [process.env.ORIGIN, process.env.BACKOFFICE];
   // Configuration de express pour utiliser les middlewares
   app.use(express.json());
-  app.use(cors({
-    origin: function(origin, callback) {
-      if (!origin || allowedOrigins.includes(origin)) {
-        callback(null, true);
-      } else {
-        callback(new Error('Not allowed by CORS'));
-      }
-    },
-    credentials: true
-  }));
+  app.use(
+    cors({
+      origin: function (origin, callback) {
+        if (!origin || allowedOrigins.includes(origin)) {
+          callback(null, true);
+        } else {
+          callback(new Error("Not allowed by CORS"));
+        }
+      },
+      credentials: true,
+    })
+  );
   app.use(
     expressSession({
       secret:
@@ -320,8 +321,11 @@ let fetch;
 
   // Suppression de la conversation et du match entre deux utilisateurs
   app.delete("/conversations/:userId", authMiddleware, async (req, res) => {
-    const userId = req.user._id; // utilisateur connecté
-    const otherUserId = req.params.userId;
+    const userId = new mongoose.Types.createFromHexString(req.user._id); // utilisateur connecté
+    const otherUserId = new mongoose.Types.ObjectId(req.params.userId);
+
+    console.log("TYPE DES UTILISATEURS", typeof userId, typeof otherUserId); // doit être 'object' (ObjectId)
+
 
     console.log("userId", userId);
     console.log("otherUserId", otherUserId);
@@ -331,31 +335,33 @@ let fetch;
       await Message.deleteMany({
         $or: [
           { sender: userId, receiver: otherUserId },
-          { sender: otherUserId, receiver: userId }
-        ]
+          { sender: otherUserId, receiver: userId },
+        ],
       });
+
+      const user = await User.findById(userId);
+      const otherUser = await User.findById(otherUserId);
+      console.log("Avant suppression:", user.likedBy, otherUser.likedBy);
 
       // Supprimer le match dans les deux sens
       await User.updateOne(
         { _id: userId },
-        { $pull: { mutualMatches: otherUserId } }
+        { $pull: { mutualMatches: otherUserId, likedBy: otherUserId } }
       );
       await User.updateOne(
         { _id: otherUserId },
-        { $pull: { mutualMatches: userId } }
+        { $pull: { mutualMatches: userId, likedBy: userId } }
       );
 
-      console.log('DELETE match', {userId});
-      console.log('DELETE match', {otherUserId});
+      console.log("DELETE match", { userId });
+      console.log("DELETE match", { otherUserId });
 
       res.status(200).json({ message: "Conversation et match supprimés." });
     } catch (error) {
+      console.error("Erreur lors de la suppression :", error);
       res.status(500).json({ message: "Erreur lors de la suppression." });
     }
   });
-
-
-
 
   // Route par défaut (Hello World)
   /**
@@ -1128,11 +1134,9 @@ let fetch;
       user.banEnd = isBanned ? (banEnd ? new Date(banEnd) : null) : null; // Convertir banEnd en Date ou null
       console.log(`User ${id} isBanned status updated to:`, isBanned);
       await user.save();
-      res
-        .status(200)
-        .json({
-          message: `User ${isBanned ? "banned" : "unbanned"} successfully`,
-        });
+      res.status(200).json({
+        message: `User ${isBanned ? "banned" : "unbanned"} successfully`,
+      });
       console.log("User after save:", user);
     } catch (error) {
       console.error("Error checking if user is banned:", error);

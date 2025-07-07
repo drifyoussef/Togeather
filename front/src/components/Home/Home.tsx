@@ -64,8 +64,11 @@ export default function Home() {
   };
 
   // Filtrer les utilisateurs par genre préféré
-  const filteredUsersList = users.filter((user:any) =>
-    preferredGender === "both" ? true : user.userGender === preferredGender
+  const currentUserId = localStorage.getItem("currentUserId");
+  const filteredUsersList = users.filter(
+    (user: any) =>
+      (preferredGender === "both" ? true : user.userGender === preferredGender) &&
+      user._id !== currentUserId // <-- On enlève l'utilisateur connecté ici
   );
 
   return (

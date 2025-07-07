@@ -42,6 +42,7 @@ const UserSchema = new Schema({
   favoriteCategory: { type: String, required: [true, 'Veuillez indiquer votre catégorie préférée'] }, // Catégorie préférée
   likedBy: [{ type: mongoose.Schema.Types.ObjectId, ref: 'User' }], // like d'autres utilisateurs
   isMutual: { type: Boolean, default: false }, // like mutuel
+  mutualMatches: [{ type: mongoose.Schema.Types.ObjectId, ref: 'User' }], // Matches mutuels
   previews: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Preview' }],
   messages: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Message' }], // Messages des utilisateurs
   isAdmin: { type: Boolean, default: false }, // Booléen pour savoir si l'utilisateur est un administrateur
