@@ -900,7 +900,7 @@ let fetch;
    *         description: Internal server error
    */
   // Route pour valider un paiement PayPal
-  app.post("/successPayments", successPayments);
+  app.post("/successPayments", authMiddleware, successPayments);
 
   // Route pour renvoyer un email de confirmation
   app.post("/resend-confirmation", async (req, res) => {
@@ -1079,6 +1079,48 @@ let fetch;
     res.send("Payment canceled");
   });
 
+
+ // Route pour supprimer un utilisateur
+  /**
+   * @swagger
+   * /auth/unsubscribe:
+   *   post:
+   *     summary: Désinscription d'un utilisateur
+   *     tags: [Users]
+   *     parameters:
+   *       - in: path
+   *         name: id
+   *         schema:
+   *           type: string
+   *         required: true
+   *         description: User ID
+   *     responses:
+   *       200:
+   *         description: User unsubscribed successfully
+   *       404:
+   *         description: User not found
+   *       500:
+   *         description: Internal server error
+   */
+
+  app.post("/auth/unsubscribe", authMiddleware, async (req, res) => {
+    try {
+      const userId = req.user._id; // Récupérer l'ID de l'utilisateur connecté
+      const user = await User.findByIdAndUpdate(
+        userId,
+        { isPremium: false },
+        { new: true } // Retourner l'utilisateur mis à jour
+      );
+      if (!user) {
+        return res.status(404).json({ message: "User not found" });
+      }
+      res.status(200).json({ message: "User unsubscribed successfully" });
+    } catch (error) {
+      console.error("Error unsubscribing user:", error);
+      res.status(500).json({ message: "Error unsubscribing user" });
+    }
+  });
+
   // Route pour supprimer un utilisateur
   /**
    * @swagger
@@ -1163,13 +1205,13 @@ let fetch;
   cron.schedule("* * * * *", async () => {
     try {
       const now = new Date();
-      const usersToUnban = await User.find({
+      const usersBanned = await User.find({
         isBanned: true,
         banEnd: { $lte: now, $ne: null },
       });
-      console.log("CRON: usersToUnban found:", usersToUnban.length);
+      console.log("CRON: Nombre d'utilisateurs bannis:", usersBanned.length);
 
-      for (const user of usersToUnban) {
+      for (const user of usersBanned) {
         user.isBanned = false;
         user.banReason = null;
         user.banEnd = null;

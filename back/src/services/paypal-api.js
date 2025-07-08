@@ -1,6 +1,8 @@
 const paypal = require('paypal-rest-sdk');
 const path = require('path');
 const { paypalConfig } = require('../config/paypalConfig');
+const User = require('../models/User');
+
 
 paypalConfig();
 
@@ -87,6 +89,14 @@ const successPayments = async (req, res) => {
         // Si le paiement est approuvé, on distribue les paiements
         if (payment.state === 'approved') {
             try {
+
+                // Premium pour l'utilisateur connecté
+                if (req.user && req.user._id) {
+                    await User.findByIdAndUpdate(req.user._id, { isPremium: true });
+                    const updatedUser = await User.findById(req.user._id);
+                    console.log("isPremium après paiement :", updatedUser.isPremium);
+                }
+
                 await distributePayments(
                     [{ amount: payment.transactions[0].amount.total, sellerPayPalId: sellerId }],
                     res

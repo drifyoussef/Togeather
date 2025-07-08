@@ -49,6 +49,7 @@ const UserSchema = new Schema({
   isBanned: { type: Boolean, default: false }, // Booléen pour savoir si l'utilisateur est banni
   banReason: { type: String, required: false, default: null }, // Raison du bannissement
   banEnd: { type: Date, required: false, default: null }, // Date de fin du bannissement
+  isPremium: { type: Boolean, default: false }, // Booléen pour savoir si l'utilisateur est premium
 });
 
 UserSchema.plugin(uniqueValidator);

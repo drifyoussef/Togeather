@@ -1,6 +1,5 @@
 // User Model (Informations de l'utilisateur)
 export interface UserModel {
-  mutualMatches: any;
   _id: string;
   imageUrl: string;
   firstname: string;
@@ -19,4 +18,6 @@ export interface UserModel {
   isBanned: boolean;
   banReason: string;
   banEnd: Date;
+  mutualMatches: any;
+  isPremium: boolean;
 }
