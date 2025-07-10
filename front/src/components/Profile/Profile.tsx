@@ -122,13 +122,14 @@ const Profile: React.FC = () => {
     // Demander une confirmation avant de supprimer le compte
     try {
       const result = await Swal.fire({
-        title: 'Êtes-vous sûr?',
+        title: 'Êtes-vous sûr de vouloir supprimer votre compte?',
         text: "Vous ne pourrez pas revenir en arrière!",
         icon: 'warning',
         showCancelButton: true,
-        confirmButtonColor: '#3085d6',
-        cancelButtonColor: '#d33',
-        confirmButtonText: 'Oui, supprimez-le!'
+        confirmButtonText: 'Oui, supprimez-le!',
+        cancelButtonText: 'Annuler',
+        confirmButtonColor: "#AD0051",
+        cancelButtonColor: "#AD0051",
       });
   
       // Si l'utilisateur confirme la suppression du compte, lancer la requête de suppression

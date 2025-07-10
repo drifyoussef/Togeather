@@ -49,6 +49,7 @@ const Navbar: React.FC = () => {
         icon: "error",
         title: "Il y a un problème...",
         text: "Vous n'avez pas de matchs pour le moment",
+        confirmButtonColor: "#AD0051"
       });
       navigate("/");
     }

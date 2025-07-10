@@ -20,3 +20,20 @@ code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
     monospace;
 }
+
+.swal2-confirm:hover {
+  background-color: #470021 !important; /* couleur au hover des alertes */
+}
+
+.swal2-cancel {
+  background: #fff !important;
+  color: #AD0051 !important;
+  border: 2px solid #AD0051 !important;
+  box-shadow: none !important;
+}
+
+.swal2-cancel:hover, .swal2-cancel:focus {
+  background: #470021 !important;
+  color: #fff !important;
+  border: 2px solid #470021 !important;
+}

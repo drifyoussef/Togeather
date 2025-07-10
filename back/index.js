@@ -321,7 +321,9 @@ let fetch;
 
   // Suppression de la conversation et du match entre deux utilisateurs
   app.delete("/conversations/:userId", authMiddleware, async (req, res) => {
+    console.log(req.user_id, "USER ID BEFORE MONGOOSE TYPES");
     const userId = new mongoose.Types.ObjectId(req.user._id); // utilisateur connecté
+    console.log(userId, "USER ID AFTER MONGOOSE TYPES");
     const otherUserId = new mongoose.Types.ObjectId(req.params.userId);
 
     console.log("TYPE DES UTILISATEURS", typeof userId, typeof otherUserId); // doit être 'object' (ObjectId)

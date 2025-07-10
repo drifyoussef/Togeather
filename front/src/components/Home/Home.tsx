@@ -261,7 +261,7 @@ export default function Home() {
                   </div>
                 ))
               ) : (
-                <p>Il n'y a pas d'utilisateur disponible.</p>
+                <p>Vous n'avez pas de matchs.</p>
               )}
             </div>
           </div>
