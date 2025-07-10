@@ -29,7 +29,6 @@ export default function Connexion() {
               Commencer
               <FaArrowRightLong />
             </button>
-            <button className="tutorial-button">Tutoriel</button>
           </div>
         </div>
         <div className="image-container">
