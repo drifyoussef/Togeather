@@ -120,7 +120,6 @@ export default function UserMessages() {
   const handleSendMessage = async () => {
     if (newMessage.trim() === "") return;
 
-    // Données du message
     const messageData = {
       content: newMessage,
       senderId: connectedUserId,
@@ -129,7 +128,6 @@ export default function UserMessages() {
     };
 
     try {
-      // Envoi du message à l'API
       const response = await fetch(
         `${process.env.REACT_APP_API_URL}/messages`,
         {
@@ -143,14 +141,8 @@ export default function UserMessages() {
       );
 
       if (response.ok) {
-        const newMessageData = await response.json();
-        socket.emit("sendMessage", newMessageData);
-
-        // Met à jour l'état des messages
-        setMessages((prevMessages) => [...prevMessages, newMessageData]);
-
-        // Set le message à vide (input)
         setNewMessage("");
+        setReload(true); // Rafraîchis la liste des messages
       } else {
         console.error("Failed to send message");
       }
@@ -158,18 +150,6 @@ export default function UserMessages() {
       console.error("Error sending message:", error);
     }
   };
-
-  // Utiliser le hook useEffect pour écouter les messages reçus
-  useEffect(() => {
-    socket.on("receiveMessage", (message: any) => {
-      setMessages((prevMessages) => [...prevMessages, message]);
-    });
-
-    // Nettoyer le socket à la fin de l'effet
-    return () => {
-      socket.off("receiveMessage");
-    };
-  }, []);
 
   // Fonction pour gérer le clic sur un utilisateur
   const handleUserClick = (user: UserModel) => {

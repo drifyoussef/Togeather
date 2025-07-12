@@ -328,7 +328,6 @@ let fetch;
 
     console.log("TYPE DES UTILISATEURS", typeof userId, typeof otherUserId); // doit être 'object' (ObjectId)
 
-
     console.log("userId", userId);
     console.log("otherUserId", otherUserId);
 
@@ -1081,8 +1080,7 @@ let fetch;
     res.send("Payment canceled");
   });
 
-
- // Route pour supprimer un utilisateur
+  // Route pour supprimer un utilisateur
   /**
    * @swagger
    * /auth/unsubscribe:
@@ -1148,6 +1146,23 @@ let fetch;
   app.delete("/users/:id", authMiddleware, async (req, res) => {
     try {
       const { id } = req.params;
+
+      // 1. Supprimer tous les messages où il est sender ou receiver
+      await Message.deleteMany({
+        $or: [{ sender: id }, { receiver: id }],
+      });
+
+      // 2. Retirer son ID des likes et mutualMatches des autres utilisateurs
+      await User.updateMany(
+        {},
+        {
+          $pull: {
+            likedBy: id,
+            mutualMatches: id,
+          },
+        }
+      );
+
       const user = await User.findByIdAndDelete(id);
       if (!user) {
         return res.status(404).json({ message: "User not found" });
