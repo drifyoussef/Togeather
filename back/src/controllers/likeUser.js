@@ -1,35 +1,50 @@
-const User = require('../models/User');
+const User = require("../models/User");
 
 module.exports = async (req, res) => {
   try {
-    const { id } = req.params;  // ID de l'utilisateur à liker
-    const { liked, currentUserId } = req.body;  // liked: true pour liker, false pour unliker
+    const { id } = req.params; // ID de l'utilisateur à liker
+    const { liked, currentUserId } = req.body; // liked: true pour liker, false pour unliker
 
     console.log(currentUserId, "ID DE L'UTILISATEUR LIKEUSER CONTROLLER");
 
     // Vérifier si l'utilisateur est connecté
     if (!currentUserId) {
-      return res.status(401).json({ message: 'Unauthorized' });
+      return res.status(401).json({ message: "Unauthorized" });
     }
 
     console.log(`User ID to like/unlike: ${id}`);
-    const user = await User.findById(id);  // Récupérer l'utilisateur à liker
+    const user = await User.findById(id); // Récupérer l'utilisateur à liker
 
     // Vérifier si l'utilisateur existe
     if (!user) {
-      return res.status(404).json({ message: 'User not found' });
+      return res.status(404).json({ message: "User not found" });
     }
 
-    const currentUser = await User.findById(currentUserId);  // Récupérer l'utilisateur connecté
+    const currentUser = await User.findById(currentUserId); // Récupérer l'utilisateur connecté
 
     // Vérifier si l'utilisateur connecté existe
     if (!currentUser) {
-      return res.status(404).json({ message: 'Current user not found' });
+      return res.status(404).json({ message: "Current user not found" });
+    }
+
+        // Limite de likes pour non-premium
+    if (!currentUser.isPremium && liked) {
+      // Vérifie le nombre de likes déjà faits
+      const likesCount = await User.countDocuments({ likedBy: currentUserId });
+      if (likesCount >= 1 && !user.likedBy.includes(currentUserId)) {
+        return res
+          .status(403)
+          .json({
+            message: "Vous devez être premium pour liker plus d'une personne.",
+          });
+      }
     }
 
     if (liked) {
       // Liker l'utilisateur
-      await User.findByIdAndUpdate(id, { $addToSet: { likedBy: currentUserId } });
+      await User.findByIdAndUpdate(id, {
+        $addToSet: { likedBy: currentUserId },
+      });
       console.log(`User ${currentUserId} liked ${id}`);
     } else {
       // Unliker l'utilisateur
@@ -42,29 +57,39 @@ module.exports = async (req, res) => {
     const updatedCurrentUser = await User.findById(currentUserId);
 
     // Vérifier si les utilisateurs sont mutuellement likés
-    const isMutual = updatedUser.likedBy.includes(currentUserId) && updatedCurrentUser.likedBy.includes(id);
+    const isMutual =
+      updatedUser.likedBy.includes(currentUserId) &&
+      updatedCurrentUser.likedBy.includes(id);
 
     // Gérer le tableau mutualMatches
     if (isMutual) {
       // Ajoute chacun dans le mutualMatches de l'autre
-      await User.findByIdAndUpdate(currentUserId, { $addToSet: { mutualMatches: id } });
-      await User.findByIdAndUpdate(id, { $addToSet: { mutualMatches: currentUserId } });
+      await User.findByIdAndUpdate(currentUserId, {
+        $addToSet: { mutualMatches: id },
+      });
+      await User.findByIdAndUpdate(id, {
+        $addToSet: { mutualMatches: currentUserId },
+      });
     } else {
       // Retire chacun du mutualMatches de l'autre
-      await User.findByIdAndUpdate(currentUserId, { $pull: { mutualMatches: id } });
-      await User.findByIdAndUpdate(id, { $pull: { mutualMatches: currentUserId } });
+      await User.findByIdAndUpdate(currentUserId, {
+        $pull: { mutualMatches: id },
+      });
+      await User.findByIdAndUpdate(id, {
+        $pull: { mutualMatches: currentUserId },
+      });
     }
 
     // Répondre avec un message de succès et les informations mises à jour
     res.status(200).json({
-      message: liked ? 'User liked' : 'User unliked',
-      liked: liked,  // Statut de like
+      message: liked ? "User liked" : "User unliked",
+      liked: liked, // Statut de like
       totalLikes: updatedUser.likedBy.length,
-      isMutual: isMutual,  // Statut de like mutuel
+      isMutual: isMutual, // Statut de like mutuel
     });
   } catch (error) {
     // En cas d'erreur, on renvoie une erreur 500
-    console.error('Error updating like status:', error);
-    res.status(500).json({ message: 'Error updating like status' });
+    console.error("Error updating like status:", error);
+    res.status(500).json({ message: "Error updating like status" });
   }
 };
