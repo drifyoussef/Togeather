@@ -5,7 +5,7 @@
   padding: 16px 0;
   text-align: center;
   /* Surtout PAS de position: fixed ou absolute */
-  margin-top: 40px; /* optionnel, espace avec le contenu */
+  margin-top: 0px; /* optionnel, espace avec le contenu */
 }
 
 .footer-content {

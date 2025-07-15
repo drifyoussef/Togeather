@@ -306,17 +306,16 @@ export default function UserMessages() {
                   />
                 )}
                 <div className="header-text">
-                  <p>
-                    {user.firstname}, {user.age} ans
+                  <p className="match-name">{user.firstname}</p>
+                  <p className="latest-message">
+                    {latestMessage.sender
+                      ? latestMessage.content.length > 10
+                        ? `${latestMessage.content.slice(0, 15)}...`
+                        : latestMessage.content
+                      : "Nouveau match !"}
                   </p>
-                  <p>{user.job}</p>
                 </div>
               </div>
-              <p className="latest-message">
-                {latestMessage.sender
-                  ? `${latestMessage.sender.firstname}: ${latestMessage.content}`
-                  : ""}
-              </p>
               <div>
                 <MdDelete
                   className="delete-message-icon"
@@ -357,19 +356,24 @@ export default function UserMessages() {
                       : "left"
                   }`}
                 >
-                  <div className="avatar">
-                    {message.sender && message.sender._id === connectedUserId
-                      ? connectedFirstname
-                        ? connectedFirstname.charAt(0)
-                        : "U"
-                      : selectedUser
-                      ? selectedUser.firstname.charAt(0)
-                      : "U"}
-                  </div>
-                  <div className="bubble">
-                    <p className="user-message">{message.content}</p>
-                    <span className="time">
-                      Message de {message.sender && message.sender.firstname} à{" "}
+                  {!(
+                    message.sender && message.sender._id === connectedUserId
+                  ) && (
+                    <div className="avatar">
+                      {selectedUser ? selectedUser.firstname.charAt(0) : "U"}
+                    </div>
+                  )}
+                  <div>
+                    <div className="bubble">
+                      <p className="user-message">{message.content}</p>
+                    </div>
+                    <span
+                      className={`time ${
+                        message.sender && message.sender._id === connectedUserId
+                          ? "time-right"
+                          : "time-left"
+                      }`}
+                    >
                       {new Date(message.createdAt).toLocaleTimeString([], {
                         hour: "2-digit",
                         minute: "2-digit",
