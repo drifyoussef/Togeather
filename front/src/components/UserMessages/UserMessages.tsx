@@ -5,6 +5,7 @@ import { UserModel } from "../../models/User.model";
 import { useNavigate, useParams } from "react-router-dom";
 import { MdDelete } from "react-icons/md";
 import io from "socket.io-client";
+import Swal from "sweetalert2";
 
 const socket = io(process.env.REACT_APP_API_URL);
 
@@ -17,7 +18,7 @@ export default function UserMessages() {
   // Récupérer l'ID de l'utilisateur connecté
   const connectedUserId = localStorage.getItem("currentUserId");
   // Récupérer le prénom de l'utilisateur connecté
-  const connectedFirstname = localStorage.getItem("firstname");
+  //const connectedFirstname = localStorage.getItem("firstname");
 
   //console.log(connectedUserId, "CONNECTED USER ID FROM USERMESSAGES");
   //console.log(connectedFirstname, "CONNECTED FIRSTNAME FROM USERMESSAGES");
@@ -41,6 +42,8 @@ export default function UserMessages() {
   const [selectedUser, setSelectedUser] = useState<UserModel | null>(null);
   // Charger la visibilité du chat (state par défaut: false pour le responsive mobile)
   const [isChatVisible, setIsChatVisible] = useState(false);
+  // Charger le message survolé (state par défaut: null)
+  const [hoveredMessage, setHoveredMessage] = useState<string | null>(null);
 
   //console.log(messages, "MESSAGES");
 
@@ -284,6 +287,64 @@ export default function UserMessages() {
     }
   };
 
+  const handleReportMessage = async (messageId: string) => {
+    console.log("Reporting message with ID:", messageId);
+    const { value: reason } = await Swal.fire({
+      title: "Signaler ce message",
+      input: "text",
+      inputLabel: "Raison du signalement",
+      inputPlaceholder: "Décrivez la raison...",
+      showCancelButton: true,
+      confirmButtonText: "Envoyer",
+      cancelButtonText: "Annuler",
+      icon: "warning",
+      confirmButtonColor: "#AD0051",
+      cancelButtonColor: "#333",
+      inputAttributes: {
+        style: "width: auto; margin-top: 16px;", // <-- largeur personnalisée de l'input
+      },
+    });
+
+    if (reason) {
+      try {
+        const token = localStorage.getItem("token");
+        const response = await fetch(
+          `${process.env.REACT_APP_API_URL}/messages/${messageId}/report`,
+          {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+              Authorization: `Bearer ${token}`,
+            },
+            body: JSON.stringify({ reason }),
+          }
+        );
+        if (response.ok) {
+          Swal.fire({
+            title: "Signalement envoyé",
+            text: "Merci, le message a été signalé au backoffice.",
+            icon: "success",
+            confirmButtonColor: "#AD0051",
+          });
+        } else {
+          Swal.fire({
+            title: "Erreur",
+            text: "Impossible d'envoyer le signalement.",
+            icon: "error",
+            confirmButtonColor: "#AD0051",
+          });
+        }
+      } catch (error) {
+        Swal.fire({
+          title: "Erreur",
+          text: "Une erreur est survenue.",
+          icon: "error",
+          confirmButtonColor: "#AD0051",
+        });
+      }
+    }
+  };
+
   return (
     <div className="div-matches">
       <div className={`box-match ${isChatVisible ? "hidden" : ""}`}>
@@ -355,6 +416,8 @@ export default function UserMessages() {
                       ? "right"
                       : "left"
                   }`}
+                  onMouseEnter={() => setHoveredMessage(message._id)}
+                  onMouseLeave={() => setHoveredMessage(null)}
                 >
                   {!(
                     message.sender && message.sender._id === connectedUserId
@@ -366,6 +429,16 @@ export default function UserMessages() {
                   <div>
                     <div className="bubble">
                       <p className="user-message">{message.content}</p>
+                      {hoveredMessage === message._id &&
+                        message.sender &&
+                        message.sender._id !== connectedUserId && (
+                          <button
+                            className="report-btn"
+                            onClick={() => handleReportMessage(message._id)}
+                          >
+                            Signaler
+                          </button>
+                        )}
                     </div>
                     <span
                       className={`time ${

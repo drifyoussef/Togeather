@@ -29,6 +29,20 @@ router.post('/', authMiddleware, async (req, res) => {
   }
 });
 
+router.get('/reports', authMiddleware, async (req, res) => {
+  try {
+    const reportedMessages = await Message.find({
+      reports: { $exists: true, $not: { $size: 0 } },
+    })
+      .populate('sender', 'firstname lastname email _id')
+      .populate('reports.reportedBy', 'firstname lastname email _id');
+    res.status(200).json(reportedMessages);
+  } catch (error) {
+    console.error('Error fetching reported messages:', error);
+    res.status(500).json({ error: 'Internal Server Error' });
+  }
+});
+
 router.get('/:id', authMiddleware, async (req, res) => {
     const { id } = req.params;
   

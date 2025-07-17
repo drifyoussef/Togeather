@@ -82,7 +82,8 @@
 }
 
 .bubble {
-    max-width: 70%;          /* largeur maximale pour les longs messages */
+    min-width: 70%;
+    max-width: 100%;          /* largeur maximale pour les longs messages */
     width: fit-content;
     padding: 10px;
     border-radius: 20px;
@@ -91,6 +92,30 @@
     word-break: break-word;
     white-space: pre-line;
     overflow-wrap: break-word;
+}
+
+.report-btn {
+    bottom: 20px;
+    background: #fff;
+    color: #AD0051;
+    border: 1px solid #AD0051;
+    border-radius: 8px;
+    padding: 2px 8px;
+    cursor: pointer;
+    font-size: 12px;
+    z-index: 2;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.2s;
+}
+
+.bubble:hover .report-btn {
+    opacity: 1;
+    pointer-events: auto;
+}
+
+.report-btn:hover {
+    color: #fff;
 }
 
 .user-message {

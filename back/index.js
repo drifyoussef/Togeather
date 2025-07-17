@@ -285,6 +285,21 @@ let fetch;
     }
   });
 
+  app.get("/messages/reports", authMiddleware, async (req, res) => {
+    try {
+      const reportedMessages = await Message.find({
+        reports: { $exists: true, $not: { $size: 0 } },
+      })
+        .populate("sender", "firstname name email") // infos du user reporté
+        .populate("reports.reportedBy", "firstname name email"); // infos du reporteur
+      res.status(200).json(reportedMessages);
+    } catch (error) {
+      res
+        .status(500)
+        .json({ message: "Erreur lors de la récupération des reports." });
+    }
+  });
+
   // Route pour récupérer les messages d'un utilisateur via l'id du destinataire ou de l'expéditeur
   /**
    * @swagger
@@ -316,6 +331,85 @@ let fetch;
       res.json(messages);
     } catch (error) {
       res.status(500).json({ message: error.message });
+    }
+  });
+
+  // Route pour signaler un message
+  /**
+   * @swagger
+   * /messages/{id}/report:
+   *   post:
+   *     summary: Signaler un message
+   *     tags: [Messages]
+   *     parameters:
+   *       - in: path
+   *         name: id
+   *         schema:
+   *           type: string
+   *         required: true
+   *         description: ID du message à signaler
+   *     requestBody:
+   *       required: true
+   *       content:
+   *         application/json:
+   *           schema:
+   *             type: object
+   *             properties:
+   *               reason:
+   *                 type: string
+   *                 description: Raison du signalement
+   *     responses:
+   *       200:
+   *         description: Message reported successfully
+   *       400:
+   *         description: Bad request
+   *       404:
+   *         description: Message not found
+   *       500:
+   *         description: Internal server error
+   */
+  app.post("/messages/:id/report", authMiddleware, async (req, res) => {
+    const { reason } = req.body;
+    const { id } = req.params;
+    if (!id || !reason) {
+      return res
+        .status(400)
+        .json({ message: "Message ID and reason are required." });
+    }
+    try {
+      // On peuple le sender pour avoir l'auteur du message signalé
+      const message = await Message.findById(id)
+        .populate("sender", "firstname name")
+        .exec();
+      if (!message) {
+        return res.status(404).json({ message: "Message not found." });
+      }
+
+      // Récupérer le reporteur
+      const reporter = await User.findById(req.user._id).select(
+        "firstname name"
+      );
+
+      // Stocker le report dans le message
+      if (!message.reports) message.reports = [];
+      message.reports.push({
+        reportedBy: req.user._id,
+        reason,
+        reportedAt: new Date(),
+      });
+      await message.save();
+
+      // Log complet avec le bon reporté
+      console.log(
+        `Report: "${reporter?.firstname} ${reporter?.name}" a signalé le message de "${message.sender?.firstname} ${message.sender?.name}" pour la raison : "${reason}"`
+      );
+
+      console.log(`${message.sender} "données de l'utilisateur signalé"`);
+
+      res.status(200).json({ message: "Message reported successfully." });
+    } catch (error) {
+      console.error("Error reporting message:", error);
+      res.status(500).json({ message: "Internal server error." });
     }
   });
 
