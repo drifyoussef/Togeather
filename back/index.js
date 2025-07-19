@@ -286,19 +286,30 @@ let fetch;
   });
 
   app.get("/messages/reports", authMiddleware, async (req, res) => {
-    try {
-      const reportedMessages = await Message.find({
-        reports: { $exists: true, $not: { $size: 0 } },
+  try {
+    const reportedMessages = await Message.find({
+      reports: { $exists: true, $not: { $size: 0 } },
+    })
+      .populate({
+        path: "sender",
+        select: "firstname name email",
+        options: { strictPopulate: false }
       })
-        .populate("sender", "firstname name email") // infos du user reporté
-        .populate("reports.reportedBy", "firstname name email"); // infos du reporteur
-      res.status(200).json(reportedMessages);
-    } catch (error) {
-      res
-        .status(500)
-        .json({ message: "Erreur lors de la récupération des reports." });
-    }
-  });
+      .populate({
+        path: "reports.reportedBy",
+        select: "firstname name email",
+        options: { strictPopulate: false }
+      });
+
+      console.log(JSON.stringify(reportedMessages, null, 2));
+
+    res.status(200).json(reportedMessages);
+  } catch (error) {
+    res
+      .status(500)
+      .json({ message: "Erreur lors de la récupération des reports." });
+  }
+});
 
   // Route pour récupérer les messages d'un utilisateur via l'id du destinataire ou de l'expéditeur
   /**
@@ -379,7 +390,7 @@ let fetch;
     try {
       // On peuple le sender pour avoir l'auteur du message signalé
       const message = await Message.findById(id)
-        .populate("sender", "firstname name")
+        .populate("sender", "firstname name email")
         .exec();
       if (!message) {
         return res.status(404).json({ message: "Message not found." });
@@ -404,7 +415,7 @@ let fetch;
         `Report: "${reporter?.firstname} ${reporter?.name}" a signalé le message de "${message.sender?.firstname} ${message.sender?.name}" pour la raison : "${reason}"`
       );
 
-      console.log(`${message.sender} "données de l'utilisateur signalé"`);
+      console.log(`${message.sender} "données de l'utilisateur signalé", ${message.sender.name} "NOM DE L'UTILISATEUR SIGNALÉ"`);
 
       res.status(200).json({ message: "Message reported successfully." });
     } catch (error) {

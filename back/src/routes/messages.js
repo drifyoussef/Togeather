@@ -34,8 +34,8 @@ router.get('/reports', authMiddleware, async (req, res) => {
     const reportedMessages = await Message.find({
       reports: { $exists: true, $not: { $size: 0 } },
     })
-      .populate('sender', 'firstname lastname email _id')
-      .populate('reports.reportedBy', 'firstname lastname email _id');
+      .populate('sender', 'firstname name email _id')
+      .populate('reports.reportedBy', 'firstname name email _id');
     res.status(200).json(reportedMessages);
   } catch (error) {
     console.error('Error fetching reported messages:', error);
@@ -53,8 +53,8 @@ router.get('/:id', authMiddleware, async (req, res) => {
           { sender: id, receiver: req.user._id }
         ]
       })
-      .populate('sender', 'firstname lastname _id') // Populate sender
-      .populate('receiver', 'firstname lastname _id') // Populate receiver
+      .populate('sender', 'firstname name email _id') // Populate sender
+      .populate('receiver', 'firstname name email _id') // Populate receiver
       .sort({ createdAt: 1 });
   
       res.status(200).json(messages);

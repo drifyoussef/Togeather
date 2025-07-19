@@ -58,7 +58,7 @@ export default function Dashboard() {
       console.error("No token found in localStorage");
       redirect("/auth/admin/login");
     }
-  }, [token, preferredGender, mutualMatches]);
+  }, [token, preferredGender, mutualMatches, users]);
 
   const toggleBan = (
     userId: string,
@@ -120,7 +120,7 @@ export default function Dashboard() {
       console.error("No token found in localStorage");
       redirect("/auth/admin/login");
     }
-  }, [token]);
+  }, [reports, token]);
 
   const columns = [
     { field: "name", headerName: "Nom", width: 150 },
@@ -155,6 +155,9 @@ export default function Dashboard() {
               <input id="banEnd" type="datetime-local" class="swal2-input">
             `
                 : "",
+              customClass: {
+                input: "my-swal-input",
+              },
               showCancelButton: true,
               confirmButtonText: "Oui",
               cancelButtonText: "Non",
@@ -246,8 +249,9 @@ export default function Dashboard() {
               <thead>
                 <tr>
                   <th>Utilisateur</th>
+                  <th>Email de l'utilisateur</th>
                   <th>Message signalé</th>
-                  <th>Raisons du signalement</th>
+                  <th>Signalements</th>
                   <th>Date du premier signalement</th>
                 </tr>
               </thead>
@@ -257,8 +261,8 @@ export default function Dashboard() {
                     _id: string;
                     sender?: {
                       firstname?: string;
-                      lastname?: string;
                       name?: string;
+                      email?: string;
                     };
                     content: string;
                     reports?: ReportItem[];
@@ -267,10 +271,11 @@ export default function Dashboard() {
                       <td>
                         {msg.sender
                           ? `${msg.sender.firstname || ""} ${
-                              msg.sender.lastname || msg.sender.name || ""
+                              msg.sender.name || ""
                             }`
                           : "Utilisateur inconnu"}
                       </td>
+                      <td>{msg.sender ? msg.sender.email : "Email inconnu"}</td>
                       <td>{msg.content}</td>
                       <td>
                         <ul
@@ -289,16 +294,19 @@ export default function Dashboard() {
                                     ""
                                   }`
                                 : "Inconnu"}
-                                {" à signalé "} {msg.sender
-                          ? `${msg.sender.firstname || ""} ${
-                              msg.sender.lastname || msg.sender.name || ""
-                            }`
-                          : "Utilisateur inconnu"}
-                          <br />
-                          {" pour la raison suivante : "}
-                          <br />
+                              {" à signalé "}{" "}
+                              {msg.sender
+                                ? `${msg.sender.firstname || ""} ${
+                                    msg.sender.name || ""
+                                  }`
+                                : "Utilisateur inconnu"}
+                              <br />
+                              {" pour la raison suivante : "}
+                              <br />
                               <b>{r.reason}</b>
+                              <br />
                               <p>
+                                {" à "}
                                 {r.reportedAt
                                   ? new Date(r.reportedAt).toLocaleString()
                                   : ""}

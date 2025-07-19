@@ -322,7 +322,7 @@ export default function UserMessages() {
         if (response.ok) {
           Swal.fire({
             title: "Signalement envoyé",
-            text: "Merci, le message a été signalé au backoffice.",
+            text: "Merci, le message a été signalé aux administrateurs du site.",
             icon: "success",
             confirmButtonColor: "#AD0051",
           });

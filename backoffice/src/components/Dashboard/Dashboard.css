@@ -79,6 +79,11 @@ p {
   margin-top: 16px;
 }
 
+
+.swal2-input {
+  width: -webkit-fill-available;
+}
+
 #reports table {
   width: 100%;
   border-collapse: collapse;
@@ -116,7 +121,7 @@ p {
 }
 
 #reports td ul li {
-  margin-bottom: 6px;
+  margin-bottom: 32px;
   font-size: 0.97em;
 }
 
