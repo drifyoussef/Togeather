@@ -70,7 +70,18 @@ const Login: React.FC = () => {
           Swal.fire({
             icon: "error",
             title: "Vous êtes banni",
-            text: `Raison: ${errorData.banReason}`,
+            html: `
+              <div>
+                <div><b>Pour la raison suivante :</b> ${
+                  errorData.banReason
+                }</div>
+                ${
+                  errorData.bannedMessage
+                    ? `<div style="margin-top:8px;"><b>Message signalé :</b> "${errorData.bannedMessage}"</div>`
+                    : ""
+                }
+              </div>
+            `,
             footer: `Date de fin du banissement: ${formattedDate}`,
             customClass: {
               confirmButton: "my-swal-confirm",

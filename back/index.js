@@ -188,8 +188,21 @@ let fetch;
         return res.status(404).json({ message: "User not found" });
       }
       if (user.isBanned) {
-        return res.status(403).json({ message: "User is banned" });
-      }
+  // Récupérer le dernier message signalé de l'utilisateur
+  const lastReportedMessage = await Message.findOne({
+    sender: user._id,
+    reports: { $exists: true, $not: { $size: 0 } }
+  })
+    .sort({ "reports.reportedAt": -1 })
+    .lean();
+
+  return res.status(403).json({
+    message: "Vous êtes banni",
+    banReason: user.banReason,
+    banEnd: user.banEnd,
+    bannedMessage: lastReportedMessage ? lastReportedMessage.content : undefined
+  });
+}
       res.status(200).json(user);
     } catch (error) {
       console.error("Error fetching user:", error);
