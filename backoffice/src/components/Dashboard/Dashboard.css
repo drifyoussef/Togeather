@@ -84,6 +84,22 @@ p {
   width: -webkit-fill-available;
 }
 
+.my-swal-input-container {
+  display: flex;
+  gap: 8px;
+  flex-flow: column-reverse;
+}
+
+.swal2-html-container .my-swal-input,
+.swal2-html-container input.my-swal-input,
+.swal2-html-container select.my-swal-input {
+  min-height: 30px;
+}
+
+label {
+  margin-top: 24px;
+}
+
 #reports table {
   width: 100%;
   border-collapse: collapse;

@@ -24,20 +24,20 @@ export default function Dashboard() {
   }
 
   interface ReportItem {
+    _id: number;
+    sender?: { _id?: string; firstname?: string; lastname?: string; name?: string; email?: string };
     reason: string;
     reportedBy?: { firstname?: string; lastname?: string; name?: string };
     reportedAt?: string;
+    content?: string;
+    reports?: ReportItem[];
   }
 
   const [users, setUsers] = useState<User[]>([]);
-  const [reports, setReports] = useState([]);
+  const [reports, setReports] = useState<ReportItem[]>([]);
   const token = localStorage.getItem("token");
 
-  console.log(users.length, "TEST USERS");
-  console.log(reports, "TEST REPORTS");
-
   useEffect(() => {
-    console.log(users, preferredGender, mutualMatches, "TEST USEEFFECT");
     if (token) {
       fetch(`${import.meta.env.VITE_REACT_APP_API_URL}/auth/users`, {
         headers: { Authorization: `Bearer ${token}` },
@@ -58,7 +58,7 @@ export default function Dashboard() {
       console.error("No token found in localStorage");
       redirect("/auth/admin/login");
     }
-  }, [token, preferredGender, mutualMatches, users]);
+  }, [token, preferredGender, mutualMatches]);
 
   const toggleBan = (
     userId: string,
@@ -66,9 +66,7 @@ export default function Dashboard() {
     banReason: string,
     banEnd: Date
   ) => {
-    console.log(`User ${userId} is now ${isBanned ? "banned" : "unbanned"}`);
     const token = localStorage.getItem("token");
-
     fetch(`${import.meta.env.VITE_REACT_APP_API_URL}/auth/users/ban`, {
       method: "POST",
       headers: {
@@ -99,7 +97,6 @@ export default function Dashboard() {
   };
 
   useEffect(() => {
-    console.log(reports, "reports data");
     if (token) {
       fetch(`${import.meta.env.VITE_REACT_APP_API_URL}/messages/reports`, {
         headers: { Authorization: `Bearer ${token}` },
@@ -120,7 +117,7 @@ export default function Dashboard() {
       console.error("No token found in localStorage");
       redirect("/auth/admin/login");
     }
-  }, [reports, token]);
+  }, [token]);
 
   const columns = [
     { field: "name", headerName: "Nom", width: 150 },
@@ -139,74 +136,120 @@ export default function Dashboard() {
       field: "isBanned",
       headerName: "Bannir/Débannir",
       width: 100,
-      renderCell: (params: GridRenderCellParams<User>) => (
-        <button
-          className="ban-button"
-          onClick={() => {
-            Swal.fire({
-              title: `Voulez-vous ${
-                params.row.isBanned ? "débannir" : "bannir"
-              } ${params.row.firstname} ?`,
-              html: !params.row.isBanned
-                ? `
-              <label for="banReason">Raison du bannissement :</label>
-              <input id="banReason" class="swal2-input" placeholder="Entrez la raison du bannissement">
-              <label for="banEnd">Date de fin du bannissement :</label>
-              <input id="banEnd" type="datetime-local" class="swal2-input">
-            `
-                : "",
-              customClass: {
-                input: "my-swal-input",
-              },
-              showCancelButton: true,
-              confirmButtonText: "Oui",
-              cancelButtonText: "Non",
-              preConfirm: () => {
-                if (!params.row.isBanned) {
-                  const banReason = (
-                    document.getElementById("banReason") as HTMLInputElement
-                  )?.value;
-                  const banEnd = (
-                    document.getElementById("banEnd") as HTMLInputElement
-                  )?.value;
+      renderCell: (params: GridRenderCellParams<User>) => {
+        // Filtrer les messages signalés de cet utilisateur
+        const userReports = reports.filter(
+          (msg: ReportItem) => msg.sender && msg.sender._id === params.row._id
+        );
 
-                  if (!banReason || !banEnd) {
-                    Swal.showValidationMessage(
-                      "Veuillez remplir tous les champs !"
-                    );
-                    return null;
-                  }
-
-                  // Convertit la date locale en ISO (UTC)
-                  const banEndDate = new Date(banEnd);
-                  // Pour la France, pas besoin de forcer le fuseau, new Date(banEnd) prend la locale du navigateur
-                  const banEndISO = banEndDate.toISOString();
-
-                  return { banReason, banEnd: banEndISO };
-                }
-                return {};
-              },
-            }).then((result) => {
-              if (result.isConfirmed) {
-                const { banReason, banEnd } = result.value || {};
-                toggleBan(
-                  params.row._id,
-                  !params.row.isBanned,
-                  banReason,
-                  banEnd
-                );
-                Swal.fire(
-                  `${params.row.firstname} a été ${
-                    params.row.isBanned ? "débanni" : "banni"
-                  } !`
-                );
-              }
+        // Créer une liste de toutes les raisons de reports (avec le message associé)
+        const reportReasons: { label: string; value: string }[] = [];
+        userReports.forEach((msg: ReportItem) => {
+          msg.reports?.forEach((r: ReportItem) => {
+            reportReasons.push({
+              label: `${msg.content ? `"${msg.content}"` : ""} - ${r.reason}`,
+              value: r.reason,
             });
-          }}
-        >
-          {params.row.isBanned ? "Débannir" : "Bannir"}
-        </button>
-      ),
+          });
+        });
+
+        return (
+          <button
+            className="ban-button"
+            onClick={async () => {
+              await Swal.fire({
+                title: `Voulez-vous ${
+                  params.row.isBanned ? "débannir" : "bannir"
+                } ${params.row.firstname} ?`,
+                html: !params.row.isBanned
+                  ? `
+                  <label for="banReason">Raison du bannissement :</label>
+                  <div class="my-swal-input-container">
+                    <input id="banReason" class="my-swal-input" placeholder="Entrez la raison du bannissement" style="flex:1;" autocomplete="off">
+                    <select id="banReasonSelect" class="my-swal-input" style="flex:1;">
+                      <option value="">Sélectionner la raison du bannissement</option>
+                      ${reportReasons
+                        .map(
+                          (r) =>
+                            `<option value="${r.value.replace(/"/g, "&quot;")}">${r.label.replace(
+                              /"/g,
+                              "&quot;"
+                            )}</option>`
+                        )
+                        .join("")}
+                    </select>
+                  </div>
+                  <label for="banEnd">Date de fin du bannissement :</label>
+                  <input id="banEnd" type="datetime-local" class="my-swal-input">
+                `
+                  : "",
+                customClass: {
+                  input: "my-swal-input",
+                },
+                showCancelButton: true,
+                confirmButtonText: "Oui",
+                cancelButtonText: "Non",
+                didOpen: () => {
+                  const select = document.getElementById(
+                    "banReasonSelect"
+                  ) as HTMLSelectElement | null;
+                  const input = document.getElementById(
+                    "banReason"
+                  ) as HTMLInputElement | null;
+                  if (select && input) {
+                    select.addEventListener("change", () => {
+                      if (select.value) {
+                        input.value = select.value;
+                      }
+                    });
+                  }
+                },
+                preConfirm: () => {
+                  if (!params.row.isBanned) {
+                    const banReason = (
+                      document.getElementById("banReason") as HTMLInputElement
+                    )?.value;
+                    const banEnd = (
+                      document.getElementById("banEnd") as HTMLInputElement
+                    )?.value;
+
+                    if (!banReason || !banEnd) {
+                      Swal.showValidationMessage(
+                        "Veuillez remplir tous les champs !"
+                      );
+                      return null;
+                    }
+
+                    // Convertit la date locale en ISO (UTC)
+                    const banEndDate = new Date(banEnd);
+                    const banEndISO = banEndDate.toISOString();
+
+                    return { banReason, banEnd: banEndISO };
+                  }
+                  return {};
+                },
+              }).then((result) => {
+                if (result.isConfirmed) {
+                  const { banReason, banEnd } = result.value || {};
+                  toggleBan(
+                    params.row._id,
+                    !params.row.isBanned,
+                    banReason,
+                    banEnd
+                  );
+                  Swal.fire(
+                    `${params.row.firstname} a été ${
+                      params.row.isBanned ? "débanni" : "banni"
+                    } !`
+                  );
+                }
+              });
+            }}
+          >
+            {params.row.isBanned ? "Débannir" : "Bannir"}
+          </button>
+        );
+      },
     },
   ];
 
@@ -256,72 +299,59 @@ export default function Dashboard() {
                 </tr>
               </thead>
               <tbody>
-                {reports.map(
-                  (msg: {
-                    _id: string;
-                    sender?: {
-                      firstname?: string;
-                      name?: string;
-                      email?: string;
-                    };
-                    content: string;
-                    reports?: ReportItem[];
-                  }) => (
-                    <tr key={msg._id}>
-                      <td>
-                        {msg.sender
-                          ? `${msg.sender.firstname || ""} ${
-                              msg.sender.name || ""
-                            }`
-                          : "Utilisateur inconnu"}
-                      </td>
-                      <td>{msg.sender ? msg.sender.email : "Email inconnu"}</td>
-                      <td>{msg.content}</td>
-                      <td>
-                        <ul
-                          style={{
-                            paddingLeft: 0,
-                            margin: 0,
-                            listStyle: "none",
-                          }}
-                        >
-                          {msg.reports?.map((r: ReportItem, i: number) => (
-                            <li key={i}>
-                              {r.reportedBy
-                                ? `${r.reportedBy.firstname || ""} ${
-                                    r.reportedBy.lastname ||
-                                    r.reportedBy.name ||
-                                    ""
-                                  }`
-                                : "Inconnu"}
-                              {" à signalé "}{" "}
-                              {msg.sender
-                                ? `${msg.sender.firstname || ""} ${
-                                    msg.sender.name || ""
-                                  }`
-                                : "Utilisateur inconnu"}
-                              <br />
-                              {" pour la raison suivante : "}
-                              <br />
-                              <b>{r.reason}</b>
-                              <br />
-                              <p>
-                                {" à "}
-                                {r.reportedAt
-                                  ? new Date(r.reportedAt).toLocaleString()
-                                  : ""}
-                              </p>
-                            </li>
-                          ))}
-                        </ul>
-                      </td>
-                      <td>
-                        {msg.reports?.[0]?.reportedAt &&
-                          new Date(msg.reports[0].reportedAt).toLocaleString()}
-                      </td>
-                    </tr>
-                  )
-                )}
+                {reports.map((msg, idx) => (
+                  <tr key={msg._id || idx}>
+                    <td>
+                      {msg.sender
+                        ? `${msg.sender.firstname || ""} ${msg.sender.name || ""}`
+                        : "Utilisateur inconnu"}
+                    </td>
+                    <td>{msg.sender ? msg.sender.email : "Email inconnu"}</td>
+                    <td>{msg.content ?? ""}</td>
+                    <td>
+                      <ul
+                        style={{
+                          paddingLeft: 0,
+                          margin: 0,
+                          listStyle: "none",
+                        }}
+                      >
+                        {msg.reports?.map((r: ReportItem, i: number) => (
+                          <li key={i}>
+                            {r.reportedBy
+                              ? `${r.reportedBy.firstname || ""} ${
+                                  r.reportedBy.lastname ||
+                                  r.reportedBy.name ||
+                                  ""
+                                }`
+                              : "Inconnu"}
+                            {" à signalé "}{" "}
+                            {msg.sender
+                              ? `${msg.sender.firstname || ""} ${
+                                  msg.sender.name || ""
+                                }`
+                              : "Utilisateur inconnu"}
+                            <br />
+                            {" pour la raison suivante : "}
+                            <br />
+                            <b>{r.reason}</b>
+                            <br />
+                            <p>
+                              {" à "}
+                              {r.reportedAt
+                                ? new Date(r.reportedAt).toLocaleString()
+                                : ""}
+                            </p>
+                          </li>
+                        ))}
+                      </ul>
+                    </td>
+                    <td>
+                      {msg.reports?.[0]?.reportedAt &&
+                        new Date(msg.reports[0].reportedAt).toLocaleString()}
+                    </td>
+                  </tr>
+                ))}
               </tbody>
             </table>
           </div>
