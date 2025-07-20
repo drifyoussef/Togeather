@@ -228,13 +228,15 @@ export default function UserMessages() {
       );
       if (response.ok) {
         // Mets à jour la liste des matchs affichés (retire le match supprimé)
-        setDisplayedMatches((prev) => prev.filter((user) => user._id !== userId));
+        setDisplayedMatches((prev) =>
+          prev.filter((user) => user._id !== userId)
+        );
         // Met à jour le state des matchs mutuels
         setSelectedUser(null);
-         // Met à jour le state des matchs mutuels
+        // Met à jour le state des matchs mutuels
         setIsChatVisible(false);
         localStorage.removeItem("selectedUserId");
-         // Met à jour les matchs mutuels
+        // Met à jour les matchs mutuels
         console.log(setDisplayedMatches, "UPDATED MATCHES AFTER DELETION");
         // Mets à jour les messages (retire ceux liés à ce user)
         setMessages((prev) =>
@@ -265,7 +267,7 @@ export default function UserMessages() {
   };
 
   const handleReportMessage = async (messageId: string) => {
-     console.log("Reporting message with ID:", messageId);
+    console.log("Reporting message with ID:", messageId);
     const { value: reason } = await Swal.fire({
       title: "Signaler ce message",
       input: "text",
@@ -356,9 +358,36 @@ export default function UserMessages() {
               </div>
               <div
                 className="delete-message"
-                onClick={(e) => {
+                onClick={async (e) => {
                   e.stopPropagation();
-                  handleDeleteConversation(user._id);
+                  const result = await Swal.fire({
+                    title: "Supprimer la conversation",
+                    text: "Êtes-vous sûr de vouloir supprimer cette conversation ? Cette action effacera tous les messages et votre match. Cette action est irréversible.",
+                    icon: "warning",
+                    showCancelButton: true,
+                    confirmButtonColor: "#AD0051",
+                    cancelButtonColor: "#333",
+                    confirmButtonText: "Oui, supprimer",
+                    cancelButtonText: "Annuler",
+                  });
+                  if (result.isConfirmed) {
+                    try {
+                      await handleDeleteConversation(user._id);
+                      Swal.fire({
+                        title: "Conversation supprimée",
+                        text: "La conversation a été supprimée avec succès.",
+                        icon: "success",
+                        confirmButtonColor: "#AD0051",
+                      });
+                    } catch (error) {
+                      Swal.fire({
+                        title: "Erreur",
+                        text: "La suppression a échoué. Veuillez réessayer.",
+                        icon: "error",
+                        confirmButtonColor: "#AD0051",
+                      });
+                    }
+                  }
                 }}
               >
                 <MdDelete className="delete-message-icon" />
