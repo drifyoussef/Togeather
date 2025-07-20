@@ -6,6 +6,7 @@ import { useNavigate, useParams } from "react-router-dom";
 import { MdDelete } from "react-icons/md";
 import io from "socket.io-client";
 import Swal from "sweetalert2";
+import { IoChatbubbleEllipsesOutline } from "react-icons/io5";
 
 const socket = io(process.env.REACT_APP_API_URL);
 
@@ -411,59 +412,70 @@ export default function UserMessages() {
             </div>
           )}
           <div className="chat-container">
-            {messages
-              .sort(
-                (a, b) =>
-                  new Date(a.createdAt).getTime() -
-                  new Date(b.createdAt).getTime()
-              )
-              .map((message, index) => (
-                <div
-                  key={`${message._id}-${index}`}
-                  className={`message ${
-                    message.sender && message.sender._id === connectedUserId
-                      ? "right"
-                      : "left"
-                  }`}
-                  onMouseEnter={() => setHoveredMessage(message._id)}
-                  onMouseLeave={() => setHoveredMessage(null)}
-                >
-                  {!(
-                    message.sender && message.sender._id === connectedUserId
-                  ) && (
-                    <div className="avatar">
-                      {selectedUser ? selectedUser.firstname.charAt(0) : "U"}
+            {messages.length === 0 ? (
+              <div
+                className="no-messages"
+              >
+                <IoChatbubbleEllipsesOutline size={48} color="#AD0051" />
+                <p>Aucun message pour le moment</p>
+                <p>Commencez la conversation en envoyant votre premier message à {selectedUser?.firstname}!</p>
+              </div>
+            ) : (
+              messages
+                .sort(
+                  (a, b) =>
+                    new Date(a.createdAt).getTime() -
+                    new Date(b.createdAt).getTime()
+                )
+                .map((message, index) => (
+                  <div
+                    key={`${message._id}-${index}`}
+                    className={`message ${
+                      message.sender && message.sender._id === connectedUserId
+                        ? "right"
+                        : "left"
+                    }`}
+                    onMouseEnter={() => setHoveredMessage(message._id)}
+                    onMouseLeave={() => setHoveredMessage(null)}
+                  >
+                    {!(
+                      message.sender && message.sender._id === connectedUserId
+                    ) && (
+                      <div className="avatar">
+                        {selectedUser ? selectedUser.firstname.charAt(0) : "U"}
+                      </div>
+                    )}
+                    <div>
+                      <div className="bubble">
+                        <p className="user-message">{message.content}</p>
+                        {hoveredMessage === message._id &&
+                          message.sender &&
+                          message.sender._id !== connectedUserId && (
+                            <button
+                              className="report-btn"
+                              onClick={() => handleReportMessage(message._id)}
+                            >
+                              Signaler
+                            </button>
+                          )}
+                      </div>
+                      <span
+                        className={`time ${
+                          message.sender &&
+                          message.sender._id === connectedUserId
+                            ? "time-right"
+                            : "time-left"
+                        }`}
+                      >
+                        {new Date(message.createdAt).toLocaleTimeString([], {
+                          hour: "2-digit",
+                          minute: "2-digit",
+                        })}
+                      </span>
                     </div>
-                  )}
-                  <div>
-                    <div className="bubble">
-                      <p className="user-message">{message.content}</p>
-                      {hoveredMessage === message._id &&
-                        message.sender &&
-                        message.sender._id !== connectedUserId && (
-                          <button
-                            className="report-btn"
-                            onClick={() => handleReportMessage(message._id)}
-                          >
-                            Signaler
-                          </button>
-                        )}
-                    </div>
-                    <span
-                      className={`time ${
-                        message.sender && message.sender._id === connectedUserId
-                          ? "time-right"
-                          : "time-left"
-                      }`}
-                    >
-                      {new Date(message.createdAt).toLocaleTimeString([], {
-                        hour: "2-digit",
-                        minute: "2-digit",
-                      })}
-                    </span>
                   </div>
-                </div>
-              ))}
+                ))
+            )}
           </div>
           <div className="bubble-type-div">
             <input
