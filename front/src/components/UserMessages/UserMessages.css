@@ -274,19 +274,18 @@
     padding: 8px;
 }
 
-.delete-message-icon:hover {
-    color: #AD0051;
-}
-
 .delete-message {
     background-color: #AD0051;
     justify-self: flex-end;
     border-radius: 50%;
     margin-right: 8px;
+    margin-top: 8px;
 }
 
 .delete-message:hover {
     background-color: #470021;
+}
+.delete-message:hover .delete-message-icon {
     color: #AD0051;
 }
 
