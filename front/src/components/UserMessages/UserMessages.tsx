@@ -301,7 +301,7 @@ export default function UserMessages() {
       confirmButtonColor: "#AD0051",
       cancelButtonColor: "#333",
       inputAttributes: {
-        style: "width: auto; margin-top: 16px;", // <-- largeur personnalisée de l'input
+        style: "width: auto; margin-top: 16px;",
       },
     });
 
@@ -377,11 +377,11 @@ export default function UserMessages() {
                   </p>
                 </div>
               </div>
-              <div>
-                <MdDelete
-                  className="delete-message-icon"
-                  onClick={() => handleDeleteConversation(user._id)}
-                />
+              <div
+                className="delete-message"
+                onClick={() => handleDeleteConversation(user._id)}
+              >
+                <MdDelete className="delete-message-icon" />
               </div>
             </div>
           );
@@ -463,6 +463,12 @@ export default function UserMessages() {
               placeholder="Ecrivez votre message ici..."
               value={newMessage}
               onChange={(e) => setNewMessage(e.target.value)}
+              onKeyDown={(e) => {
+                if (e.key === "Enter") {
+                  handleSendMessage();
+                  setReload(true);
+                }
+              }}
             />
             <button
               className="send-message"

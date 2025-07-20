@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { DataGrid, GridRenderCellParams } from "@mui/x-data-grid";
 import "./Dashboard.css";
 import { useFetchUsers } from "../../hooks/useFetchUsers.tsx";
-import { redirect } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import Swal from "sweetalert2";
 
 export default function Dashboard() {
@@ -35,6 +35,7 @@ export default function Dashboard() {
 
   const [users, setUsers] = useState<User[]>([]);
   const [reports, setReports] = useState<ReportItem[]>([]);
+  const navigate = useNavigate();
   const token = localStorage.getItem("token");
 
   useEffect(() => {
@@ -56,9 +57,10 @@ export default function Dashboard() {
         });
     } else {
       console.error("No token found in localStorage");
-      redirect("/auth/admin/login");
+      localStorage.clear();
+      navigate("/auth/admin/login");
     }
-  }, [token, preferredGender, mutualMatches]);
+  }, [token, preferredGender, mutualMatches, navigate]);
 
   const toggleBan = (
     userId: string,
@@ -115,9 +117,10 @@ export default function Dashboard() {
         });
     } else {
       console.error("No token found in localStorage");
-      redirect("/auth/admin/login");
+      localStorage.clear();
+      navigate("/auth/admin/login");
     }
-  }, [token]);
+  }, [token, navigate]);
 
   const columns = [
     { field: "name", headerName: "Nom", width: 150 },
@@ -277,7 +280,7 @@ export default function Dashboard() {
             <p className="user-length">
               Nombre d'utilisateurs : {users.length}
             </p>
-            <div style={{ height: 500, width: 950 }}>
+            <div style={{ height: 500, width: "fit-content" }}>
               <DataGrid
                 rows={users.map((user, index) => ({ id: index + 1, ...user }))}
                 columns={columns}

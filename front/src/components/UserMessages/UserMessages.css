@@ -12,9 +12,10 @@
 
 .match-box {
     border-top: #AD0051 2px solid;
-    height: 150px;
+    height: fit-content;
     width: 100%;
     box-sizing: border-box;
+    padding-bottom: 8px;
 }
 
 .match-box:first-child {
@@ -269,11 +270,23 @@
     color: #fff;
     cursor: pointer;
     font-size: 20px;
-    margin-left: 10px;
     transition: color 0.3s ease;
+    padding: 8px;
 }
 
 .delete-message-icon:hover {
+    color: #AD0051;
+}
+
+.delete-message {
+    background-color: #AD0051;
+    justify-self: flex-end;
+    border-radius: 50%;
+    margin-right: 8px;
+}
+
+.delete-message:hover {
+    background-color: #470021;
     color: #AD0051;
 }
 
