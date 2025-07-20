@@ -45,7 +45,13 @@ export default function UserMessages() {
   // Charger le message survolé (state par défaut: null)
   const [hoveredMessage, setHoveredMessage] = useState<string | null>(null);
 
-  //console.log(messages, "MESSAGES");
+  // State local pour les matchs affichés
+  const [displayedMatches, setDisplayedMatches] = useState<UserModel[]>([]);
+
+  // Synchronise displayedMatches avec mutualMatches
+  useEffect(() => {
+    setDisplayedMatches(mutualMatches);
+  }, [mutualMatches]);
 
   // Fonction pour récupérer les messages globaux
   const fetchMessages = async () => {
@@ -174,30 +180,6 @@ export default function UserMessages() {
     }
   }, [id]);
 
-  // Fonction pour afficher un message
-
-  /*
-  const displayMessage = (messageData: any) => {
-    const chat = document.querySelector('.chat');
-    const messageContainer = document.createElement('div');
-    const bubble = document.createElement('div');
-
-    bubble.classList.add('bubble');
-
-    if (messageData.senderId === connectedUserId) {
-      messageContainer.classList.add('right');
-    } else if (messageData.senderId === id) {
-      messageContainer.classList.add('left');
-    }
-
-    bubble.textContent = `${messageData.senderId}: ${messageData.content}`;
-    messageContainer.appendChild(bubble);
-    if (chat) {
-      chat.appendChild(messageContainer);
-    }
-  };
-  */
-
   // Fonction pour récupérer le dernier message
   const getLatestMessage = (userId: string) => {
     if (!connectedUserId) {
@@ -245,23 +227,15 @@ export default function UserMessages() {
         }
       );
       if (response.ok) {
-        // Mets à jour la liste des matchs (retire le match supprimé)
-        const updatedMatches = mutualMatches.filter(
-          (user) => user._id !== userId
-        );
+        // Mets à jour la liste des matchs affichés (retire le match supprimé)
+        setDisplayedMatches((prev) => prev.filter((user) => user._id !== userId));
         // Met à jour le state des matchs mutuels
         setSelectedUser(null);
-        // Met à jour le state des matchs mutuels
+         // Met à jour le state des matchs mutuels
         setIsChatVisible(false);
         localStorage.removeItem("selectedUserId");
-        // Met à jour les matchs mutuels
-        console.log(updatedMatches, "UPDATED MATCHES AFTER DELETION");
-        // Met à jour le state du like dans le userProfile
-        if (window.location.pathname === `/profile/${userId}`) {
-          // Utilise un event custom ou un state global/context pour notifier UserProfile
-          window.dispatchEvent(new CustomEvent("forceUnlike"));
-          console.log("FORCE UNLIKE DISPATCHED (userMessages.tsx)");
-        }
+         // Met à jour les matchs mutuels
+        console.log(setDisplayedMatches, "UPDATED MATCHES AFTER DELETION");
         // Mets à jour les messages (retire ceux liés à ce user)
         setMessages((prev) =>
           prev.filter(
@@ -277,7 +251,10 @@ export default function UserMessages() {
           setSelectedUser(null);
           setIsChatVisible(false);
           localStorage.removeItem("selectedUserId");
-          //navigate("/messages");
+        }
+        // Eventuel event pour UserProfile
+        if (window.location.pathname === `/profile/${userId}`) {
+          window.dispatchEvent(new CustomEvent("forceUnlike"));
         }
       } else {
         console.error("Erreur lors de la suppression de la conversation");
@@ -288,7 +265,7 @@ export default function UserMessages() {
   };
 
   const handleReportMessage = async (messageId: string) => {
-    console.log("Reporting message with ID:", messageId);
+     console.log("Reporting message with ID:", messageId);
     const { value: reason } = await Swal.fire({
       title: "Signaler ce message",
       input: "text",
@@ -348,7 +325,7 @@ export default function UserMessages() {
   return (
     <div className="div-matches">
       <div className={`box-match ${isChatVisible ? "hidden" : ""}`}>
-        {mutualMatches.map((user) => {
+        {displayedMatches.map((user) => {
           const latestMessage = getLatestMessage(user._id);
           return (
             <div
@@ -379,7 +356,10 @@ export default function UserMessages() {
               </div>
               <div
                 className="delete-message"
-                onClick={() => handleDeleteConversation(user._id)}
+                onClick={(e) => {
+                  e.stopPropagation();
+                  handleDeleteConversation(user._id);
+                }}
               >
                 <MdDelete className="delete-message-icon" />
               </div>
@@ -410,7 +390,7 @@ export default function UserMessages() {
               )
               .map((message, index) => (
                 <div
-                  key={`${message._id}-${index}`} // Ensure unique keys by combining _id and index
+                  key={`${message._id}-${index}`}
                   className={`message ${
                     message.sender && message.sender._id === connectedUserId
                       ? "right"
