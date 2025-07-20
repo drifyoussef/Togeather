@@ -325,6 +325,29 @@ export default function UserMessages() {
     }
   };
 
+  useEffect(() => {
+  // Lance le timer seulement si displayedMatches est vide
+  if (displayedMatches.length === 0) {
+    const timer = setTimeout(() => {
+      // Vérifie à nouveau après 1000ms (ou plus si besoin)
+      if (displayedMatches.length === 0) {
+        Swal.fire({
+          icon: "info",
+          title: "Aucun match à afficher",
+          text: "Vous allez être redirigé vers l'accueil.",
+          confirmButtonColor: "#AD0051",
+          confirmButtonText: "OK",
+        }).then(() => {
+          navigate("/");
+        });
+      }
+    }, 1000); // 1000ms d'attente, ajuste si besoin
+
+    // Nettoyage du timer si le composant se démonte ou si displayedMatches change
+    return () => clearTimeout(timer);
+  }
+}, [displayedMatches, navigate]);
+
   return (
     <div className="div-matches">
       <div className={`box-match ${isChatVisible ? "hidden" : ""}`}>
