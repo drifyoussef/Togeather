@@ -1,7 +1,7 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import "./App.css";
 import Navbar from "./components/Navbar/Navbar";
-import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
+import { BrowserRouter as Router, Route, Routes, useLocation } from "react-router-dom";
 import Home from "./components/Home/Home";
 import Profile from "./components/Profile/Profile";
 import Messages from "./components/Messages/Messages";
@@ -22,8 +22,25 @@ import Banned from "./components/Banned/Banned";
 import Footer from "./components/Footer/Footer";
 import { UserModel } from './models/User.model';
 
+// Extend Window interface to include Axeptio
+declare global {
+  interface Window {
+    Axeptio?: {
+      reload: () => void;
+      // add other properties/methods if needed
+    };
+  }
+}
+
 function App() {
   const [user, setUser] = useState<UserModel | null>(null);
+
+  const location = useLocation();
+  useEffect(() => {
+    if (window.Axeptio) {
+      window.Axeptio.reload();
+    }
+  }, [location.pathname]);
 
   return (
     <>
