@@ -47,56 +47,64 @@ const Login: React.FC = () => {
       );
 
       if (!response.ok) {
-        const errorData = await response.json();
-        setError(errorData.message);
+        const contentType = response.headers.get("content-type");
+        if (contentType && contentType.includes("application/json")) {
+          const errorData = await response.json();
+          setError(errorData.message);
 
-        // Vérifier si l'utilisateur est banni et rediriger
-        if (response.status === 403) {
-          const banDate = new Date(errorData.banEnd);
-          const now = new Date();
+          // Vérifier si l'utilisateur est banni et rediriger
+          if (response.status === 403) {
+            const banDate = new Date(errorData.banEnd);
+            const now = new Date();
 
-          if (banDate <= now) {
+            if (banDate <= now) {
+              return;
+            }
+
+            // Sinon, le ban est encore actif
+            const formattedDate = `${banDate.toLocaleDateString("fr-FR", {
+              timeZone: "Europe/Paris",
+            })} à ${banDate.toLocaleTimeString("fr-FR", {
+              hour: "2-digit",
+              minute: "2-digit",
+              timeZone: "Europe/Paris",
+            })}`;
+            Swal.fire({
+              icon: "error",
+              title: "Vous êtes banni",
+              html: `
+                <div>
+                  <div><b>Pour la raison suivante :</b> ${
+                    errorData.banReason
+                  }</div>
+                  ${
+                    errorData.bannedMessage
+                      ? `<div style="margin-top:8px;"><b>Message signalé :</b> "${errorData.bannedMessage}"</div>`
+                      : ""
+                  }
+                </div>
+              `,
+              footer: `Date de fin du banissement: ${formattedDate}`,
+              customClass: {
+                confirmButton: "my-swal-confirm",
+                cancelButton: "my-swal-cancel",
+              },
+              buttonsStyling: false,
+            });
             return;
           }
 
-          // Sinon, le ban est encore actif
-          const formattedDate = `${banDate.toLocaleDateString("fr-FR", {
-            timeZone: "Europe/Paris",
-          })} à ${banDate.toLocaleTimeString("fr-FR", {
-            hour: "2-digit",
-            minute: "2-digit",
-            timeZone: "Europe/Paris",
-          })}`;
-          Swal.fire({
-            icon: "error",
-            title: "Vous êtes banni",
-            html: `
-              <div>
-                <div><b>Pour la raison suivante :</b> ${
-                  errorData.banReason
-                }</div>
-                ${
-                  errorData.bannedMessage
-                    ? `<div style="margin-top:8px;"><b>Message signalé :</b> "${errorData.bannedMessage}"</div>`
-                    : ""
-                }
-              </div>
-            `,
-            footer: `Date de fin du banissement: ${formattedDate}`,
-            customClass: {
-              confirmButton: "my-swal-confirm",
-              cancelButton: "my-swal-cancel",
-            },
-            buttonsStyling: false,
-          });
-          return;
+          if (errorData.emailNotConfirmed) {
+            // Erreur lors de la connexion de l'utilisateur (email non confirmé)
+            setEmailNotConfirmed(true);
+          }
+          console.error("Login failed:", errorData);
+        } else {
+          // Si la réponse n'est pas du JSON (ex: erreur serveur HTML)
+          const text = await response.text();
+          setError("Erreur serveur: " + text);
+          console.error("Erreur serveur:", text);
         }
-
-        if (errorData.emailNotConfirmed) {
-          // Erreur lors de la connexion de l'utilisateur (email non confirmé)
-          setEmailNotConfirmed(true);
-        }
-        console.error("Login failed:", errorData);
       } else {
         // Connexion réussie
         const successData = await response.json();
@@ -120,6 +128,9 @@ const Login: React.FC = () => {
         } else {
           // Erreur lors de la connexion de l'utilisateur
           console.error("Login failed:", successData.message);
+          const text = await response.text();
+          setError("Erreur serveur: " + text);
+          console.error("Erreur serveur:", text);
         }
       }
     } catch (error) {
