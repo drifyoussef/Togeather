@@ -100,6 +100,11 @@ const Login: React.FC = () => {
       } else {
         // Connexion réussie
         const successData = await response.json();
+        if (successData.alreadyLoggedIn) {
+          // Redirection côté frontend
+          navigate("/");
+          return;
+        }
         //console.log('successdata', successData);
         //console.log('Login successful:', successData.message);
         if (successData.token) {
