@@ -74,6 +74,12 @@ let fetch;
   app.use(bodyParser.json({ limit: "50mb" }));
   app.use(bodyParser.urlencoded({ limit: "50mb", extended: true }));
 
+  // Log raw body pour le débogage
+  app.use((req, res, next) => {
+    console.log("BODY RAW:", req.body);
+    next();
+  });
+
   // Swagger setup
   const swaggerOptions = {
     swaggerDefinition: {
@@ -1344,7 +1350,7 @@ let fetch;
         isBanned: true,
         banEnd: { $lte: now, $ne: null },
       });
-      console.log("CRON: Nombre d'utilisateurs bannis:", usersBanned.length);
+      //console.log("CRON: Nombre d'utilisateurs bannis:", usersBanned.length);
 
       for (const user of usersBanned) {
         user.isBanned = false;
