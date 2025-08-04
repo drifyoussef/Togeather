@@ -128,7 +128,7 @@ let fetch;
   });
 
   // Route avec middleware pour les messages en temps réel
-  app.use("/messages", authMiddleware, messagesRouter);
+  app.use("/api/messages", authMiddleware, messagesRouter);
 
   // Recupération des routes
   //Route pour s'enregistrer si la personne est enregistrée la redirection se fait vers la page de connexion
@@ -148,7 +148,7 @@ let fetch;
    *         description: Internal server error
    */
   app.get(
-    "/auth/register",
+    "/api/auth/register",
     redirectIfAuthenticatedMiddleware,
     newUserController
   );
@@ -165,7 +165,7 @@ let fetch;
    *       500:
    *         description: Internal server error
    */
-  app.get("/auth/logout", logoutController);
+  app.get("/api/auth/logout", logoutController);
   // Route pour se connecter
   /**
    * @swagger
@@ -181,7 +181,7 @@ let fetch;
    *       500:
    *         description: Internal server error
    */
-  app.get("/auth/user", authMiddleware, getUserController, async (req, res) => {
+  app.get("/api/auth/user", authMiddleware, getUserController, async (req, res) => {
     try {
       const user = await User.findById(req.user.id).select("-password");
       if (!user) {
@@ -210,7 +210,7 @@ let fetch;
     }
   });
 
-  app.get("/me", async (req, res) => {
+  app.get("/api/me", async (req, res) => {
     try {
       const token = req.headers.authorization?.split(" ")[1];
       if (!token) {
@@ -248,7 +248,7 @@ let fetch;
    *       500:
    *         description: Internal server error
    */
-  app.get("/auth/users", authMiddleware, getUsersController);
+  app.get("/api/auth/users", authMiddleware, getUsersController);
   // Route pour récupérer un utilisateur par son id
   /**
    * @swagger
@@ -273,7 +273,7 @@ let fetch;
    *       500:
    *         description: Internal server error
    */
-  app.get("/auth/users/:id", authMiddleware, getUserByIdController);
+  app.get("/api/auth/users/:id", authMiddleware, getUserByIdController);
   // Route pour récuperer les messages
   /**
    * @swagger
@@ -289,7 +289,7 @@ let fetch;
    *       500:
    *         description: Internal server error
    */
-  app.get("/messages", authMiddleware, async (req, res) => {
+  app.get("/api/messages", authMiddleware, async (req, res) => {
     try {
       const messages = await Message.find().populate("sender receiver");
       res.json(messages);
@@ -298,7 +298,7 @@ let fetch;
     }
   });
 
-  app.get("/messages/reports", authMiddleware, async (req, res) => {
+  app.get("/api/messages/reports", authMiddleware, async (req, res) => {
   try {
     const reportedMessages = await Message.find({
       reports: { $exists: true, $not: { $size: 0 } },
@@ -346,7 +346,7 @@ let fetch;
    *       500:
    *         description: Internal server error
    */
-  app.get("/messages/:id", authMiddleware, async (req, res) => {
+  app.get("/api/messages/:id", authMiddleware, async (req, res) => {
     try {
       const { id } = req.params;
       const messages = await Message.find({
@@ -392,7 +392,7 @@ let fetch;
    *       500:
    *         description: Internal server error
    */
-  app.post("/messages/:id/report", authMiddleware, async (req, res) => {
+  app.post("/api/messages/:id/report", authMiddleware, async (req, res) => {
     const { reason } = req.body;
     const { id } = req.params;
     if (!id || !reason) {
@@ -438,7 +438,7 @@ let fetch;
   });
 
   // Suppression de la conversation et du match entre deux utilisateurs
-  app.delete("/conversations/:userId", authMiddleware, async (req, res) => {
+  app.delete("/api/conversations/:userId", authMiddleware, async (req, res) => {
     console.log(req.user_id, "USER ID BEFORE MONGOOSE TYPES");
     const userId = new mongoose.Types.ObjectId(req.user._id); // utilisateur connecté
     console.log(userId, "USER ID AFTER MONGOOSE TYPES");
@@ -686,7 +686,7 @@ let fetch;
    *       500:
    *         description: Error processing image
    */
-  app.post("/upload", upload.single("file"), async (req, res) => {
+  app.post("/api/upload", upload.single("file"), async (req, res) => {
     console.log(req.file, "Recieved file");
     // Si pas de fichier, on renvoie une erreur 400
     if (!req.file) {
@@ -742,7 +742,7 @@ let fetch;
    *       500:
    *         description: Internal server error
    */
-  app.get("/uploads/:filename", (req, res) => {
+  app.get("/api/uploads/:filename", (req, res) => {
     console.log(
       path.join(__dirname, `src/uploads/${req.params.filename}`),
       "PATH JOIN"
@@ -797,7 +797,7 @@ let fetch;
    *         description: Internal server error
    */
   app.post(
-    "/users/register",
+    "/api/users/register",
     redirectIfAuthenticatedMiddleware,
     storeUserController
   );
@@ -841,7 +841,7 @@ let fetch;
    *         description: Internal server error
    */
   app.post(
-    "/users/login",
+    "/api/users/login",
     redirectIfAuthenticatedMiddleware,
     loginUserController
   );
@@ -868,12 +868,12 @@ let fetch;
    *         description: Internal server error
    */
   app.post(
-    "/auth/admin/login",
+    "/api/auth/admin/login",
     redirectIfAuthenticatedMiddleware,
     loginAdminController
   );
 
-  app.post("/auth/users/:id/like", authMiddleware, likeUserController);
+  app.post("/api/auth/users/:id/like", authMiddleware, likeUserController);
   // Route pour envoyer un message
   /**
    * @swagger
@@ -903,7 +903,7 @@ let fetch;
    *       500:
    *         description: Internal server error
    */
-  app.post("/messages", authMiddleware, async (req, res) => {
+  app.post("/api/messages", authMiddleware, async (req, res) => {
     try {
       const { senderId, receiverId, content } = req.body;
       const message = new Message({
@@ -965,7 +965,7 @@ let fetch;
    *       500:
    *         description: Internal server error
    */
-  app.post("/users/update", authMiddleware, updateUserController);
+  app.post("/api/users/update", authMiddleware, updateUserController);
 
   // Route pour créer une commande PayPal
   /**
@@ -992,7 +992,7 @@ let fetch;
    *       500:
    *         description: Internal server error
    */
-  app.post("/create-paypal-order", createOrder);
+  app.post("/api/create-paypal-order", createOrder);
 
   /**
    * @swagger
@@ -1019,10 +1019,10 @@ let fetch;
    *         description: Internal server error
    */
   // Route pour valider un paiement PayPal
-  app.post("/successPayments", authMiddleware, successPayments);
+  app.post("/api/successPayments", authMiddleware, successPayments);
 
   // Route pour renvoyer un email de confirmation
-  app.post("/resend-confirmation", async (req, res) => {
+  app.post("/api/resend-confirmation", async (req, res) => {
     const { email } = req.body;
     try {
       const user = await User.findOne({ email });
@@ -1067,7 +1067,7 @@ let fetch;
    *       500:
    *         description: Internal server error
    */
-  app.post("/confirm-email", async (req, res) => {
+  app.post("/api/confirm-email", async (req, res) => {
     const { id } = req.body;
     console.log("Recieved ID", id);
     try {
@@ -1138,7 +1138,7 @@ let fetch;
    *       500:
    *         description: Internal server error
    */
-  app.get("/account/verify/:token", async (req, res) => {
+  app.get("/api/account/verify/:token", async (req, res) => {
     // token est envoyé dans l'url
     const token = req.params.token;
     console.log("Received token:", token);
@@ -1194,7 +1194,7 @@ let fetch;
    *       500:
    *         description: Internal server error
    */
-  app.get("/cancelPayments", (req, res) => {
+  app.get("/api/cancelPayments", (req, res) => {
     res.send("Payment canceled");
   });
 
@@ -1221,7 +1221,7 @@ let fetch;
    *         description: Internal server error
    */
 
-  app.post("/auth/unsubscribe", authMiddleware, async (req, res) => {
+  app.post("/api/auth/unsubscribe", authMiddleware, async (req, res) => {
     try {
       const userId = req.user._id; // Récupérer l'ID de l'utilisateur connecté
       const user = await User.findByIdAndUpdate(
@@ -1261,7 +1261,7 @@ let fetch;
    *       500:
    *         description: Internal server error
    */
-  app.delete("/users/:id", authMiddleware, async (req, res) => {
+  app.delete("/api/users/:id", authMiddleware, async (req, res) => {
     try {
       const { id } = req.params;
 
@@ -1292,7 +1292,7 @@ let fetch;
     }
   });
 
-  app.post("/auth/users/ban", authMiddleware, async (req, res) => {
+  app.post("/api/auth/users/ban", authMiddleware, async (req, res) => {
     try {
       const { id, isBanned, banReason, banEnd } = req.body;
       console.log(
