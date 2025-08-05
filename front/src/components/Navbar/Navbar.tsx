@@ -26,10 +26,10 @@ const Navbar: React.FC = () => {
         credentials: "include",
       });
       if (response.ok) {
-        //localStorage.clear();
-        //localStorage.removeItem("token");
-        //localStorage.removeItem("currentUserId");
-        //localStorage.removeItem("firstname");
+        localStorage.clear();
+        // localStorage.removeItem("token");
+        // localStorage.removeItem("currentUserId");
+        // localStorage.removeItem("firstname");
         navigate("/connection");
       } else {
         console.error("Failed to log out");
