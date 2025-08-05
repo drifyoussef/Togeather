@@ -52,8 +52,8 @@ let fetch;
   const server = http.createServer(app);
   const io = socketIo(server, {
     cors: {
-      origin: [process.env.ORIGIN, process.env.BACKOFFICE], // Allow all origins
-      methods: ["GET", "POST"],
+      origin: "*", // Allow all origins
+      methods: ["GET","HEAD","PUT","PATCH","POST","DELETE"],
     },
   });
 
