@@ -110,7 +110,7 @@ const Login: React.FC = () => {
         const successData = await response.json();
         if (successData.alreadyLoggedIn) {
           // Redirection côté frontend
-          navigate("/");
+          window.location.href = "/";
           return;
         }
         //console.log('successdata', successData);
@@ -125,7 +125,7 @@ const Login: React.FC = () => {
           localStorage.setItem("firstname", successData.firstname);
           //console.log('userId from login', successData.userId);
           // Rediriger l'utilisateur vers la page d'accueil
-          navigate("/");
+          window.location.href = "/"; // Force le reload sur la home
         } else {
           // Erreur lors de la connexion de l'utilisateur
           console.error("Login failed:", successData.message);
