@@ -656,7 +656,7 @@ let fetch;
   const upload = multer({ storage: storage });
 
   // Serve static files from the uploads folder
-  app.use('/uploads', express.static(path.join(__dirname, 'src/uploads')));
+  app.use('/api/uploads', express.static(path.join(__dirname, 'src/uploads')));
 
   // Route pour uploader une image
   /**
@@ -692,7 +692,7 @@ let fetch;
    *       500:
    *         description: Error processing image
    */
-  app.post("/upload", upload.single("file"), async (req, res) => {
+  app.post("/api/upload", upload.single("file"), async (req, res) => {
     console.log(req.file, "Recieved file");
     // Si pas de fichier, on renvoie une erreur 400
     if (!req.file) {
@@ -748,7 +748,7 @@ let fetch;
    *       500:
    *         description: Internal server error
    */
-  app.get("/uploads/:filename", (req, res) => {
+  app.get("/api/uploads/:filename", (req, res) => {
     console.log(
       path.join(__dirname, `src/uploads/${req.params.filename}`),
       "PATH JOIN"
