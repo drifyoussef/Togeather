@@ -112,8 +112,14 @@ const Login: React.FC = () => {
         //console.log('Login successful:', successData.message);
         if (successData.token) {
           // Créer un token et le stocke dans le localStorage
-          localStorage.setItem("token", successData.token || successData.alreadyLoggedIn);
-          console.log("Token after login (login frontend):", localStorage.getItem("token"));
+          localStorage.setItem(
+            "token",
+            successData.token || successData.alreadyLoggedIn
+          );
+          console.log(
+            "Token after login (login frontend):",
+            localStorage.getItem("token")
+          );
           // Stocker l'ID de l'utilisateur actuel dans le localStorage
           localStorage.setItem("currentUserId", successData.userId);
           // Stocker le prénom de l'utilisateur dans le localStorage
@@ -124,9 +130,9 @@ const Login: React.FC = () => {
         } else {
           // Erreur lors de la connexion de l'utilisateur
           console.error("Login failed:", successData.message);
-          const text = await response.text();
-          setError("Erreur serveur: " + text);
-          console.error("Erreur serveur:", text);
+          setError(
+            "Erreur serveur: " + (successData.message || "Réponse inattendue")
+          );
         }
       }
     } catch (error) {
