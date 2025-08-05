@@ -26,7 +26,10 @@ const Navbar: React.FC = () => {
         credentials: "include",
       });
       if (response.ok) {
-        localStorage.clear();
+        //localStorage.clear();
+        //localStorage.removeItem("token");
+        //localStorage.removeItem("currentUserId");
+        //localStorage.removeItem("firstname");
         navigate("/connection");
       } else {
         console.error("Failed to log out");
@@ -49,7 +52,7 @@ const Navbar: React.FC = () => {
         icon: "error",
         title: "Il y a un problème...",
         text: "Vous n'avez pas de matchs pour le moment",
-        confirmButtonColor: "#AD0051"
+        confirmButtonColor: "#AD0051",
       });
       navigate("/");
     }
@@ -65,18 +68,23 @@ const Navbar: React.FC = () => {
   return (
     <nav className={`navbar ${isConnectionPage ? "navbar-connection" : ""}`}>
       <div className="navbar-logo">
-        <NavLink to={isConnectionPage ? "/connection" : "/"}><img src={Logo} alt="Home" className="home-navbar" /></NavLink>
+        <NavLink to={isConnectionPage ? "/connection" : "/"}>
+          <img src={Logo} alt="Home" className="home-navbar" />
+        </NavLink>
       </div>
-        <RxHamburgerMenu onClick={toggleMenu} className="navbar-toggle"/>
+      <RxHamburgerMenu onClick={toggleMenu} className="navbar-toggle" />
       <ul className={isOpen ? "navbar-links active" : "navbar-links"}>
         {!isConnectionPage ? (
           <>
-           <li>
+            <li>
               <NavLink
-                to={isConnectionPage ? "/connection" : "/"} className={({ isActive }) => (isActive ? "active" : "")}>Accueil
+                to={isConnectionPage ? "/connection" : "/"}
+                className={({ isActive }) => (isActive ? "active" : "")}
+              >
+                Accueil
               </NavLink>
-           </li>
-           <li>
+            </li>
+            <li>
               <NavLink
                 to="/premium"
                 className={({ isActive }) => (isActive ? "active" : "")}
