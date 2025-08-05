@@ -123,6 +123,7 @@ const Login: React.FC = () => {
           localStorage.setItem("currentUserId", successData.userId);
           // Stocker le prénom de l'utilisateur dans le localStorage
           localStorage.setItem("firstname", successData.firstname);
+          window.location.reload();
           //console.log('userId from login', successData.userId);
           // Rediriger l'utilisateur vers la page d'accueil
           navigate("/");
