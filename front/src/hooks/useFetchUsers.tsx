@@ -29,7 +29,13 @@ export const useFetchUsers = () => {
     //console.log("Token:", token);
 
     // Si le token n'est pas trouvé et que le chemin actuel n'est pas autorisé
-    if (!token && currentPath !== '/auth/login' && currentPath !== '/auth/register' && currentPath !== '/connection' && currentPath !== '/confirm-email') {
+    if (
+      !token &&
+      currentPath !== "/auth/login" &&
+      currentPath !== "/auth/register" &&
+      currentPath !== "/connection" &&
+      currentPath !== "/confirm-email"
+    ) {
       console.error("Token not found");
       localStorage.setItem("showSwal", "true");
 
@@ -41,14 +47,14 @@ export const useFetchUsers = () => {
         .then((response) => {
           if (response.status === 403) {
             console.error("User is banned");
-            navigate('/banned'); // Rediriger vers la page bannie
+            navigate("/banned"); // Rediriger vers la page bannie
           } else {
-            navigate('/connection'); // Rediriger vers la page de connexion
+            navigate("/connection"); // Rediriger vers la page de connexion
           }
         })
         .catch((error) => {
           console.error("Error fetching user:", error);
-          navigate('/connection'); // Rediriger vers la page de connexion en cas d'erreur
+          navigate("/connection"); // Rediriger vers la page de connexion en cas d'erreur
         });
 
       return;
@@ -61,10 +67,16 @@ export const useFetchUsers = () => {
     })
       .then((response) => {
         const contentType = response.headers.get("content-type");
-        if (response.ok && contentType && contentType.includes("application/json")) {
+        if (
+          response.ok &&
+          contentType &&
+          contentType.includes("application/json")
+        ) {
           return response.json();
         } else {
-          return response.text().then(text => { throw new Error(text); });
+          return response.text().then((text) => {
+            throw new Error(text);
+          });
         }
       })
       .then((data) => {
@@ -86,10 +98,16 @@ export const useFetchUsers = () => {
     })
       .then((response) => {
         const contentType = response.headers.get("content-type");
-        if (response.ok && contentType && contentType.includes("application/json")) {
+        if (
+          response.ok &&
+          contentType &&
+          contentType.includes("application/json")
+        ) {
           return response.json();
         } else {
-          return response.text().then(text => { throw new Error(text); });
+          return response.text().then((text) => {
+            throw new Error(text);
+          });
         }
       })
       .then((data) => {
@@ -104,8 +122,7 @@ export const useFetchUsers = () => {
       });
   }, [navigate]);
 
-
-// Filtrer les utilisateurs en fonction du genre préféré
+  // Filtrer les utilisateurs en fonction du genre préféré
   useEffect(() => {
     if (preferredGender && users.length > 0) {
       let filtered: UserModel[] = [];
@@ -128,25 +145,25 @@ export const useFetchUsers = () => {
   }, [preferredGender, users]);
 
   useEffect(() => {
-  if (currentUser && users.length > 0) {
-    // Filtrer les utilisateurs qui sont dans mutualMatches du currentUser
-    const mutualMatches = users.filter((user) =>
-      currentUser.mutualMatches?.includes(user._id)
-    );
-    setMutualMatches(mutualMatches);
-
-    // Filtrage par genre préféré (optionnel)
-    let filtered: UserModel[] = [];
-    if (currentUser.preferredGender === "both") {
-      filtered = users;
-    } else {
-      filtered = users.filter(
-        (user) => user.userGender === currentUser.preferredGender
+    if (currentUser && users.length > 0) {
+      // Filtrer les utilisateurs qui sont dans mutualMatches du currentUser
+      const mutualMatches = users.filter((user) =>
+        currentUser.mutualMatches?.includes(user._id)
       );
+      setMutualMatches(mutualMatches);
+
+      // Filtrage par genre préféré (optionnel)
+      let filtered: UserModel[] = [];
+      if (currentUser.preferredGender === "both") {
+        filtered = users;
+      } else {
+        filtered = users.filter(
+          (user) => user.userGender === currentUser.preferredGender
+        );
+      }
+      setFilteredUsers(filtered);
     }
-    setFilteredUsers(filtered);
-  }
-}, [currentUser, users]);
+  }, [currentUser, users]);
 
   return { users, preferredGender, mutualMatches, filteredUsers };
 };
