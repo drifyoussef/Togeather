@@ -24,7 +24,7 @@ export const useFetchUsers = () => {
 
     // Récupérer le chemin actuel
     const currentPath = window.location.pathname;
-
+    
     //console.log("Current Path:", currentPath);
     //console.log("Token:", token);
 
@@ -38,8 +38,18 @@ export const useFetchUsers = () => {
     ) {
       console.error("Token not found");
       localStorage.setItem("showSwal", "true");
+      navigate("/connection");
+      return;
+    }
 
-      // Vérifier si l'utilisateur est banni avant de rediriger
+    // Vérifier si l'utilisateur est banni avant de rediriger (uniquement si token présent)
+    if (
+      token &&
+      currentPath !== "/auth/login" &&
+      currentPath !== "/auth/register" &&
+      currentPath !== "/connection" &&
+      currentPath !== "/confirm-email"
+    ) {
       fetch(`${process.env.REACT_APP_API_URL}/auth/user`, {
         headers: { Authorization: `Bearer ${token}` },
         method: "GET",
@@ -48,78 +58,76 @@ export const useFetchUsers = () => {
           if (response.status === 403) {
             console.error("User is banned");
             navigate("/banned"); // Rediriger vers la page bannie
-          } else {
-            navigate("/connection"); // Rediriger vers la page de connexion
+            return;
           }
         })
         .catch((error) => {
           console.error("Error fetching user:", error);
-          navigate("/connection"); // Rediriger vers la page de connexion en cas d'erreur
         });
-
-      return;
     }
 
-    // Route de l'API pour récupérer l'utilisateur actuel
-    fetch(`${process.env.REACT_APP_API_URL}/auth/user`, {
-      headers: { Authorization: `Bearer ${token}` },
-      method: "GET",
-    })
-      .then((response) => {
-        const contentType = response.headers.get("content-type");
-        if (
-          response.ok &&
-          contentType &&
-          contentType.includes("application/json")
-        ) {
-          return response.json();
-        } else {
-          return response.text().then((text) => {
-            throw new Error(text);
-          });
-        }
+    // Route de l'API pour récupérer l'utilisateur actuel (si token présent)
+    if (token) {
+      fetch(`${process.env.REACT_APP_API_URL}/auth/user`, {
+        headers: { Authorization: `Bearer ${token}` },
+        method: "GET",
       })
-      .then((data) => {
-        if (data.message) {
-          console.error(data.message);
-        } else {
-          setPreferredGender(data.preferredGender);
-          setCurrentUser(data);
-        }
-      })
-      .catch((error) => {
-        console.error("Error fetching user:", error);
-      });
+        .then((response) => {
+          const contentType = response.headers.get("content-type");
+          if (
+            response.ok &&
+            contentType &&
+            contentType.includes("application/json")
+          ) {
+            return response.json();
+          } else {
+            return response.text().then((text) => {
+              throw new Error(text);
+            });
+          }
+        })
+        .then((data) => {
+          if (data.message) {
+            console.error(data.message);
+          } else {
+            setPreferredGender(data.preferredGender);
+            setCurrentUser(data);
+          }
+        })
+        .catch((error) => {
+          console.error("Error fetching user:", error);
+        });
 
-    // Route de l'API pour récupérer tous les utilisateurs
-    fetch(`${process.env.REACT_APP_API_URL}/auth/users`, {
-      headers: { Authorization: `Bearer ${token}` },
-      method: "GET",
-    })
-      .then((response) => {
-        const contentType = response.headers.get("content-type");
-        if (
-          response.ok &&
-          contentType &&
-          contentType.includes("application/json")
-        ) {
-          return response.json();
-        } else {
-          return response.text().then((text) => {
-            throw new Error(text);
-          });
-        }
+      // Route de l'API pour récupérer tous les utilisateurs
+      fetch(`${process.env.REACT_APP_API_URL}/auth/users`, {
+        headers: { Authorization: `Bearer ${token}` },
+        method: "GET",
       })
-      .then((data) => {
-        if (data.message) {
-          console.error(data.message);
-        } else {
-          setUsers(data);
-        }
-      })
-      .catch((error) => {
-        console.error("Error fetching users:", error);
-      });
+        .then((response) => {
+          const contentType = response.headers.get("content-type");
+          if (
+            response.ok &&
+            contentType &&
+            contentType.includes("application/json")
+          ) {
+            return response.json();
+          } else {
+            return response.text().then((text) => {
+              throw new Error(text);
+            });
+          }
+        })
+        .then((data) => {
+          if (data.message) {
+            console.error(data.message);
+          } else {
+            setUsers(data);
+          }
+        })
+        .catch((error) => {
+          console.error("Error fetching users:", error);
+        });
+    }
   }, [navigate]);
 
   // Filtrer les utilisateurs en fonction du genre préféré
