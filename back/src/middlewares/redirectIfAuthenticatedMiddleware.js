@@ -8,6 +8,7 @@ module.exports = (req, res, next) => {
   const token = jwt.sign({ _id: req.session.userId }, privateKey, {
     algorithm: "RS256",
   });
+  console.log("Session userId:", req.session.userId);
   return res.status(200).json({ alreadyLoggedIn: true, token: token });
 }
     next()
