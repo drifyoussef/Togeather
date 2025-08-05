@@ -112,10 +112,7 @@ const Login: React.FC = () => {
         //console.log('Login successful:', successData.message);
         if (successData.token) {
           // Créer un token et le stocke dans le localStorage
-          localStorage.setItem(
-            "token",
-            successData.token || successData.alreadyLoggedIn
-          );
+          localStorage.setItem("token", successData.token);
           console.log(
             "Token after login (login frontend):",
             localStorage.getItem("token")
