@@ -270,7 +270,7 @@ const Profile: React.FC = () => {
           {imageUrl ? (
             //console.log(imageUrl, "image url"),
             <div className="user-img-profile-container">
-              <img src={`${process.env.REACT_APP_API_URL}/${imageUrl}`} alt="User" className="user-img-profile" />
+              <img src={`${process.env.REACT_APP_API_URL}/api/uploads/${imageUrl}`} alt="User" className="user-img-profile" />
               <div
                 className="edit-button-container-profile"
                 onClick={handleEditClick}
