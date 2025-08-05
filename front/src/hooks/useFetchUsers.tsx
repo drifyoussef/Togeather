@@ -59,7 +59,14 @@ export const useFetchUsers = () => {
       headers: { Authorization: `Bearer ${token}` },
       method: "GET",
     })
-      .then((response) => response.json())
+      .then((response) => {
+        const contentType = response.headers.get("content-type");
+        if (response.ok && contentType && contentType.includes("application/json")) {
+          return response.json();
+        } else {
+          return response.text().then(text => { throw new Error(text); });
+        }
+      })
       .then((data) => {
         if (data.message) {
           console.error(data.message);
@@ -77,7 +84,14 @@ export const useFetchUsers = () => {
       headers: { Authorization: `Bearer ${token}` },
       method: "GET",
     })
-      .then((response) => response.json())
+      .then((response) => {
+        const contentType = response.headers.get("content-type");
+        if (response.ok && contentType && contentType.includes("application/json")) {
+          return response.json();
+        } else {
+          return response.text().then(text => { throw new Error(text); });
+        }
+      })
       .then((data) => {
         if (data.message) {
           console.error(data.message);
