@@ -108,16 +108,11 @@ const Login: React.FC = () => {
       } else {
         // Connexion réussie
         const successData = await response.json();
-        if (successData.alreadyLoggedIn) {
-          // Redirection côté frontend
-          window.location.href = "/";
-          return;
-        }
         //console.log('successdata', successData);
         //console.log('Login successful:', successData.message);
         if (successData.token) {
           // Créer un token et le stocke dans le localStorage
-          localStorage.setItem("token", successData.token);
+          localStorage.setItem("token", successData.token || successData.alreadyLoggedIn);
           console.log("Token after login (login frontend):", localStorage.getItem("token"));
           // Stocker l'ID de l'utilisateur actuel dans le localStorage
           localStorage.setItem("currentUserId", successData.userId);
@@ -125,7 +120,7 @@ const Login: React.FC = () => {
           localStorage.setItem("firstname", successData.firstname);
           //console.log('userId from login', successData.userId);
           // Rediriger l'utilisateur vers la page d'accueil
-          window.location.href = "/"; // Force le reload sur la home
+          navigate("/");
         } else {
           // Erreur lors de la connexion de l'utilisateur
           console.error("Login failed:", successData.message);
