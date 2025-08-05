@@ -124,12 +124,6 @@ const Login: React.FC = () => {
           //console.log('userId from login', successData.userId);
           // Rediriger l'utilisateur vers la page d'accueil
           navigate("/");
-        } else {
-          // Erreur lors de la connexion de l'utilisateur
-          console.error("Login failed:", successData.message);
-          setError(
-            "Erreur serveur: " + (successData.message || "Réponse inattendue")
-          );
         }
       }
     } catch (error) {
