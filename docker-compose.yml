@@ -28,7 +28,6 @@ services:
       - /usr/src/app/node_modules
     depends_on:
       - backend
-    mem_limit: 2g
   
   backoffice:
     build:
