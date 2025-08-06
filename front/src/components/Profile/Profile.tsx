@@ -217,8 +217,19 @@ const Profile: React.FC = () => {
           body: formData,
         }
       );
+
+      if (!imageResponse.ok) {
+        throw new Error(`Upload failed: ${imageResponse.status} ${imageResponse.statusText}`);
+      }
+
       const result = await imageResponse.json();
+      
+      if (!result.imageUrl) {
+        throw new Error("No image URL returned from server");
+      }
+
       setImageUrl(result.imageUrl);
+      
       // Mettre à jour l'image de l'utilisateur dans la base de données
       const token = localStorage.getItem("token");
       const updatedData = {
@@ -227,7 +238,7 @@ const Profile: React.FC = () => {
       };
 
       // Mettre à jour les données utilisateur
-      await fetch(`${process.env.REACT_APP_API_URL}/users/update`, {
+      const updateResponse = await fetch(`${process.env.REACT_APP_API_URL}/users/update`, {
         method: "POST",
         headers: {
           Authorization: `Bearer ${token}`,
@@ -236,10 +247,28 @@ const Profile: React.FC = () => {
         body: JSON.stringify(updatedData),
       });
 
+      if (!updateResponse.ok) {
+        throw new Error(`User update failed: ${updateResponse.status} ${updateResponse.statusText}`);
+      }
+
       // Mettre à jour le champ "imageUrl" dans la base de données
       setUpdatedField("imageUrl");
+      
+      Swal.fire({
+        icon: 'success',
+        title: 'Succès',
+        text: 'Votre photo de profil a été mise à jour avec succès',
+        timer: 2000,
+        showConfirmButton: false
+      });
+
     } catch (error) {
       console.error("Error uploading image:", error);
+      Swal.fire({
+        icon: 'error',
+        title: 'Erreur',
+        text: 'Une erreur est survenue lors du téléchargement de l\'image. Veuillez réessayer.',
+      });
     }
   };
 
@@ -253,11 +282,7 @@ const Profile: React.FC = () => {
       if (file) {
         setImageFile(file); // Set image file
         handleImageUpload(file);
-        const reader = new FileReader();
-        reader.onload = (e: any) => {
-          setImageUrl(e.target.result);
-        };
-        reader.readAsDataURL(file);
+        // Don't set imageUrl here - let handleImageUpload handle it with the server response
       }
     };
     fileInput.click();
@@ -270,7 +295,11 @@ const Profile: React.FC = () => {
           {imageUrl ? (
             //console.log(imageUrl, "image url"),
             <div className="user-img-profile-container">
-              <img src={`${process.env.REACT_APP_API_URL}/${imageUrl}`} alt="User" className="user-img-profile" />
+              <img 
+                src={imageUrl.startsWith('data:') ? imageUrl : `${process.env.REACT_APP_API_URL}/${imageUrl}`} 
+                alt="User" 
+                className="user-img-profile" 
+              />
               <div
                 className="edit-button-container-profile"
                 onClick={handleEditClick}

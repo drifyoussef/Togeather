@@ -656,10 +656,10 @@ let fetch;
   const upload = multer({ storage: storage });
 
   // Serve static files from the uploads folder
-  //app.use('/api/uploads', express.static(path.join(__dirname, 'src/uploads')));
-  app.use('/api/uploads', (req, res, next) => {
-    return res.json({ message: "Uploads endpoint" });
-  });
+  app.use('/api/uploads', express.static(path.join(__dirname, 'src/uploads')));
+  //app.use('/api/uploads', (req, res, next) => {
+  //  return res.json({ message: "Uploads endpoint" });
+  //});
 
   // Route pour uploader une image
   /**
