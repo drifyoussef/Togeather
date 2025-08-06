@@ -11,7 +11,7 @@ services:
       - NODE_ENV=development
     volumes:
       - backend-data:/usr/src/app/src/uploads
-    mem_limit: 4g
+    mem_limit: 512m
   frontend:
     build:
       context: ./front
@@ -28,7 +28,7 @@ services:
       - /usr/src/app/node_modules
     depends_on:
       - backend
-    mem_limit: 4g
+    mem_limit: 2g
   
   backoffice:
     build:
@@ -46,7 +46,7 @@ services:
       - /usr/src/app/node_modules
     depends_on:
       - backend
-    mem_limit: 4g
+    mem_limit: 512m
 
 volumes:
   backend-data:
