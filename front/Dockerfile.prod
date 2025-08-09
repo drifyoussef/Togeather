@@ -10,6 +10,10 @@ RUN npm install --legacy-peer-deps
 # Copier le code source
 COPY . .
 
+# ✅ AJOUTER CES LIGNES AVANT LE BUILD
+ARG REACT_APP_API_URL
+ENV REACT_APP_API_URL=$REACT_APP_API_URL
+
 # Build de production avec plus de mémoire
 RUN NODE_OPTIONS="--max-old-space-size=2048" npm run build
 
