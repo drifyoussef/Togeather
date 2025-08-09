@@ -10,7 +10,7 @@ services:
     environment:
       - NODE_ENV=development
     volumes:
-      - backend-data:/usr/src/app/src/uploads
+      - backend-data-local:/usr/src/uploads
     mem_limit: 512m
   frontend:
     build:
@@ -48,4 +48,5 @@ services:
     mem_limit: 512m
 
 volumes:
-  backend-data:
+  backend-data-local:
+    driver: local

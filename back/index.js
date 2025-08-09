@@ -53,7 +53,7 @@ let fetch;
   const io = socketIo(server, {
     cors: {
       origin: "*", // Allow all origins
-      methods: ["GET","HEAD","PUT","PATCH","POST","DELETE"],
+      methods: ["GET", "HEAD", "PUT", "PATCH", "POST", "DELETE"],
     },
   });
 
@@ -187,34 +187,41 @@ let fetch;
    *       500:
    *         description: Internal server error
    */
-  app.get("/api/auth/user", authMiddleware, getUserController, async (req, res) => {
-    try {
-      const user = await User.findById(req.user.id).select("-password");
-      if (!user) {
-        return res.status(404).json({ message: "User not found" });
-      }
-      if (user.isBanned) {
-  // Récupérer le dernier message signalé de l'utilisateur
-  const lastReportedMessage = await Message.findOne({
-    sender: user._id,
-    reports: { $exists: true, $not: { $size: 0 } }
-  })
-    .sort({ "reports.reportedAt": -1 })
-    .lean();
+  app.get(
+    "/api/auth/user",
+    authMiddleware,
+    getUserController,
+    async (req, res) => {
+      try {
+        const user = await User.findById(req.user.id).select("-password");
+        if (!user) {
+          return res.status(404).json({ message: "User not found" });
+        }
+        if (user.isBanned) {
+          // Récupérer le dernier message signalé de l'utilisateur
+          const lastReportedMessage = await Message.findOne({
+            sender: user._id,
+            reports: { $exists: true, $not: { $size: 0 } },
+          })
+            .sort({ "reports.reportedAt": -1 })
+            .lean();
 
-  return res.status(403).json({
-    message: "Vous êtes banni",
-    banReason: user.banReason,
-    banEnd: user.banEnd,
-    bannedMessage: lastReportedMessage ? lastReportedMessage.content : undefined
-  });
-}
-      res.status(200).json(user);
-    } catch (error) {
-      console.error("Error fetching user:", error);
-      res.status(500).json({ message: "Error fetching user" });
+          return res.status(403).json({
+            message: "Vous êtes banni",
+            banReason: user.banReason,
+            banEnd: user.banEnd,
+            bannedMessage: lastReportedMessage
+              ? lastReportedMessage.content
+              : undefined,
+          });
+        }
+        res.status(200).json(user);
+      } catch (error) {
+        console.error("Error fetching user:", error);
+        res.status(500).json({ message: "Error fetching user" });
+      }
     }
-  });
+  );
 
   app.get("/api/me", async (req, res) => {
     try {
@@ -305,30 +312,30 @@ let fetch;
   });
 
   app.get("/api/messages/reports", authMiddleware, async (req, res) => {
-  try {
-    const reportedMessages = await Message.find({
-      reports: { $exists: true, $not: { $size: 0 } },
-    })
-      .populate({
-        path: "sender",
-        select: "firstname name email",
-        options: { strictPopulate: false }
+    try {
+      const reportedMessages = await Message.find({
+        reports: { $exists: true, $not: { $size: 0 } },
       })
-      .populate({
-        path: "reports.reportedBy",
-        select: "firstname name email",
-        options: { strictPopulate: false }
-      });
+        .populate({
+          path: "sender",
+          select: "firstname name email",
+          options: { strictPopulate: false },
+        })
+        .populate({
+          path: "reports.reportedBy",
+          select: "firstname name email",
+          options: { strictPopulate: false },
+        });
 
       console.log(JSON.stringify(reportedMessages, null, 2));
 
-    res.status(200).json(reportedMessages);
-  } catch (error) {
-    res
-      .status(500)
-      .json({ message: "Erreur lors de la récupération des reports." });
-  }
-});
+      res.status(200).json(reportedMessages);
+    } catch (error) {
+      res
+        .status(500)
+        .json({ message: "Erreur lors de la récupération des reports." });
+    }
+  });
 
   // Route pour récupérer les messages d'un utilisateur via l'id du destinataire ou de l'expéditeur
   /**
@@ -434,7 +441,9 @@ let fetch;
         `Report: "${reporter?.firstname} ${reporter?.name}" a signalé le message de "${message.sender?.firstname} ${message.sender?.name}" pour la raison : "${reason}"`
       );
 
-      console.log(`${message.sender} "données de l'utilisateur signalé", ${message.sender.name} "NOM DE L'UTILISATEUR SIGNALÉ"`);
+      console.log(
+        `${message.sender} "données de l'utilisateur signalé", ${message.sender.name} "NOM DE L'UTILISATEUR SIGNALÉ"`
+      );
 
       res.status(200).json({ message: "Message reported successfully." });
     } catch (error) {
@@ -639,8 +648,9 @@ let fetch;
   // Stocker les images dans le dossier uploads
   const storage = multer.diskStorage({
     destination: (req, file, cb) => {
-      console.log(path.join(__dirname, "src/uploads"), "PATH JOIN");
-      cb(null, path.join(__dirname, "src/uploads"));
+      const uploadsPath = "/usr/src/uploads"; // ✅ HORS du répertoire app
+      console.log(uploadsPath, "UPLOADS PATH");
+      cb(null, uploadsPath);
     },
     filename: (req, file, cb) => {
       console.log(file, "FILE");
@@ -656,7 +666,7 @@ let fetch;
   const upload = multer({ storage: storage });
 
   // Serve static files from the uploads folder
-  app.use('/api/uploads', express.static(path.join(__dirname, 'src/uploads')));
+  app.use('/api/uploads', express.static('/usr/src/uploads'));
   //app.use('/api/uploads', (req, res, next) => {
   //  return res.json({ message: "Uploads endpoint" });
   //});
