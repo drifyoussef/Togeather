@@ -280,6 +280,7 @@ const Profile: React.FC = () => {
     fileInput.onchange = (e: any) => {
       const file = e.target.files[0];
       if (file) {
+        console.log(imageFile);
         setImageFile(file); // Set image file
         handleImageUpload(file);
         // Don't set imageUrl here - let handleImageUpload handle it with the server response

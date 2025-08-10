@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import "./App.css";
 import Navbar from "./components/Navbar/Navbar";
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 import { BrowserRouter as Router, Route, Routes, useLocation } from "react-router-dom";
 import Home from "./components/Home/Home";
 import Profile from "./components/Profile/Profile";
@@ -33,6 +34,7 @@ declare global {
 }
 
 function App() {
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [user, setUser] = useState<UserModel | null>(null);
 
   const location = useLocation();
