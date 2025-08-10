@@ -762,12 +762,12 @@ let fetch;
    *         description: Internal server error
    */
   app.get("/api/uploads/:filename", (req, res) => {
-    console.log(
-      path.join(__dirname, `src/uploads/${req.params.filename}`),
-      "PATH JOIN"
-    );
-    res.sendFile(path.join(__dirname, `src/uploads/${req.params.filename}`));
-  });
+  console.log(
+    path.join("/usr/src/uploads", req.params.filename),
+    "PATH JOIN"
+  );
+  res.sendFile(path.join("/usr/src/uploads", req.params.filename));
+});
 
   //${process.env.REACT_APP_API_URL}/uploads/file-1733443004501.jpg
 
