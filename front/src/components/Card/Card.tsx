@@ -6,6 +6,7 @@ import { FaPizzaSlice, FaHamburger, FaIceCream } from "react-icons/fa";
 import { GiChickenOven, GiTacos } from "react-icons/gi";
 import { LuSandwich } from "react-icons/lu";
 import { RiDrinks2Fill } from "react-icons/ri";
+import { useImageFallback } from "../../hooks/useImageFallback";
 
 // Catégories disponibles
 type Category = 'Asiatique' | 'Pizza' | 'Poulet' | 'Sandwich' | 'Mexicain' | 'Burger' | 'Glaces' | 'Boissons';
@@ -43,6 +44,7 @@ export default function Card({
   id,
 }: CardProps) {
   const navigate = useNavigate();
+  const { handleImageError } = useImageFallback();
 
   // Rediriger vers la page de profil de l'utilisateur
   const handleClick = () => {
@@ -52,7 +54,7 @@ export default function Card({
   // Affichage du composant Card
   return (
     <div className="card" onClick={handleClick}>
-      <img src={`${process.env.REACT_APP_API_URL}/${imageUrl}`} alt="person" className="card-image" />
+      <img src={`${process.env.REACT_APP_API_URL}/${imageUrl}`} alt="person" className="card-image" onError={handleImageError} />
       <div className="card-content">
         <div className="card-container">
           <p className="card-text">{text}</p>

@@ -8,6 +8,7 @@ import { RiDrinks2Fill } from "react-icons/ri";
 import Card from "../Card/Card";
 import { useFetchUsers } from "../../hooks/useFetchUsers";
 import "./Home.css";
+import { useImageFallback } from "../../hooks/useImageFallback";
 
 // Catégories disponibles
 type Category =
@@ -62,6 +63,8 @@ export default function Home() {
         return null;
     }
   };
+
+  const { handleImageError } = useImageFallback();
 
   // Filtrer les utilisateurs par genre préféré
   const currentUserId = localStorage.getItem("currentUserId");
@@ -257,7 +260,7 @@ export default function Home() {
                     className="user-card"
                     onClick={() => handleUserinfosClick(user)}
                   >
-                    <img src={`${process.env.REACT_APP_API_URL}/${user.imageUrl}`} alt={`${user.firstname}'s avatar`} className="match-card-image" />
+                    <img src={`${process.env.REACT_APP_API_URL}/${user.imageUrl}`} alt={`${user.firstname}'s avatar`} className="match-card-image" onError={handleImageError} />
                   </div>
                 ))
               ) : (

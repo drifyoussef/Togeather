@@ -5,6 +5,7 @@ import { UserModel } from "../../models/User.model";
 import Swal from "sweetalert2";
 
 import "./UserProfile.css";
+import { useImageFallback } from "../../hooks/useImageFallback";
 
 const UserProfile: React.FC = () => {
   // Récupérer l'ID de l'utilisateur à partir des paramètres de l'URL
@@ -13,6 +14,8 @@ const UserProfile: React.FC = () => {
   const [user, setUser] = useState<UserModel | null>(null);
   const [liked, setLiked] = useState(false);
   const [reload, setReload] = useState(false);
+
+  const { handleImageError } = useImageFallback();
 
   // Fonction pour liker un utilisateur
   const likeUser = () => {
@@ -153,6 +156,7 @@ const UserProfile: React.FC = () => {
           src={`${process.env.REACT_APP_API_URL}/${user.imageUrl}`}
           className="user-profile-image"
           alt="User Profile"
+          onError={handleImageError}
         />
       </div>
       <h1>

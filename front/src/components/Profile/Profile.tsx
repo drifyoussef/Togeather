@@ -5,6 +5,7 @@ import { UserModel } from "../../models/User.model";
 import { MdEdit } from "react-icons/md";
 import { FaEdit } from "react-icons/fa";
 import Swal from "sweetalert2";
+import { useImageFallback } from "../../hooks/useImageFallback";
 
 const Profile: React.FC = () => {
   const [user, setUser] = useState<UserModel>();
@@ -290,6 +291,8 @@ const Profile: React.FC = () => {
     fileInput.click();
   };
 
+  const { handleImageError } = useImageFallback();
+
   return (
     <div className="div-profile">
       <div className="profileCard">
@@ -301,6 +304,7 @@ const Profile: React.FC = () => {
                 src={imageUrl.startsWith('data:') ? imageUrl : `${process.env.REACT_APP_API_URL}/${imageUrl}`} 
                 alt="User" 
                 className="user-img-profile" 
+                onError={handleImageError}
               />
               <div
                 className="edit-button-container-profile"

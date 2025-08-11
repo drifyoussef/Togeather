@@ -7,6 +7,7 @@ import { MdDelete } from "react-icons/md";
 import io from "socket.io-client";
 import Swal from "sweetalert2";
 import { IoChatbubbleEllipsesOutline } from "react-icons/io5";
+import { useImageFallback } from "../../hooks/useImageFallback";
 
 const socket = io(process.env.REACT_APP_API_URL);
 
@@ -48,6 +49,8 @@ export default function UserMessages() {
 
   // State local pour les matchs affichés
   const [displayedMatches, setDisplayedMatches] = useState<UserModel[]>([]);
+
+  const { handleImageError } = useImageFallback();
 
   // Synchronise displayedMatches avec mutualMatches
   useEffect(() => {
@@ -367,6 +370,7 @@ export default function UserMessages() {
                     className="profile-picture"
                     src={`${process.env.REACT_APP_API_URL}/${selectedUser.imageUrl}`}
                     alt={`${selectedUser.firstname} ${selectedUser.name}`}
+                    onError={handleImageError}
                   />
                 )}
                 <div className="header-text">
@@ -428,6 +432,7 @@ export default function UserMessages() {
                 className="profile-picture"
                 src={`${process.env.REACT_APP_API_URL}/${selectedUser.imageUrl}`}
                 alt={`${selectedUser.firstname} ${selectedUser.name}`}
+                onError={handleImageError}
               />
               <p className="header-conversation">
                 Conversation avec {selectedUser.firstname}
