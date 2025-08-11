@@ -3,9 +3,9 @@
   <head>
     <meta charset="utf-8" />
     <link rel="icon" href="%PUBLIC_URL%/favicon.ico" />
-        <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-     <link
+    <link
       href="https://fonts.googleapis.com/css2?family=Lobster&display=swap"
       rel="stylesheet"
     />
@@ -15,35 +15,15 @@
     />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta name="theme-color" content="#000000" />
-    <meta name="description" content="Togeather est un réseau social pour faire des rencontres amicales." />
+    <meta
+      name="description"
+      content="Togeather est un réseau social pour faire des rencontres amicales."
+    />
     <link rel="apple-touch-icon" href="%PUBLIC_URL%/logo192.png" />
     <link rel="manifest" href="%PUBLIC_URL%/manifest.json" />
     <title>Togeather</title>
-    <!-- Google Analytics -->
-    <script async src="https://www.googletagmanager.com/gtag/js?id=G-9JX7G3BB7M"></script>
-    <script>
-      window.dataLayer = window.dataLayer || [];
-      function gtag(){dataLayer.push(arguments);}
-      gtag('js', new Date());
-      gtag('config', 'G-9JX7G3BB7M');
-    </script>
-    <!-- Google Tag Manager -->
-    <script>
-      (function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
-      new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
-      j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
-      'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
-      })(window,document,'script','dataLayer','GT-NM8K6FQ2');
-    </script>
-  </head>
-  <body>
-    <!-- Google Tag Manager (noscript) -->
-    <noscript>
-      <iframe src="https://www.googletagmanager.com/ns.html?id=GT-NM8K6FQ2" height="0" width="0" style="display:none;visibility:hidden"></iframe>
-    </noscript>
-    <!-- End Google Tag Manager (noscript) -->
-    <div id="root"></div>
-    <!-- Axeptio Cookie Banner -->
+
+    <!-- Axeptio Cookie Banner avec gestion complète -->
     <script>
       window.axeptioSettings = {
         clientId: "675a92be5c4ee64f4c4ce114",
@@ -58,12 +38,125 @@
           }
         }
       };
-      (function(d, s) {
-        var t = d.getElementsByTagName(s)[0], e = d.createElement(s);
-        e.async = true; e.src = "https://static.axept.io/sdk.js";
+
+      (function (d, s) {
+        let t = d.getElementsByTagName(s)[0], e = d.createElement(s);
+        e.async = true;
+        e.src = "//static.axept.io/sdk.js";
         t.parentNode.insertBefore(e, t);
       })(document, "script");
+
+      function loadGoogleAnalyticsTag() {
+        //console.log("🟢 CHARGEMENT Google Analytics - Autorisé");
+        const scriptGoogle = document.querySelector('script[data-google="google-analytics-tag"]')
+        if (scriptGoogle) {
+          //console.log("⚠️ Google Analytics déjà chargé");
+          return;
+        }
+
+        const t = document.getElementsByTagName("script")[0];
+        const e = document.createElement("script");
+        e.async = true;
+        e.src = "https://www.googletagmanager.com/gtag/js?id=G-9JX7G3BB7M";
+        e.setAttribute("data-google", "google-analytics-tag");
+        t.parentNode.insertBefore(e, t);
+        window.dataLayer = window.dataLayer || [];
+
+        function gtag() {
+          dataLayer.push(arguments);
+        }
+
+        gtag("js", new Date());
+        gtag("config", "G-9JX7G3BB7M");
+        //console.log("✅ Google Analytics chargé avec succès");
+      }
+
+      function loadGoogleTagManager() {
+        //console.log("🟢 CHARGEMENT Google Tag Manager - Autorisé");
+        const scriptGTM = document.querySelector('script[data-google="google-tag-manager"]')
+        if (scriptGTM) {
+          //console.log("⚠️ Google Tag Manager déjà chargé");
+          return;
+        }
+
+        (function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+        new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+        j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+        'https://www.googletagmanager.com/gtm.js?id='+i+dl;j.setAttribute("data-google", "google-tag-manager");f.parentNode.insertBefore(j,f);
+        })(window,document,'script','dataLayer','GT-NM8K6FQ2');
+        //console.log("✅ Google Tag Manager chargé avec succès");
+      }
+
+      function removeGoogleAnalyticsTag() {
+        //console.log("🔴 SUPPRESSION Google Analytics - Refusé");
+        const scriptGoogle = document.querySelector('script[data-google="google-analytics-tag"]');
+        if (scriptGoogle) {
+          scriptGoogle.remove();
+          //console.log("🗑️ Script Google Analytics supprimé");
+        }
+        
+        const scriptGTM = document.querySelector('script[data-google="google-tag-manager"]');
+        if (scriptGTM) {
+          scriptGTM.remove();
+          //console.log("🗑️ Script Google Tag Manager supprimé");
+        }
+        
+        const cookies = document.cookie?.split(';');
+        let cookiesRemoved = 0;
+        for (let cookie of cookies) {
+          cookie = cookie.trim();
+          if (cookie.startsWith("_ga") || cookie.startsWith("_gtm") || cookie.startsWith("_gid")) {
+            const cookieName = cookie.split("=")[0];
+            document.cookie = cookieName + "=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
+            cookiesRemoved++;
+          }
+        }
+        //console.log(`🍪 ${cookiesRemoved} cookies Google supprimés`);
+      }
+
+      void 0 === window._axcb && (window._axcb = []);
+      window._axcb.push(function (axeptio) {
+        //console.log("🔧 Axeptio initialisé");
+        
+        axeptio.on("cookies:complete", function (choices) {
+          //console.log("📊 Choix utilisateur:", choices.$$googleConsentMode);
+          
+          if (choices.$$googleConsentMode.analytics_storage === "granted") {
+            //console.log("✅ Analytics ACCEPTÉ par l'utilisateur");
+            loadGoogleAnalyticsTag();
+            loadGoogleTagManager();
+          }
+          if (choices.$$googleConsentMode.analytics_storage === "denied") {
+            //console.log("❌ Analytics REFUSÉ par l'utilisateur");
+            removeGoogleAnalyticsTag();
+          }
+          
+          // ✅ MASQUER LE WIDGET AVEC CSS
+          //console.log("🔒 Masquage du widget Axeptio");
+          setTimeout(() => {
+            const axeptioWidget = document.querySelector('#axeptio_widget, [id*="axeptio"]');
+            if (axeptioWidget) {
+              axeptioWidget.style.display = 'none';
+              //console.log("👻 Widget Axeptio masqué");
+            }
+          }, 0);
+        });
+      });
+      
+      //console.log("🚀 Configuration Axeptio chargée");
     </script>
-    
+  </head>
+  <body>
+    <!-- Google Tag Manager (noscript) - Se charge seulement si consentement -->
+    <noscript id="gtm-noscript" style="display: none">
+      <iframe
+        src="https://www.googletagmanager.com/ns.html?id=GT-NM8K6FQ2"
+        height="0"
+        width="0"
+        style="display: none; visibility: hidden"
+      ></iframe>
+    </noscript>
+
+    <div id="root"></div>
   </body>
 </html>

@@ -13,6 +13,7 @@ const Profile: React.FC = () => {
   const [updatedField, setUpdatedField] = useState<string | null>(null);
   const [reload, setReload] = useState(false);
   const [imageUrl, setImageUrl] = useState<string>("");
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [imageFile, setImageFile] = useState<File | null>(null);
   const navigate = useNavigate();
 
@@ -280,7 +281,7 @@ const Profile: React.FC = () => {
     fileInput.onchange = (e: any) => {
       const file = e.target.files[0];
       if (file) {
-        console.log(imageFile);
+        //console.log(imageFile);
         setImageFile(file); // Set image file
         handleImageUpload(file);
         // Don't set imageUrl here - let handleImageUpload handle it with the server response

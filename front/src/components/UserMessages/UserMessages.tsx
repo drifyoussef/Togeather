@@ -238,7 +238,7 @@ export default function UserMessages() {
         setIsChatVisible(false);
         localStorage.removeItem("selectedUserId");
         // Met à jour les matchs mutuels
-        console.log(setDisplayedMatches, "UPDATED MATCHES AFTER DELETION");
+        //console.log(setDisplayedMatches, "UPDATED MATCHES AFTER DELETION");
         // Mets à jour les messages (retire ceux liés à ce user)
         setMessages((prev) =>
           prev.filter(
@@ -268,7 +268,7 @@ export default function UserMessages() {
   };
 
   const handleReportMessage = async (messageId: string) => {
-    console.log("Reporting message with ID:", messageId);
+    //console.log("Reporting message with ID:", messageId);
     const { value: reason } = await Swal.fire({
       title: "Signaler ce message",
       input: "text",

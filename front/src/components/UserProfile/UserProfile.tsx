@@ -116,7 +116,7 @@ const UserProfile: React.FC = () => {
       setReload((r) => !r); // force le refetch de l'utilisateur
     };
     window.addEventListener("forceUnlike", handleForceUnlike);
-    console.log("Event listener for forceUnlike added");
+    //console.log("Event listener for forceUnlike added");
     return () => window.removeEventListener("forceUnlike", handleForceUnlike);
   }, []);
 
