@@ -3,14 +3,6 @@
    This file aims to provide safe overrides; component CSS can still override specifics.
 */
 
-/* Images and media scale down */
-img, picture, video, svg {
-  max-width: 100%;
-  height: auto;
-  display: block;
-}
-
-
 /* Responsive circle size using clamp: min 48px, preferred 7vw, max 100px */
 .circle, .circle-match-home {
   width: clamp(48px, 7vw, 100px) !important;
