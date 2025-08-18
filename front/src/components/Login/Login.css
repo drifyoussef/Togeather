@@ -2,7 +2,9 @@
   display: flex;
   justify-content: center;
   align-items: center;
-  height: calc(100vh - 64px);
+  flex: 1 1 auto;
+  min-height: 0;
+  overflow: auto;
   flex-direction: column;
 }
 

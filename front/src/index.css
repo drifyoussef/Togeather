@@ -1,10 +1,19 @@
+@import './styles/responsive.css';
+@import './styles/responsive-overrides.css';
+@import './styles/responsive-final.css';
+
 * {
   margin: 0;
   padding: 0;
+  box-sizing: border-box; /* avoid sizing surprises */
 }
 
-#root{
-  height: 100vh;
+/* Ensure the root fills the viewport and use % heights so mobile address bar doesn't create gaps */
+html, body, #root {
+  height: 100%;
+  min-height: 100%;
+  margin: 0;
+  padding: 0;
 }
 
 body {
@@ -14,6 +23,12 @@ body {
     sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+}
+
+/* Don't reserve extra bottom padding globally — footer participates in flow.
+   Keep #root able to fill the viewport so the app-level grid can pin footer to bottom. */
+#root {
+  height: 100%;
 }
 
 code {

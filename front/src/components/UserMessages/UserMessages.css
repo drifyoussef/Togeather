@@ -1,11 +1,15 @@
 .div-matches {
     display: flex;
-    height: calc(100vh - 64px);
+    /* let parent .main-content provide the available space */
+    flex: 1 1 auto;
+    min-height: 0; /* allow shrinking inside a flex parent */
+    overflow: auto;
 }
 
 .box-match {
     width: 400px;
-    height: calc(100vh - 64px);
+    max-height: 100%;
+    height: auto;
     overflow-y: auto;
     border-right: 1px solid #ddd;
 }
@@ -64,7 +68,7 @@
     flex-grow: 1;
     display: flex;
     flex-direction: column;
-    height: 90vh;
+    min-height: 0; /* allow shrinking inside flex parent */
 }
 
 .header-messages {
@@ -269,7 +273,7 @@
 .delete-message-icon {
     color: #fff;
     cursor: pointer;
-    font-size: 20px;
+    font-size: 32px;
     transition: color 0.3s ease;
     padding: 8px;
 }
@@ -302,6 +306,13 @@
         padding: 0px;
         width: 24%;
     }
+    
+    .message.right {
+    flex-flow: row-reverse;
+    align-self: flex-end;
+    margin-right: 16px;
+    }
+
 }
 
 @media only screen and (max-width: 320px), only screen and (max-width: 375px), only screen and (max-width: 425px)  {
@@ -326,30 +337,26 @@
     display: none;
 }
 
+.message.right {
+    flex-flow: row-reverse;
+    align-self: flex-end;
+    margin-right: 16px;
+}
+
+
 }
 
 @media only screen and (min-width: 320px) and (max-width: 375px){
     .bubble-type-div {
         margin-bottom: 24px;
     }
-}
 
-@media only screen and (min-width: 400px) and (max-width: 600px){
-    .messages{
-        height: 84vh;
+    .message.right {
+    flex-flow: row-reverse;
+    align-self: flex-end;
+    margin-right: 16px;
     }
-}
 
-@media only screen and (min-width: 400px) and (max-width: 600px) and (min-height: 900px) and (max-height: 950px){
-    .messages{
-        height: 82vh!important;
-    }
-}
-
-@media only screen and (min-width: 1024px) and (max-width: 1100px) and (min-height: 600px) and (max-height: 700px){
-    .messages{
-        height: 85vh;
-    }
 }
 
 @media only screen and (min-width: 768px) and (max-width: 1023px){

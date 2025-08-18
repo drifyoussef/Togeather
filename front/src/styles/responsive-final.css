@@ -1,0 +1,57 @@
+/* Final responsive safety overrides — last-resort rules to neutralize fixed heights
+   Loaded after other responsive helpers. Designed to be conservative but force elements
+   inside .main-content to not exceed viewport height and to let content flow.
+*/
+
+/* Broad overrides for common components */
+.main-content .card,
+.main-content .user-card,
+.main-content .card-image,
+.main-content .match-card-image,
+.main-content .user-image,
+.main-content .profile-box,
+.main-content .register-panel,
+.main-content .register-form,
+.main-content .banner,
+.main-content .hero,
+.main-content .messages-box {
+  height: auto !important;
+  min-height: 0 !important;
+  max-height: 70vh !important;
+}
+
+/* Override explicit px heights */
+.main-content [style*="height:"] {
+  height: auto !important;
+  max-height: 70vh !important;
+}
+
+/* Reduce large vertical paddings and margins on small screens */
+@media (max-width: 768px) {
+
+  .main-content .p1-home { font-size: 20px !important; }
+  .main-content .p2-home { font-size: 14px !important; }
+}
+
+/* Make sure scrollable regions don't exceed viewport */
+.main-content .overflow-auto, .main-content .scrollable {
+  max-height: 60vh !important;
+  overflow: auto !important;
+}
+
+/* Limit hero/circle sizes more aggressively on tiny screens */
+@media (max-width: 420px) {
+  .main-content .circle, .main-content .circle-match-home {
+    width: 64px !important;
+    height: 64px !important;
+  }
+}
+
+/* Catch-all: if a media query elsewhere tries to force large heights, cap key blocks again */
+@media screen and (min-height: 568px) {
+  .main-content .card, .main-content .hero, .main-content .banner, .main-content .register-panel {
+    max-height: 75vh !important;
+    height: auto !important;
+    overflow: auto !important;
+  }
+}

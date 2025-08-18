@@ -1,0 +1,104 @@
+/* Responsive overrides (safe, conservative)
+   Purpose: neutralize fixed/heavy pixel heights inside page content so they don't push footer
+   These are intentionally low-specificity but use .main-content to avoid changing admin/backoffice styles.
+*/
+
+/* Prevent images and card blocks inside main-content from forcing huge heights */
+.main-content img,
+.main-content picture,
+.main-content video,
+.main-content svg,
+.main-content .user-image,
+.main-content .profile-box,
+.main-content .register-panel {
+  height: auto !important;
+  max-height: 60vh !important; /* never larger than viewport (safe) */
+}
+
+/* For elements that used explicit fixed heights (e.g., 200px..400px) let them shrink */
+.main-content [style*="height:"] {
+  height: auto !important;
+  max-height: 70vh !important;
+}
+
+/* Reduce oversized fixed px heights set in CSS by being more specific and using max-height clamp */
+.main-content [class*="profile"],
+.main-content [class*="register"],
+.main-content [class*="image"] {
+  min-height: 0 !important;
+  height: auto !important;
+  max-height: 70vh !important;
+}
+
+/* Keep overflow internal to blocks that need it, but avoid global internal scrolling */
+.main-content .scrollable, .main-content .overflow-auto {
+  max-height: 60vh;
+  overflow: auto;
+}
+
+/* Responsive overrides (safe, conservative)
+   Purpose: neutralize fixed/heavy pixel heights inside page content so they don't push footer
+   These are intentionally low-specificity but use .main-content to avoid changing admin/backoffice styles.
+*/
+
+/* Prevent images and card blocks inside main-content from forcing huge heights */
+.main-content img,
+.main-content picture,
+.main-content video,
+.main-content svg,
+.main-content .user-image,
+.main-content .profile-box,
+.main-content .register-panel {
+  height: auto !important;
+  max-height: 60vh !important; /* never larger than viewport (safe) */
+}
+
+/* For elements that used explicit fixed heights (e.g., 200px..400px) let them shrink */
+.main-content [style*="height:"] {
+  height: auto !important;
+  max-height: 70vh !important;
+}
+
+/* Reduce oversized fixed px heights set in CSS by being more specific and using max-height clamp */
+.main-content [class*="profile"],
+.main-content [class*="register"],
+.main-content [class*="image"] {
+  min-height: 0 !important;
+  height: auto !important;
+  max-height: 70vh !important;
+}
+
+/* Keep overflow internal to blocks that need it, but avoid global internal scrolling */
+.main-content .scrollable, .main-content .overflow-auto {
+  max-height: 60vh;
+  overflow: auto;
+}
+
+/* Tone down large paddings/margins on mobile */
+@media (max-width: 768px) {
+  .main-content .div-match, .main-content .p3-home {
+    padding-bottom: 8px !important;
+    margin-bottom: 8px !important;
+  }
+}
+
+/* Mobile-only: pink scrollbar for category row (kept in overrides to ensure it loads last) */
+@media (max-width: 425px) {
+  .parent {
+    overflow-x: auto;
+  }
+
+  .parent::-webkit-scrollbar {
+    height: 6px;
+  }
+  .parent::-webkit-scrollbar-thumb {
+    background: #ad0051;
+    border-radius: 6px;
+  }
+  .parent::-webkit-scrollbar-track {
+    background: #f6f6f6;
+    border-radius: 6px;
+  }
+
+  .parent { scrollbar-width: thin; scrollbar-color: #ad0051 #f6f6f6; }
+}

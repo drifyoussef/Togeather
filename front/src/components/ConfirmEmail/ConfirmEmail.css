@@ -1,6 +1,13 @@
 .confirm-email{
-    height: 100vh;
-    align-content: center;
+    /* don't force viewport-height — allow page to scroll and footer to stay in flow */
+    min-height: 0;
+    height: auto;
+    max-height: none;
+    overflow: visible;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
     text-align: center;
 }
 

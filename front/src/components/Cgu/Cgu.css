@@ -40,7 +40,6 @@
   }
   
   .footer {
-    margin-top: 30px;
     font-size: 14px;
     color: #555555;
     text-align: center;
@@ -53,8 +52,9 @@
     }
 
     .cgu-content {
-      height: 400px!important;
-      overflow-y: scroll!important;
+      height: auto !important;
+      max-height: clamp(240px, 60vh, 480px) !important;
+      overflow-y: auto !important;
     }
 
 }
@@ -66,8 +66,9 @@
   }
 
   .cgu-content {
-    height: 400px!important;
-    overflow-y: scroll!important;
+    height: auto !important;
+    max-height: clamp(240px, 60vh, 480px) !important;
+    overflow-y: auto !important;
   }
 
 }
@@ -79,8 +80,9 @@
   }
 
   .cgu-content {
-    height: 400px!important;
-    overflow-y: scroll!important;
+    height: auto !important;
+    max-height: clamp(240px, 60vh, 480px) !important;
+    overflow-y: auto !important;
   }
 
 }

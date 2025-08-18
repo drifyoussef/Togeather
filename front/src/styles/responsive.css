@@ -1,0 +1,86 @@
+/* Global responsive utilities - non-invasive defaults
+   Purpose: make images/cards/circles responsive and avoid fixed heights that break layouts
+   This file aims to provide safe overrides; component CSS can still override specifics.
+*/
+
+/* Images and media scale down */
+img, picture, video, svg {
+  max-width: 100%;
+  height: auto;
+  display: block;
+}
+
+
+/* Responsive circle size using clamp: min 48px, preferred 7vw, max 100px */
+.circle, .circle-match-home {
+  width: clamp(48px, 7vw, 100px) !important;
+  height: clamp(48px, 7vw, 100px) !important;
+  border-radius: 50%;
+}
+
+/* Utility container for centered content */
+.container, .site-container {
+  max-width: 1100px;
+  padding: 0 16px;
+  margin: 0 auto;
+  box-sizing: border-box;
+  width: 100%;
+}
+
+/* Ensure .main-content children cannot force extra height */
+.main-content, .page-content {
+  min-height: 0;
+  height: auto;
+}
+
+/* Footer inner responsiveness */
+.footer__inner { width: 100%; box-sizing: border-box; }
+
+/* Utility spacing that adapts */
+.responsive-gap { gap: clamp(8px, 2vw, 24px); }
+
+/* Breakpoints for specific behaviors */
+@media (max-width: 768px) {
+  .p1-home { font-size: 20px; }
+  .p2-home { font-size: 14px; }
+}
+
+/* Small screens: keep clamp but reduce max to avoid oversized circles on tiny devices */
+@media (max-width: 420px) {
+  .circle, .circle-match-home { width: clamp(44px, 14vw, 70px) !important; height: clamp(44px, 14vw, 70px) !important; }
+}
+
+/* Smartphone-only: make category row scroll horizontally */
+@media (max-width: 425px) {
+  .parent {
+    display: flex !important;
+    flex-wrap: nowrap !important;
+    gap: 12px !important;
+  overflow-x: auto !important;
+    padding-inline: 12px !important;
+    margin-left: 0 !important;
+  }
+
+  .parent > * {
+    flex: 0 0 auto !important;
+  }
+
+  /* Classic pink scrollbar under categories (webkit) */
+  .parent::-webkit-scrollbar {
+    height: 6px;
+  }
+  .parent::-webkit-scrollbar-thumb {
+    background: #ad0051; /* pink/magenta */
+    border-radius: 6px;
+  }
+  .parent::-webkit-scrollbar-track {
+    background: #f6f6f6;
+    border-radius: 6px;
+  }
+
+  /* Firefox fallback */
+  .parent {
+    scrollbar-width: thin;
+    scrollbar-color: #ad0051 #f6f6f6;
+  }
+}

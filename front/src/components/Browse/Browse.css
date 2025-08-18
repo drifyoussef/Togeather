@@ -7,14 +7,17 @@
 }
 
 .browse-div {
-  height: calc(100vh - 64px);
+  flex: 1 1 auto; /* let parent control available space */
+  min-height: 0;  /* allow shrinking inside flex parent */
+  overflow: auto;
 }
 
 .browse-image {
-  width: 288px;
-  height: 130px;
+  width: clamp(120px, 30vw, 288px);
+  height: clamp(80px, 12vw, 130px);
   border-radius: 8px;
   object-fit: cover;
+  max-height: 50vh;
 }
 
 .browse-name {
@@ -23,14 +26,16 @@
 }
 
 .browse-restaurant-review {
-  font-size: 14px;
+  font-size: clamp(12px, 2.5vw, 14px);
   padding: 8px;
   background: #bbb;
   border-radius: 50px;
-  width: 24Px;
-  height: 24PX;
-  align-content: center;
-  text-align-last: center;
+  width: 24px;
+  height: 24px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
 }
 
 .divAsiatique, .divPizza, .divPoulet, .divSandwich, .divBurger, .divGlaces, .divBoissons, .divMexicain {
@@ -83,16 +88,15 @@
   transition: background-color 0.3s, color 0.3s;
 }
 
-.circle { 
-  width: 100px;
-  height: 100px;
+.circle {
+  place-self: center;
+  width: clamp(48px, 8vw, 100px);
+  height: clamp(48px, 8vw, 100px);
   display: flex;
   align-items: center;
   justify-content: center;
   background: #ffa9a9;
-  -moz-border-radius: 70px; 
-  -webkit-border-radius: 70px; 
-  border-radius: 70px;
+  border-radius: 50%;
   transition: transform 0.3s ease;
 }
 
