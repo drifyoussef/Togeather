@@ -5,7 +5,6 @@
 * {
   margin: 0;
   padding: 0;
-  box-sizing: border-box; /* avoid sizing surprises */
 }
 
 /* Ensure the root fills the viewport and use % heights so mobile address bar doesn't create gaps */

@@ -22,7 +22,6 @@
 }
 
 /* Reduce oversized fixed px heights set in CSS by being more specific and using max-height clamp */
-.main-content [class*="profile"],
 .main-content [class*="register"],
 .main-content [class*="image"] {
   min-height: 0 !important;
@@ -60,7 +59,6 @@
 }
 
 /* Reduce oversized fixed px heights set in CSS by being more specific and using max-height clamp */
-.main-content [class*="profile"],
 .main-content [class*="register"],
 .main-content [class*="image"] {
   min-height: 0 !important;

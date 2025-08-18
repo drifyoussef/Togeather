@@ -196,7 +196,6 @@
 
     .p1-home{
         font-size: 20px;
-        margin-left: 32px;
     }
 
     .p2-home{
@@ -253,8 +252,16 @@
         margin-top: 24px;
     }
 
+    .parent-match {
+        width: 100vw;
+    }
+
     .div8{
         margin-right: 16px;
+    }
+
+    .div-match {
+        margin-top: 24px!important;
     }
 }
 
@@ -351,17 +358,17 @@
     }
     .p2-home{
         font-size: 14px;
-        margin-left: 32px;
+        margin-left: clamp(16px, 5vw, 64px);
         margin-top: 8px;
     }
 
     .p3-home{
-        margin-left: 16px;
+        margin-left: clamp(16px, 5vw, 64px);
         font-size: 20px;
     }
 
     .p-match {
-        margin-left: 16px;
+        margin-left: clamp(16px, 5vw, 64px);
         font-size: 20px;
     }
 
