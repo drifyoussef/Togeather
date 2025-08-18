@@ -61,12 +61,3 @@
     touch-action: pan-x !important;
   }
 }
-
-/* Catch-all: if a media query elsewhere tries to force large heights, cap key blocks again */
-@media screen and (min-height: 568px) {
-  .main-content .card, .main-content .hero, .main-content .banner, .main-content .register-panel {
-    max-height: 75vh !important;
-    height: auto !important;
-    overflow: auto !important;
-  }
-}

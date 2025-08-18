@@ -9,14 +9,6 @@
   max-height: 70vh !important;
 }
 
-/* Reduce oversized fixed px heights set in CSS by being more specific and using max-height clamp */
-.main-content [class*="register"],
-.main-content [class*="image"] {
-  min-height: 0 !important;
-  height: auto !important;
-  max-height: 70vh !important;
-}
-
 /* Keep overflow internal to blocks that need it, but avoid global internal scrolling */
 .main-content .scrollable, .main-content .overflow-auto {
   max-height: 60vh;
