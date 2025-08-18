@@ -45,31 +45,35 @@ function App() {
   }, [location.pathname]);
 
   return (
-    <>
+    <div className="App">
       <Navbar />
-      <Routes>
-          <Route path="/" element={<Home />} />
-          <Route path="/cgu" element={<Cgu />} />
-          <Route path="/cgv" element={<Cgv />} />
-          <Route path="/profile" element={<Profile />} />
-          <Route path="/profile/:id" element={<UserProfile />} />
-          <Route path="/messages" element={<Messages />} />
-          <Route path="/messages/:id" element={<UserMessages />} />
-          <Route path="/browse" element={<Browse />} />
-          <Route path="/browse/:category" element={<Browse />} />
-          <Route path="/browse/:category/:place_id" element={<Restaurant />} />
-          <Route path="/connection" element={<Connection />} />
-          <Route path="/auth/register" element={<Register />} />
-          <Route path="/auth/login" element={<Login />} />
-          <Route path="/premium" element={<Premium />} />
-          <Route path="/success" element={<Success />} />
-          <Route path="/cancel" element={<Cancel />} />
-          <Route path="/confirm-email" element={<ConfirmEmail data={{ message: "" }} />} />
-          {/* {user && <Route path="/banned" element={<Banned user={user} />} />} */}
-          <Route path="/banned" element={<Banned user={user as any} />} />
-      </Routes>
-      <Footer />
-    </>
+      <main className="main-content">
+        <Routes>
+            <Route path="/" element={<Home />} />
+            <Route path="/cgu" element={<Cgu />} />
+            <Route path="/cgv" element={<Cgv />} />
+            <Route path="/profile" element={<Profile />} />
+            <Route path="/profile/:id" element={<UserProfile />} />
+            <Route path="/messages" element={<Messages />} />
+            <Route path="/messages/:id" element={<UserMessages />} />
+            <Route path="/browse" element={<Browse />} />
+            <Route path="/browse/:category" element={<Browse />} />
+            <Route path="/browse/:category/:place_id" element={<Restaurant />} />
+            <Route path="/connection" element={<Connection />} />
+            <Route path="/auth/register" element={<Register />} />
+            <Route path="/auth/login" element={<Login />} />
+            <Route path="/premium" element={<Premium />} />
+            <Route path="/success" element={<Success />} />
+            <Route path="/cancel" element={<Cancel />} />
+            <Route path="/confirm-email" element={<ConfirmEmail data={{ message: "" }} />} />
+            {/* {user && <Route path="/banned" element={<Banned user={user} />} />} */}
+            <Route path="/banned" element={<Banned user={user as any} />} />
+        </Routes>
+      </main>
+      <footer className="footer">
+        <Footer />
+      </footer>
+    </div>
   );
 }
 

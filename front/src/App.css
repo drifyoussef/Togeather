@@ -1,8 +1,51 @@
 .App {
-  text-align: center;
+  display: grid;
+  grid-template-rows: auto 1fr auto;
+  min-height: 100vh; /* ensure app fills viewport so footer can sit at bottom */
 }
 
+/* body/#root shouldn't be flex containers here; keep overflow-x hidden globally in index.css if needed */
 body, #root {
-  min-height: 100vh;
+  min-height: 100%;
   overflow-x: hidden;
+}
+
+:root {
+  --footer-height: 64px; /* keep footer var only */
+}
+
+/* main area must be able to shrink inside a flex column and provide internal scrolling */
+.main-content {
+  /* main should take the middle grid row and scroll internally if needed */
+  grid-row: 2 / 3;
+  overflow: visible; /* remove internal scroll */
+  min-height: 0; /* allow internal children to shrink */
+  box-sizing: border-box;
+  padding-bottom: 0; /* let body/root handle footer spacing if needed */
+}
+
+/* Prevent direct children from growing and creating empty space under the footer */
+.main-content > * {
+  /* avoid direct children growing unexpectedly */
+  flex: 0 0 auto !important;
+}
+
+/* safety: ensure no pseudo-element creates extra height */
+.main-content::after { content: ""; display: block; height: 0; }
+
+/* Safety: ensure the last element inside main-content doesn't create bottom gap */
+.main-content > *:last-child {
+  margin-bottom: 0 !important;
+  padding-bottom: 0 !important;
+}
+
+/* Footer & safe space variables */
+:root {
+  --footer-height: 64px; /* adjust if your footer height differs */
+  --footer-safe-space: 0px; /* fallback */
+}
+
+/* Ensure main leaves room for footer so content doesn't overlap or reserve extra blank area */
+.main-content {
+  padding-bottom: 0;
 }

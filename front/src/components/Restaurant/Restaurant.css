@@ -1,6 +1,7 @@
 .div-images-restaurant{
     display: flex;
-    height: 200px;
+    height: auto;
+    max-height: clamp(120px, 30vh, 260px);
     align-self: center;
 }
 
@@ -22,7 +23,8 @@
 }
 
 .restaurant-image{
-    width: 200px;
+    width: clamp(120px, 18vw, 240px);
+    height: auto;
 }
 
 .restaurant-rating-icon, .restaurant-address-icon, .restaurant-number-icon{

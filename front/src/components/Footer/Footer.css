@@ -1,25 +1,28 @@
+/* Footer styles restored to previous version */
 .footer {
-  width: 100%;
+  display: block; /* full-bleed background */
+  width: 100vw;
+  left: 0;
   background: #ad0051;
   color: #fff;
-  padding: 16px 0;
-  text-align: center;
-  /* Surtout PAS de position: fixed ou absolute */
-  margin-top: 0px; /* optionnel, espace avec le contenu */
 }
 
-.footer-content {
+.footer .footer-content {
   display: flex;
   flex-direction: column;
   gap: 8px;
   align-items: center;
   justify-content: center;
+  padding: 16px;
+  max-width: 1100px;
+  margin: 0 auto;
+  box-sizing: border-box;
 }
 
 .footer-links {
   display: flex;
   flex-direction: column;
-  gap: 12px;
+  margin-top: 8px;
 }
 
 .footer a {
@@ -34,11 +37,9 @@
 }
 
 @media (min-width: 600px) {
-  .footer-content {
+  .footer .footer-content {
     flex-direction: row;
     justify-content: space-between;
-    max-width: 900px;
-    margin: 0 auto;
     width: 90%;
   }
 }

@@ -1,11 +1,16 @@
 .div-matches {
     display: flex;
-    height: calc(100vh - 64px);
+    /* allow the parent flex (.main-content) to control available space */
+    flex: 1 1 auto;
+    min-height: 0; /* allow shrinking inside flex parent */
+    overflow: auto;
 }
 
 .box-match {
     width: 400px;
-    height: calc(100vh - 64px);
+    /* don't force a viewport height here; allow the column to size and scroll internally */
+    max-height: 100%;
+    height: auto;
     overflow-y: auto;
 }
 
@@ -80,8 +85,9 @@
     flex-direction: column;
 }
 
-.profile-picture {
-    height: 300px;
+    .profile-picture {
+    height: auto;
+    max-height: clamp(120px, 30vh, 320px);
     background-color: #bbb;
 }
 
