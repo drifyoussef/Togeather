@@ -466,7 +466,6 @@
     }
 
     .card{
-        height: auto !important;
         max-height: clamp(160px, 35vh, 260px) !important;
     }
 
@@ -499,7 +498,6 @@
 
     .card{
         width: 130px !important;
-        height: auto !important;
         max-height: clamp(140px, 32vh, 220px) !important;
     }
 
@@ -520,7 +518,6 @@
 
     .card{
         width: 130px !important;
-        height: auto !important;
         max-height: clamp(140px, 32vh, 220px) !important;
     }
 
