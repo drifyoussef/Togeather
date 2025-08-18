@@ -75,4 +75,10 @@
     scrollbar-width: thin;
     scrollbar-color: #ad0051 #f6f6f6;
   }
+
+  /* Enable smooth native touch scrolling on mobile for .parent */
+  .parent {
+    -webkit-overflow-scrolling: touch;
+    touch-action: pan-x;
+  }
 }

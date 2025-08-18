@@ -4,11 +4,8 @@
 */
 
 /* Broad overrides for common components */
-.main-content .card,
 .main-content .user-card,
-.main-content .card-image,
 .main-content .match-card-image,
-.main-content .user-image,
 .main-content .profile-box,
 .main-content .register-panel,
 .main-content .register-form,
@@ -18,6 +15,16 @@
   height: auto !important;
   min-height: 0 !important;
   max-height: 70vh !important;
+}
+
+/* Prevent match images from stretching and allow natural width */
+.main-content .match-card-image {
+  height: auto !important;
+  width: auto !important;
+  max-width: 100% !important;
+  display: block !important;
+  margin-left: auto !important;
+  margin-right: auto !important;
 }
 
 /* Override explicit px heights */
@@ -44,6 +51,14 @@
   .main-content .circle, .main-content .circle-match-home {
     width: 64px !important;
     height: 64px !important;
+  }
+}
+
+/* Ensure touch scrolling remains enabled as a last-resort override */
+@media (max-width: 425px) {
+  .parent {
+    -webkit-overflow-scrolling: touch !important;
+    touch-action: pan-x !important;
   }
 }
 

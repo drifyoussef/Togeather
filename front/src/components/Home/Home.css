@@ -177,9 +177,13 @@
 
 .match-card-image{
     width: 100%;
-    height: 100%;
+    height: auto;
+    max-width: 100%;
     object-fit: cover;
     border-radius: 70px;
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
 }
 
 
@@ -254,6 +258,12 @@
 
     .parent-match {
         width: 100vw;
+    }
+
+    /* Center match cards horizontally on small screens */
+    .parent-match {
+        justify-content: center;
+        align-items: center;
     }
 
     .div8{
