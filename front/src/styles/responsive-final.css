@@ -27,6 +27,22 @@
   margin-right: auto !important;
 }
 
+/* Ensure small avatar/user-card keep square aspect and minimum size on mobile */
+.main-content .user-card {
+  width: auto !important;
+  height: auto !important;
+  display: inline-block !important;
+}
+
+.main-content .user-image {
+  width: clamp(64px, 9vw, 80px) !important;
+  height: clamp(64px, 9vw, 80px) !important;
+  min-width: 64px !important;
+  min-height: 64px !important;
+  object-fit: cover !important;
+  border-radius: 50% !important;
+}
+
 /* Override explicit px heights */
 .main-content [style*="height:"] {
   height: auto !important;
