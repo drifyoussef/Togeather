@@ -33,24 +33,3 @@
     margin-bottom: 8px !important;
   }
 }
-
-/* Mobile-only: pink scrollbar for category row (kept in overrides to ensure it loads last) */
-@media (max-width: 425px) {
-  .parent {
-    overflow-x: auto;
-  }
-
-  .parent::-webkit-scrollbar {
-    height: 6px;
-  }
-  .parent::-webkit-scrollbar-thumb {
-    background: #ad0051;
-    border-radius: 6px;
-  }
-  .parent::-webkit-scrollbar-track {
-    background: #f6f6f6;
-    border-radius: 6px;
-  }
-
-  .parent { scrollbar-width: thin; scrollbar-color: #ad0051 #f6f6f6; }
-}

@@ -194,6 +194,39 @@
         flex-wrap: nowrap;
         gap: 16px;
         overflow-x: auto;
+        overflow-y: hidden !important;
+        -webkit-overflow-scrolling: touch;
+        touch-action: pan-x;
+        justify-content: flex-start !important; /* revert to flex-start to force overflow */
+        scroll-snap-type: x proximity; /* nicer UX when swiping */
+        padding-inline: 12px;
+        box-sizing: border-box;
+        /* force width constraints that create overflow */
+        width: 100% !important;
+        max-width: 100vw !important;
+    }
+
+    /* ensure children don't shrink and snap to center - force min width to create overflow */
+    .parent > * {
+        flex: 0 0 auto !important;
+        display: inline-block !important;
+        scroll-snap-align: center;
+        min-width: 80px !important; /* force minimum width to guarantee overflow */
+        white-space: nowrap !important;
+    }
+
+    /* diagnostic: ensure parent has proper dimensions and constraints */
+    .parent {
+        width: 100% !important;
+        max-width: 100vw !important;
+        min-width: 0 !important;
+    }
+
+    /* force the category containers to take minimum space and create overflow */
+    .parent .div1, .parent .div2, .parent .div3, .parent .div4, 
+    .parent .div5, .parent .div6, .parent .div7, .parent .div8 {
+        min-width: 90px !important;
+        flex-shrink: 0 !important;
     }
 
     .div1{

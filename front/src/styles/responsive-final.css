@@ -69,11 +69,3 @@
     height: 64px !important;
   }
 }
-
-/* Ensure touch scrolling remains enabled as a last-resort override */
-@media (max-width: 425px) {
-  .parent {
-    -webkit-overflow-scrolling: touch !important;
-    touch-action: pan-x !important;
-  }
-}

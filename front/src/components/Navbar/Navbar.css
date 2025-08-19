@@ -102,6 +102,7 @@
 @media (max-width: 768px) {
   
   .navbar-toggle {
+    align-self: center;
     display: block;
     color: white;
     cursor: pointer;
