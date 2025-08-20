@@ -63,7 +63,7 @@
     white-space: nowrap;
     overflow-y: hidden;
     padding-top: 16px;
-    padding-bottom: 0px !important;
+    padding-bottom: 16px !important;
     margin-bottom: 0px !important;
     margin-left: clamp(16px, 5vw, 64px);
     margin-right: clamp(16px, 5vw, 64px);

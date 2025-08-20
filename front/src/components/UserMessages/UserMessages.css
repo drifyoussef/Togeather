@@ -1,8 +1,9 @@
 .div-matches {
     display: flex;
-    /* let parent .main-content provide the available space */
+    /* take full available height from parent .main-content */
     flex: 1 1 auto;
     min-height: 0; /* allow shrinking inside a flex parent */
+    height: 100%; /* force full height usage */
     overflow: auto;
 }
 
@@ -72,6 +73,25 @@
 }
 
 .header-messages {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 16px;
+}
+
+.back-arrow {
+    color: #AD0051;
+    cursor: pointer;
+    padding: 4px;
+    border-radius: 50%;
+    transition: background-color 0.2s ease;
+}
+
+.back-arrow:hover {
+    background-color: #470021;
+}
+
+.header-user {
     display: flex;
     align-items: center;
     gap: 8px;
@@ -273,7 +293,7 @@
 .delete-message-icon {
     color: #fff;
     cursor: pointer;
-    font-size: 32px;
+    font-size: 20px;
     transition: color 0.3s ease;
     padding: 8px;
 }

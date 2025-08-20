@@ -4,6 +4,7 @@ import { useFetchUsers } from "../../hooks/useFetchUsers";
 import { UserModel } from "../../models/User.model";
 import { useNavigate, useParams } from "react-router-dom";
 import { MdDelete } from "react-icons/md";
+import { IoArrowBack } from "react-icons/io5";
 import io from "socket.io-client";
 import Swal from "sweetalert2";
 import { IoChatbubbleEllipsesOutline } from "react-icons/io5";
@@ -46,6 +47,8 @@ export default function UserMessages() {
   const [isChatVisible, setIsChatVisible] = useState(false);
   // Charger le message survolé (state par défaut: null)
   const [hoveredMessage, setHoveredMessage] = useState<string | null>(null);
+  // Détecter si on est sur mobile
+  const [isMobile, setIsMobile] = useState(window.innerWidth <= 768);
 
   // State local pour les matchs affichés
   const [displayedMatches, setDisplayedMatches] = useState<UserModel[]>([]);
@@ -56,6 +59,16 @@ export default function UserMessages() {
   useEffect(() => {
     setDisplayedMatches(mutualMatches);
   }, [mutualMatches]);
+
+  // Gérer le redimensionnement pour détecter mobile
+  useEffect(() => {
+    const handleResize = () => {
+      setIsMobile(window.innerWidth <= 768);
+    };
+    
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
 
   // Fonction pour récupérer les messages globaux
   const fetchMessages = async () => {
@@ -171,6 +184,19 @@ export default function UserMessages() {
     navigate(`/messages/${user._id}`);
     setIsChatVisible(true); // Show chat-container on user click
     //console.log(setIsChatVisible, "SETISCHATVISIBLE");
+  };
+
+  // Fonction pour revenir à la liste des matches (mobile)
+  const handleBackToMatches = () => {
+    setIsChatVisible(false);
+    // Ne pas réinitialiser selectedUser ni supprimer selectedUserId
+    // L'utilisateur reste sélectionné visuellement dans la liste
+    // navigate vers /messages avec l'ID pour garder l'URL cohérente
+    if (selectedUser) {
+      navigate(`/messages/${selectedUser._id}`);
+    } else {
+      navigate('/messages');
+    }
   };
 
   useEffect(() => {
@@ -428,15 +454,24 @@ export default function UserMessages() {
         <div className="messages">
           {selectedUser && (
             <div className="header-messages">
-              <img
-                className="profile-picture"
-                src={`${process.env.REACT_APP_API_URL}/${selectedUser.imageUrl}`}
-                alt={`${selectedUser.firstname} ${selectedUser.name}`}
-                onError={handleImageError}
-              />
-              <p className="header-conversation">
-                Conversation avec {selectedUser.firstname}
-              </p>
+              {isMobile && (
+                <IoArrowBack 
+                  className="back-arrow" 
+                  onClick={handleBackToMatches}
+                  size={24}
+                />
+              )}
+              <div className="header-user">
+                <img
+                  className="profile-picture"
+                  src={`${process.env.REACT_APP_API_URL}/${selectedUser.imageUrl}`}
+                  alt={`${selectedUser.firstname} ${selectedUser.name}`}
+                  onError={handleImageError}
+                />
+                <p className="header-conversation">
+                  Conversation avec {selectedUser.firstname}
+                </p>
+              </div>
             </div>
           )}
           <div className="chat-container">
