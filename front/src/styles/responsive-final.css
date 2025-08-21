@@ -19,7 +19,7 @@
 
 /* Prevent match images from stretching and allow natural width */
 .main-content .match-card-image {
-  height: auto !important;
+  height: 64px !important;
   width: auto !important;
   max-width: 100% !important;
   display: block !important;
