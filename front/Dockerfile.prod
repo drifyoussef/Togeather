@@ -5,7 +5,7 @@ WORKDIR /usr/src/app
 
 # Copier les fichiers de dépendances
 COPY package*.json ./
-RUN npm install --legacy-peer-deps
+RUN npm ci --legacy-peer-deps
 
 # Copier le code source
 COPY . .
@@ -15,7 +15,7 @@ ARG REACT_APP_API_URL
 ENV REACT_APP_API_URL=$REACT_APP_API_URL
 
 # Build de production avec plus de mémoire et optimisations
-RUN NODE_OPTIONS="--max-old-space-size=4096" npm run build --production
+RUN NODE_OPTIONS="--max-old-space-size=4096" npm run build
 
 # ✅ ÉTAPE 2 : Serveur Nginx léger
 FROM nginx:alpine
