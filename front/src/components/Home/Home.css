@@ -11,6 +11,7 @@
     justify-content: space-evenly;
     align-content: flex-start;
     flex-wrap: wrap;
+    margin-top: 24px;
     margin-bottom: 24px;
 }
 
@@ -255,6 +256,7 @@
     }
 
     .div-card {
+        margin-top: 24px !important;
         margin-left: 0px;
         margin-right: 0px;
     }
