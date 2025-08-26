@@ -9,6 +9,7 @@ import Card from "../Card/Card";
 import { useFetchUsers } from "../../hooks/useFetchUsers";
 import "./Home.css";
 import { useImageFallback } from "../../hooks/useImageFallback";
+import defaultImage from "../../images/default-image.png";
 
 // Catégories disponibles
 type Category =
@@ -230,11 +231,11 @@ export default function Home() {
                 }
                 imageUrl={
                   user.imageUrl ||
-                  "https://www.w3schools.com/w3images/avatar2.png"
+                  defaultImage
                 } // Image par défaut si non disponible
                 image={
                   user.imageUrl ||
-                  "https://www.w3schools.com/w3images/avatar2.png"
+                  defaultImage
                 } // Image par défaut si non disponible
                 text={`${user.firstname}, ${user.age} ans`}
                 job={user.job}

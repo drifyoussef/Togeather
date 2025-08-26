@@ -6,6 +6,7 @@ import { MdEdit } from "react-icons/md";
 import { FaEdit } from "react-icons/fa";
 import Swal from "sweetalert2";
 import { useImageFallback } from "../../hooks/useImageFallback";
+import defaultImage from "../../images/default-image.png";
 
 const Profile: React.FC = () => {
   const [user, setUser] = useState<UserModel>();
@@ -316,7 +317,7 @@ const Profile: React.FC = () => {
           ) : (
             <div className="user-img-profile-container">
               <img
-                src="https://www.w3schools.com/w3images/avatar2.png"
+                src={defaultImage}
                 alt="default-userimage"
                 className="profileImageIcon"
               />

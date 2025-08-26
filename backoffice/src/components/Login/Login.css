@@ -57,7 +57,7 @@ button:hover {
   background-color: #470021;
 }
 
-@media only screen and (max-width: 320px), only screen and (max-width: 375px), only screen and (max-width: 425px)  {
+@media only screen and (max-width: 320px), only screen and (max-width: 375px), only screen and (max-width: 435px)  {
 
 form{
   width: 230px;

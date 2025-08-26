@@ -7,9 +7,10 @@ import React, {
 import { registerUser } from "../../services/userService";
 import "./Register.css";
 import { RxCross2 } from "react-icons/rx";
-import { FaEdit } from "react-icons/fa";
+import { FaEdit, FaEye, FaEyeSlash } from "react-icons/fa";
 import { useNavigate } from "react-router-dom";
 import Modal from "react-modal";
+import defaultImage from "../../images/default-image.png";
 
 const Register: React.FC = () => {
   const navigate = useNavigate();
@@ -30,6 +31,7 @@ const Register: React.FC = () => {
   const [imageUrl, setImageUrl] = useState<string>(""); // Add state for image URL
   const [imageFile, setImageFile] = useState<File | null>(null); // Add state for image file
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [showPassword, setShowPassword] = useState(false);
 
   // Fonction pour calculer l'âge à partir de la date de naissance
   const calcAge = useCallback((birthdate: string): number => {
@@ -218,7 +220,7 @@ const Register: React.FC = () => {
           ) : (
             <div className="user-img-profile-container">
               <img
-                src="https://www.w3schools.com/w3images/avatar2.png"
+                src={defaultImage}
                 alt="default-userimage"
                 className="profileImageIcon"
               />
@@ -266,13 +268,22 @@ const Register: React.FC = () => {
           </label>
           <label>
             Mot de passe:
-            <input
-              type="password"
-              name="password"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              required
-            />
+            <div className="password-input-container">
+              <input
+                type={showPassword ? "text" : "password"}
+                name="password"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                required
+              />
+              <button
+                type="button"
+                className="password-toggle-btn"
+                onClick={() => setShowPassword(!showPassword)}
+              >
+                {showPassword ? <FaEyeSlash /> : <FaEye />}
+              </button>
+            </div>
           </label>
         </div>
         <label>

@@ -76,7 +76,7 @@
     width: max-content;
 }
 
-@media only screen and (max-width: 320px), only screen and (max-width: 375px), only screen and (max-width: 425px) {
+@media only screen and (max-width: 320px), only screen and (max-width: 375px), only screen and (max-width: 435px) {
     .card{
         width: 130px;
         height: 226px;
@@ -137,7 +137,7 @@
     }
 }
 
-@media only screen and (max-width: 425px) {
+@media only screen and (max-width: 435px) {
     .card-text {
         font-size: 14px;
     }

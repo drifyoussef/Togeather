@@ -335,7 +335,7 @@
 
 }
 
-@media only screen and (max-width: 320px), only screen and (max-width: 375px), only screen and (max-width: 425px)  {
+@media only screen and (max-width: 320px), only screen and (max-width: 375px), only screen and (max-width: 435px)  {
 
 .left .bubble {
     margin-left: 0px;
@@ -366,15 +366,22 @@
 
 }
 
-@media only screen and (min-width: 320px) and (max-width: 375px){
+@media only screen and (min-width: 380px) and (max-width: 390px){
+    .send-message {
+        width: 22%;
+    }
+
+}
+
+@media only screen and (min-width: 320px) and (max-width: 400px){
     .bubble-type-div {
         margin-bottom: 24px;
     }
 
     .message.right {
-    flex-flow: row-reverse;
-    align-self: flex-end;
-    margin-right: 16px;
+        flex-flow: row-reverse;
+        align-self: flex-end;
+        margin-right: 24px;
     }
 
 }
@@ -388,5 +395,54 @@
 @media only screen and (min-width: 1024px){
     .box-match {
         width: 250px;
+    }
+
+    .message.right {
+        flex-flow: row-reverse;
+        align-self: flex-end;
+        margin-right: 8px;
+    }
+}
+
+/* Petites tablettes */
+@media only screen and (min-width: 436px) and (max-width: 720px) {
+    .left .bubble {
+        margin-left: 0px;
+    }
+
+    .right .bubble {
+        margin-right: 0px;
+    }
+
+    .chat-container {
+        padding: 8px;
+    }
+
+    .box-match, .message {
+        width: 100%;
+    }
+
+    .box-match.hidden {
+        display: none;
+    }
+
+    .message.right {
+        flex-flow: row-reverse;
+        align-self: flex-end;
+        margin-right: 16px;
+    }
+
+    .send-message {
+        padding: 8px;
+        width: 22%;
+    }
+
+    .bubble-type-div {
+        padding: 12px;
+        margin-bottom: 16px;
+    }
+
+    .box-match {
+        width: 100%;
     }
 }

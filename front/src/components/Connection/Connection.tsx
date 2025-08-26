@@ -9,19 +9,21 @@ export default function Connexion() {
   const navigate = useNavigate();
 
   return (
-    <div>
+    <div className="container-connection">
       <div className="top-container">
         <p className="p1-connection">Let's eat together</p>
         <p className="p2-connection">Mangeons ensemble</p>
       </div>
       <div className="div-container-connection">
         <div className="content-container">
-          <p className="text-meeting-connection">
-            Rencontrez des gens autour d'un bon repas
-          </p>
-          <p className="text-meeting-connection-lower">
-            Discutez avec des personnes pour faire des rencontres amicales
-          </p>
+          <div className="text-container">
+            <p className="text-meeting-connection">
+              Rencontrez des gens autour d'un bon repas
+            </p>
+            <p className="text-meeting-connection-lower">
+              Discutez avec des personnes pour faire des rencontres amicales
+            </p>
+          </div>
           <div className="bottom-container">
             <button onClick={() => {
               navigate("/auth/login");
@@ -32,12 +34,14 @@ export default function Connexion() {
           </div>
         </div>
         <div className="image-container">
-          <div className="image-bg"></div>
-          <img
-            className="image-connection"
-            src={connectionBackground}
-            alt="Connection"
-          />
+          <div className="image-wrapper">
+            <div className="image-bg"></div>
+            <img
+              className="image-connection"
+              src={connectionBackground}
+              alt="Connection"
+            />
+          </div>
         </div>
       </div>
     </div>

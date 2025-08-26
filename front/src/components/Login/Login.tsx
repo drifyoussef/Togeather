@@ -2,12 +2,14 @@ import React, { useState } from "react";
 import "./Login.css";
 import { useNavigate } from "react-router-dom";
 import Swal from "sweetalert2";
+import { FaEye, FaEyeSlash } from "react-icons/fa";
 
 const Login: React.FC = () => {
   // Email et mot de passe
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
+  const [showPassword, setShowPassword] = useState(false);
   // Email non confirmé (par défaut: false)
   const [emailNotConfirmed, setEmailNotConfirmed] = useState(false);
   const navigate = useNavigate();
@@ -149,14 +151,23 @@ const Login: React.FC = () => {
         </label>
         <label htmlFor="password">
           Mot de passe:
-          <input
-            type="password"
-            id="password"
-            name="password"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-            required
-          />
+          <div className="password-input-container">
+            <input
+              type={showPassword ? "text" : "password"}
+              id="password"
+              name="password"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              required
+            />
+            <button
+              type="button"
+              className="password-toggle-btn"
+              onClick={() => setShowPassword(!showPassword)}
+            >
+              {showPassword ? <FaEyeSlash /> : <FaEye />}
+            </button>
+          </div>
         </label>
         {error && <p className="error">{error}</p>}
         <button type="submit">Se connecter</button>

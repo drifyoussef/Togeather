@@ -33,12 +33,6 @@ body, #root {
 /* safety: ensure no pseudo-element creates extra height */
 .main-content::after { content: ""; display: block; height: 0; }
 
-/* Safety: ensure the last element inside main-content doesn't create bottom gap */
-.main-content > *:last-child {
-  margin-bottom: 0 !important;
-  padding-bottom: 0 !important;
-}
-
 /* Footer & safe space variables */
 :root {
   --footer-height: 64px; /* adjust if your footer height differs */

@@ -6,6 +6,7 @@
   min-height: 0;
   overflow: auto;
   flex-direction: column;
+  height: 100%;
 }
 
 form {
@@ -41,6 +42,32 @@ input[type="password"] {
   border: 1px solid #ccc;
   border-radius: 4px;
   box-sizing: border-box;
+}
+
+.password-input-container {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.password-input-container input {
+  padding-right: 40px;
+}
+
+.password-toggle-btn {
+  position: absolute;
+  right: 10px;
+  background: none;
+  border: none;
+  cursor: pointer;
+  color: #AD0051;
+  padding: 0;
+  margin: 0;
+  width: auto;
+  height: auto;
+  font-size: 16px;
+  z-index: 1;
+  margin-top: 8px;
 }
 
 button {
@@ -94,7 +121,7 @@ button:hover {
   background: transparent;
 }
 
-@media only screen and (max-width: 320px), only screen and (max-width: 375px), only screen and (max-width: 425px)  {
+@media only screen and (max-width: 320px), only screen and (max-width: 375px), only screen and (max-width: 435px)  {
 
 form{
   width: 230px;

@@ -71,3 +71,13 @@
 .icon-heart-profile.not-liked {
   color: white;
 }
+
+@media only screen and (max-width: 320px), only screen and (max-width: 375px), only screen and (max-width: 435px), only screen and (min-height: 500px) and (max-height: 700px) {
+  .user-profile {
+    padding-top: 32px;
+  }
+
+  .like-button {
+    margin-bottom: 48px;
+  }
+}

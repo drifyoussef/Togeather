@@ -190,7 +190,7 @@
 }
 
 
-@media only screen and (max-width: 320px), only screen and (max-width: 375px), only screen and (max-width: 425px)  {
+@media only screen and (max-width: 320px), only screen and (max-width: 375px), only screen and (max-width: 435px)  {
     .parent {
         flex-wrap: nowrap;
         gap: 16px;
