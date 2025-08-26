@@ -5,7 +5,6 @@
 
 /* Broad overrides for common components */
 .main-content .user-card,
-.main-content .match-card-image,
 .main-content .profile-box,
 .main-content .register-panel,
 .main-content .banner,
@@ -14,16 +13,6 @@
   height: auto !important;
   min-height: 0 !important;
   max-height: 70vh !important;
-}
-
-/* Prevent match images from stretching and allow natural width */
-.main-content .match-card-image {
-  height: 64px !important;
-  width: auto !important;
-  max-width: 100% !important;
-  display: block !important;
-  margin-left: auto !important;
-  margin-right: auto !important;
 }
 
 /* Ensure small avatar/user-card keep square aspect and minimum size on mobile */
