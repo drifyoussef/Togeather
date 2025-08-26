@@ -4,7 +4,6 @@
 */
 
 /* Broad overrides for common components */
-.main-content .user-card,
 .main-content .profile-box,
 .main-content .register-panel,
 .main-content .banner,
@@ -13,13 +12,6 @@
   height: auto !important;
   min-height: 0 !important;
   max-height: 70vh !important;
-}
-
-/* Ensure small avatar/user-card keep square aspect and minimum size on mobile */
-.main-content .user-card {
-  width: auto !important;
-  height: auto !important;
-  display: inline-block !important;
 }
 
 .main-content .user-image {
