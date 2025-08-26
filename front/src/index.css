@@ -13,6 +13,36 @@ html, body, #root {
   min-height: 100%;
   margin: 0;
   padding: 0;
+  overflow-x: hidden;
+}
+
+/* Correction spécifique pour iOS Safari mobile uniquement */
+@supports (-webkit-touch-callout: none) {
+  @media (max-width: 768px) {
+    html, body, #root {
+      height: 100vh;
+      min-height: 100vh;
+      overflow: hidden;
+    }
+    
+    /* Empêche le scroll élastique sur iOS mobile */
+    body {
+      position: fixed;
+      width: 100%;
+      overflow: hidden;
+    }
+    
+    #root {
+      overflow-y: auto;
+      overflow-x: hidden;
+      -webkit-overflow-scrolling: touch;
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+    }
+  }
 }
 
 body {
@@ -50,4 +80,21 @@ code {
   background: #470021 !important;
   color: #fff !important;
   border: 2px solid #470021 !important;
+}
+
+/* Corrections pour iOS mobile uniquement - Empêche le scroll élastique et le débordement */
+@supports (-webkit-touch-callout: none) {
+  @media (max-width: 768px) {
+    /* Empêche le bounce scroll sur iOS mobile */
+    body {
+      overscroll-behavior: none;
+      -webkit-overflow-scrolling: touch;
+    }
+    
+    /* Force les conteneurs à ne pas dépasser la viewport sur mobile */
+    * {
+      -webkit-box-sizing: border-box;
+      box-sizing: border-box;
+    }
+  }
 }

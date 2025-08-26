@@ -4,6 +4,19 @@
   min-height: 100vh; /* ensure app fills viewport so footer can sit at bottom */
 }
 
+/* Correction spécifique pour iOS mobile uniquement */
+@supports (-webkit-touch-callout: none) {
+  @media (max-width: 768px) {
+    .App {
+      height: 100vh;
+      min-height: 100vh;
+      max-height: 100vh;
+      overflow: hidden;
+      position: relative;
+    }
+  }
+}
+
 /* body/#root shouldn't be flex containers here; keep overflow-x hidden globally in index.css if needed */
 body, #root {
   min-height: 100%;
@@ -18,10 +31,23 @@ body, #root {
 .main-content {
   /* main should take the middle grid row and scroll internally if needed */
   grid-row: 2 / 3;
-  overflow: visible; /* remove internal scroll */
+  overflow: visible; /* Comportement normal pour desktop */
   min-height: 0; /* allow internal children to shrink */
   box-sizing: border-box;
   padding-bottom: 0; /* let body/root handle footer spacing if needed */
+}
+
+/* Correction spécifique pour iOS mobile uniquement */
+@supports (-webkit-touch-callout: none) {
+  @media (max-width: 768px) {
+    .main-content {
+      overflow-y: auto;
+      overflow-x: hidden;
+      -webkit-overflow-scrolling: touch;
+      height: 100%;
+      max-height: 100%;
+    }
+  }
 }
 
 /* Prevent direct children from growing and creating empty space under the footer */
