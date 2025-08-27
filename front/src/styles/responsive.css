@@ -4,7 +4,7 @@
 */
 
 /* Responsive circle size using clamp: min 48px, preferred 7vw, max 100px */
-.circle, .circle-match-home {
+.circle {
   width: clamp(48px, 7vw, 100px) !important;
   height: clamp(48px, 7vw, 100px) !important;
   border-radius: 50%;
