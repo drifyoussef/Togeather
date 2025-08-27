@@ -44,7 +44,7 @@
 
 /* Limit hero/circle sizes more aggressively on tiny screens */
 @media (max-width: 420px) {
-  .main-content .circle, .main-content .circle-match-home {
+  .main-content .circle {
     width: 64px !important;
     height: 64px !important;
   }

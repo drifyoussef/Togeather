@@ -36,8 +36,3 @@
   .p1-home { font-size: 20px; }
   .p2-home { font-size: 14px; }
 }
-
-/* Small screens: keep clamp but reduce max to avoid oversized circles on tiny devices */
-@media (max-width: 420px) {
-  .circle, .circle-match-home { width: clamp(44px, 14vw, 70px) !important; height: clamp(44px, 14vw, 70px) !important; }
-}
