@@ -10,7 +10,8 @@
 }
 
 .user-profile-image {
-  height: clamp(100px, 18vw, 150px);
+  height: clamp(100px, 30vw, 150px);
+  width: clamp(100px, 30vw, 150px);
   border-radius: 50%;
   object-fit: cover;
   margin-bottom: 20px;
