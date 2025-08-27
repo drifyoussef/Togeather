@@ -363,7 +363,7 @@
 .message.right {
     flex-flow: row-reverse;
     align-self: flex-end;
-    margin-right: 16px;
+    margin-right: 20px;
 }
 
 
