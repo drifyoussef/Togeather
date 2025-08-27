@@ -14,13 +14,8 @@ COPY . .
 ARG REACT_APP_API_URL
 ENV REACT_APP_API_URL=$REACT_APP_API_URL
 
-# Nettoyer le cache et optimiser avant le build
-RUN npm cache clean --force
-
-# Build de production avec plus de mémoire (4GB) et optimisations
-RUN NODE_OPTIONS="--max-old-space-size=4096 --max-semi-space-size=512" \
-    GENERATE_SOURCEMAP=false \
-    npm run build
+# Build de production avec plus de mémoire
+RUN NODE_OPTIONS="--max-old-space-size=2048" npm run build
 
 # ✅ ÉTAPE 2 : Serveur Nginx léger
 FROM nginx:alpine
