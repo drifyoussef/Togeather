@@ -18,6 +18,7 @@ export default defineConfig(({ mode }) => {
     build: {
       outDir: 'dist',
       assetsDir: 'assets',
+      sourcemap: false,
       rollupOptions: {
         output: {
           manualChunks: undefined,
@@ -27,24 +28,6 @@ export default defineConfig(({ mode }) => {
     server: {
       port: 3001,
       host: true,
-      allowedHosts: [
-        'localhost',
-        '127.0.0.1',
-        'togeather.fr',
-        'www.togeather.fr'
-      ],
-      headers: {
-        'Access-Control-Allow-Origin': '*',
-        'Access-Control-Allow-Methods': 'GET, POST, PUT, DELETE, OPTIONS',
-        'Access-Control-Allow-Headers': 'Content-Type, Authorization',
-      },
-    },
-    preview: {
-      port: 3001,
-      host: true,
-      headers: {
-        'Cache-Control': 'no-cache',
-      },
     },
     plugins: [react()],
   };
