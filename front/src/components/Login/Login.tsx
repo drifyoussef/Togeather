@@ -3,6 +3,8 @@ import "./Login.css";
 import { useNavigate } from "react-router-dom";
 import Swal from "sweetalert2";
 import { FaEye, FaEyeSlash } from "react-icons/fa";
+import { errorMessages, translateBackendError } from "../../utils/errorMessages";
+import ErrorMessage from "../ErrorMessage/ErrorMessage";
 
 const Login: React.FC = () => {
   // Email et mot de passe
@@ -52,7 +54,8 @@ const Login: React.FC = () => {
         const contentType = response.headers.get("content-type");
         if (contentType && contentType.includes("application/json")) {
           const errorData = await response.json();
-          setError(errorData.message);
+          const translatedError = translateBackendError(errorData.message || errorMessages.loginError);
+          setError(translatedError);
 
           // Vérifier si l'utilisateur est banni et rediriger
           if (response.status === 403) {
@@ -104,7 +107,7 @@ const Login: React.FC = () => {
         } else {
           // Si la réponse n'est pas du JSON (ex: erreur serveur HTML)
           const text = await response.text();
-          setError("Erreur serveur: " + text);
+          setError(`${errorMessages.serverError}: ${text}`);
           console.error("Erreur serveur:", text);
         }
       } else {
@@ -131,7 +134,7 @@ const Login: React.FC = () => {
     } catch (error) {
       // Erreur lors de la connexion de l'utilisateur
       console.error("Error:", error);
-      setError("Erreur lors du login.");
+      setError(errorMessages.loginError);
     }
   };
 
@@ -169,7 +172,7 @@ const Login: React.FC = () => {
             </button>
           </div>
         </label>
-        {error && <p className="error">{error}</p>}
+        {error && <ErrorMessage error={error} onClose={() => setError("")} />}
         <button type="submit">Se connecter</button>
       </form>
       <div className="no-account">

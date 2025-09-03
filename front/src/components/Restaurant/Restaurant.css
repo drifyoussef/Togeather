@@ -45,7 +45,33 @@
     flex-flow: column;
 }
 
+.div-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    margin: auto;
+    height: 100% !important;
+}
+
 .weekday-text{
     list-style: none;
     margin-left: 16px;
+}
+
+@media only screen and (max-width: 1024px) {
+    .browse-container {
+        flex-wrap: nowrap;
+        gap: 16px;
+        overflow-x: auto;
+        overflow-y: hidden !important;
+        -webkit-overflow-scrolling: touch;
+        touch-action: pan-x;
+        justify-content: flex-start !important;
+        scroll-snap-type: x proximity;
+        padding-inline: 12px;
+        box-sizing: border-box;
+        width: 100% !important;
+        max-width: 100vw !important;
+    }
 }

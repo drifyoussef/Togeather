@@ -1,14 +1,13 @@
 .browse-container {
   border-radius: 8px;
-  padding: 16px;
   display: flex;
-  justify-content: space-between;
-  align-items: center;
+  justify-content: space-around;
+  margin-bottom: 24px;
 }
 
 .browse-div {
   flex: 1 1 auto; /* let parent control available space */
-  min-height: 0;  /* allow shrinking inside flex parent */
+  min-height: 0; /* allow shrinking inside flex parent */
   overflow: auto;
 }
 
@@ -38,7 +37,14 @@
   text-align: center;
 }
 
-.divAsiatique, .divPizza, .divPoulet, .divSandwich, .divBurger, .divGlaces, .divBoissons, .divMexicain {
+.divAsiatique,
+.divPizza,
+.divPoulet,
+.divSandwich,
+.divBurger,
+.divGlaces,
+.divBoissons,
+.divMexicain {
   margin-top: 4px;
 }
 
@@ -63,6 +69,9 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
+  gap: 16px;
+  height: 100px;
+  align-items: flex-start;
 }
 
 .header-container-title {
@@ -81,7 +90,7 @@
 }
 
 .icon-heart {
-  color: #AD0051;
+  color: #ad0051;
 }
 
 .icon-category {
@@ -101,7 +110,7 @@
 }
 
 .active .circle {
-  background-color: #AD0051;
+  background-color: #ad0051;
 }
 
 .active .icon-category {
@@ -110,22 +119,25 @@
 
 .active .p-category {
   font-weight: bold;
-  color: #AD0051;
+  color: #ad0051;
+}
+
+.popular-restaurants {
+  margin-top: 32px;
 }
 
 @media only screen and (max-width: 1440px) {
-
-  .divAsiatique{
+  .divAsiatique {
     margin-left: 16px;
   }
 
-  .divBoissons{
-  margin-right: 16px;
+  .divBoissons {
+    margin-right: 16px;
   }
 }
 
 @media (max-width: 768px) {
-  .header-container{
+  .header-container {
     margin-top: 24px;
   }
 
@@ -143,17 +155,23 @@
     overflow-y: auto;
   }
 
-  .divAsiatique{
+  .divAsiatique {
     margin-left: 16px;
   }
 
-  .divFast{
+  .divFast {
     margin-right: 16px;
   }
 
-  .browse-name, .open-status {
+  .browse-name,
+  .open-status {
     font-size: 15px;
   }
+}
 
-  
+@media only screen and (max-width: 1440px) {
+  .header-container {
+    margin-left: clamp(16px, 5vw, 0px);
+    font-size: 20px;
+  }
 }

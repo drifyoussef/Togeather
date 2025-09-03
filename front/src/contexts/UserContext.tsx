@@ -1,6 +1,7 @@
 import React, { createContext, useContext, useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { UserModel } from "../models/User.model";
+import { errorMessages } from "../utils/errorMessages";
 
 interface UserContextProps {
   user: UserModel | null;
@@ -24,7 +25,7 @@ export const UserProvider: React.FC<{ children: React.ReactNode }> = ({ children
     const fetchUser = async () => {
       const token = localStorage.getItem("token");
       if (!token) {
-        setError("No token found");
+        setError(errorMessages.noTokenFound);
         setLoading(false);
         return;
       }
@@ -50,10 +51,10 @@ export const UserProvider: React.FC<{ children: React.ReactNode }> = ({ children
             setUser(userData);
           }
         } else {
-          setError("Failed to fetch user data");
+          setError(errorMessages.fetchUserDataError);
         }
       } catch (err) {
-        setError("An error occurred while fetching user data");
+        setError(errorMessages.fetchUserDataError);
       } finally {
         setLoading(false);
       }

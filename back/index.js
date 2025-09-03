@@ -568,6 +568,14 @@ let fetch;
   app.get("/api/restaurants", async (req, res) => {
     try {
       const { location, radius, keyword } = req.query;
+      
+      // Vérifier si la clé Google API est configurée
+      if (!process.env.GOOGLE_API_KEY) {
+        return res.status(500).json({ 
+          error: "Google API Key not configured. Please set GOOGLE_API_KEY environment variable." 
+        });
+      }
+
       let url = `https://maps.googleapis.com/maps/api/place/nearbysearch/json?location=${location}&radius=${radius}&type=restaurant`;
       if (keyword) {
         url += `&keyword=${keyword}`;
@@ -576,6 +584,14 @@ let fetch;
 
       const response = await fetch(url);
       const data = await response.json();
+
+      // Vérifier si l'API Google a retourné une erreur
+      if (data.status !== "OK") {
+        return res.status(400).json({ 
+          error: `Google Places API error: ${data.status}`,
+          details: data.error_message || "Unknown error"
+        });
+      }
 
       // Limiter les résultats à 4 restaurants
       const limitedResults = data.results.slice(0, 4);

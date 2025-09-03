@@ -11,6 +11,8 @@ import { FaEdit, FaEye, FaEyeSlash } from "react-icons/fa";
 import { useNavigate } from "react-router-dom";
 import Modal from "react-modal";
 import defaultImage from "../../images/default-image.png";
+import { errorMessages, translateBackendError } from "../../utils/errorMessages";
+import ErrorMessage from "../ErrorMessage/ErrorMessage";
 
 const Register: React.FC = () => {
   const navigate = useNavigate();
@@ -80,17 +82,17 @@ const Register: React.FC = () => {
     event.preventDefault();
     // Si les conditions ne sont pas acceptées ou l'âge est inférieur à 18 ans ou aucun fichier image n'est sélectionné ne pas soumettre le formulaire
     if (!termsAccepted) {
-      setError("Vous devez accepter la politique de confidentialité.");
+      setError(errorMessages.termsNotAccepted);
       return;
     }
     const age = calcAge(birthdate);
     if (age < 18) {
-      setError("Vous devez avoir au moins 18 ans pour vous inscrire.");
+      setError(errorMessages.ageRestriction);
       return;
     }
 
     if (!imageFile) {
-      setError("Vous devez ajouter une image de profil.");
+      setError(errorMessages.profileImageRequired);
       console.error("No file selected");
       return;
     }
@@ -134,12 +136,13 @@ const Register: React.FC = () => {
         // Rediriger l'utilisateur vers la page de connexion
         navigate("/auth/login");
       } else {
-        throw new Error("Error registering user");
+        throw new Error(errorMessages.registrationError);
       }
     } catch (error) {
       // Gérer les erreurs d'inscription
       console.error("Error registering user:", error);
-      setError("An error occurred during registration.");
+      const translatedError = error instanceof Error ? translateBackendError(error.message) : errorMessages.registrationError;
+      setError(translatedError);
     }
   };
 
@@ -436,7 +439,7 @@ const Register: React.FC = () => {
           </div>
         </div>
 
-        {error && <p className="error">{error}</p>}
+        {error && <ErrorMessage error={error} onClose={() => setError("")} />}
         <button type="submit">
           Créer un compte
         </button>

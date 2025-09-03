@@ -41,7 +41,7 @@ const Browse: React.FC = () => {
 
   const fetchRestaurants = async (category: string) => {
     const token = localStorage.getItem("token");
-    const location = "46.5151961,-1.778677"; // Coordonnées des Sables d'Olonne
+    const location = "48.8566,2.3522"; // Coordonnées de Paris pour test
     const radius = 3000; // Rayon de recherche en mètres (3000m = 3km)
 
     try {
@@ -56,8 +56,8 @@ const Browse: React.FC = () => {
         Boissons: "cafe",
       };
 
-      let url = `${process.env.REACT_APP_API_URL}/api/restaurants?location=${location}&radius=${radius}&keyword=${keywordMap[category]}`;
-      //console.log(`Fetching restaurants with URL: ${url}`);
+      let url = `${process.env.REACT_APP_API_URL}/restaurants?location=${location}&radius=${radius}&keyword=${keywordMap[category]}`;
+      console.log(`Fetching restaurants with URL: ${url}`);
 
       const response = await fetch(url, {
         headers: {
@@ -71,12 +71,12 @@ const Browse: React.FC = () => {
       }
 
       const data: { results: Restaurant[] } = await response.json();
-      //console.log(`API response data:`, data);
+      console.log(`API response data:`, data);
 
       // Trier les restaurants par note décroissante et limiter les résultats à 4 restaurants
       const sortedRestaurants = data.results.sort((a, b) => b.rating - a.rating).slice(0, 4);
       setRestaurants(sortedRestaurants);
-      //console.log(`Nombre de restaurants affichés pour la catégorie ${category}: ${sortedRestaurants.length}`);
+      console.log(`Nombre de restaurants affichés pour la catégorie ${category}: ${sortedRestaurants.length}`);
     } catch (error) {
       console.error("Error fetching restaurants: ", error);
     }
@@ -139,7 +139,7 @@ const Browse: React.FC = () => {
           ))}
         </div>
       </div>
-      <div>
+      <div className="popular-restaurants">
         <div className="header-container">
           <h1 className="header-container-title">Les plus populaires à proximité</h1>
           <PiStarFill className="icon-title" />

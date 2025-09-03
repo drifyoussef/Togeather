@@ -1,4 +1,6 @@
 // src/services/userService.js
+import { errorMessages } from '../utils/errorMessages';
+
 export const registerUser = async (userData) => {
     // Methode POST pour envoyer les données de l'utilisateur lors de son inscription
     try {
@@ -13,7 +15,7 @@ export const registerUser = async (userData) => {
         // Si la réponse n'est pas ok, on renvoie une erreur
         if (!response.ok) {
             const error = await response.json();
-            throw new Error(error.message || 'Erreur lors de l\'enregistrement');
+            throw new Error(error.message || errorMessages.registrationError);
         }
 
         // Sinon, on renvoie les données de la réponse
@@ -21,7 +23,7 @@ export const registerUser = async (userData) => {
         //console.log('REPONSE DU REGISTER:', data); // Log the response to check if the token is present
         return data;
     } catch (error) {
-        console.error('Erreur lors de l\'enregistrement', error);
+        console.error(errorMessages.registrationError, error);
         throw error;
     }
 };

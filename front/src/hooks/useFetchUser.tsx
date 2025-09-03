@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import { UserModel } from "../models/User.model";
+import { errorMessages } from "../utils/errorMessages";
 
 export const useFetchUser = () => {
   const [user, setUser] = useState<UserModel | null>(null);
@@ -10,7 +11,7 @@ export const useFetchUser = () => {
     const fetchUser = async () => {
       const token = localStorage.getItem("token");
       if (!token) {
-        setError("No token found");
+        setError(errorMessages.noTokenFound);
         setLoading(false);
         return;
       }
@@ -27,10 +28,10 @@ export const useFetchUser = () => {
           const userData: UserModel = await response.json();
           setUser(userData);
         } else {
-          setError("Failed to fetch user data");
+          setError(errorMessages.fetchUserDataError);
         }
       } catch (err) {
-        setError("An error occurred while fetching user data");
+        setError(errorMessages.fetchUserDataError);
       } finally {
         setLoading(false);
       }
