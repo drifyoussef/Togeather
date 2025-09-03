@@ -1,4 +1,4 @@
-FROM node:20 AS builder
+FROM node:20
 
 WORKDIR /usr/src/app
 
@@ -8,17 +8,6 @@ RUN npm install --legacy-peer-deps
 
 COPY . .
 
-RUN npm run build
-
-# Production stage with nginx
-FROM nginx:alpine
-
-# Copy built files to nginx
-COPY --from=builder /usr/src/app/dist /usr/share/nginx/html
-
-# Copy nginx configuration
-COPY nginx.conf /etc/nginx/conf.d/default.conf
-
 EXPOSE 3001
 
-CMD ["nginx", "-g", "daemon off;"]
+CMD ["npm", "run", "dev"]
