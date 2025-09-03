@@ -28,6 +28,12 @@ export default defineConfig(({ mode }) => {
     server: {
       port: 3001,
       host: true,
+      allowedHosts: [
+        'localhost',
+        '127.0.0.1',
+        'togeather.fr',
+        'www.togeather.fr'
+      ],
     },
     plugins: [react()],
   };
