@@ -14,7 +14,7 @@ export default defineConfig(({ mode }) => {
         // Add other environment variables here as needed
       },
     },
-    base: '/',
+    base: mode === 'production' ? '/' : '/',
     build: {
       outDir: 'dist',
       assetsDir: 'assets',
@@ -22,6 +22,9 @@ export default defineConfig(({ mode }) => {
       rollupOptions: {
         output: {
           manualChunks: undefined,
+          assetFileNames: 'assets/[name].[hash][extname]',
+          chunkFileNames: 'assets/[name].[hash].js',
+          entryFileNames: 'assets/[name].[hash].js',
         },
       },
     },
