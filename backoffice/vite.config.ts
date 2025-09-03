@@ -14,6 +14,16 @@ export default defineConfig(({ mode }) => {
         // Add other environment variables here as needed
       },
     },
+    base: '/',
+    build: {
+      outDir: 'dist',
+      assetsDir: 'assets',
+      rollupOptions: {
+        output: {
+          manualChunks: undefined,
+        },
+      },
+    },
     server: {
       port: 3001,
       host: true,
@@ -23,6 +33,18 @@ export default defineConfig(({ mode }) => {
         'togeather.fr',
         'www.togeather.fr'
       ],
+      headers: {
+        'Access-Control-Allow-Origin': '*',
+        'Access-Control-Allow-Methods': 'GET, POST, PUT, DELETE, OPTIONS',
+        'Access-Control-Allow-Headers': 'Content-Type, Authorization',
+      },
+    },
+    preview: {
+      port: 3001,
+      host: true,
+      headers: {
+        'Cache-Control': 'no-cache',
+      },
     },
     plugins: [react()],
   };
