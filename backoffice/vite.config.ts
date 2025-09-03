@@ -14,7 +14,7 @@ export default defineConfig(({ mode }) => {
         // Add other environment variables here as needed
       },
     },
-    base: mode === 'production' ? '/backoffice/' : '/backoffice/',
+    base: '/',
     build: {
       outDir: 'dist',
       assetsDir: 'assets',
@@ -34,6 +34,8 @@ export default defineConfig(({ mode }) => {
         'togeather.fr',
         'www.togeather.fr'
       ],
+      middlewareMode: false,
+      cors: true,
     },
     plugins: [react()],
   };
