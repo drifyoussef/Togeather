@@ -5,8 +5,11 @@ import Navbar from "./components/Navbar/Navbar.tsx";
 import './App.css';
 
 function App() {
+  // Détermine le basename selon l'environnement
+  const basename = process.env.NODE_ENV === 'production' ? '/backoffice' : '';
+  
   return (
-    <Router>
+    <Router basename={basename}>
       <Navbar />
       <Routes>
         <Route path="/auth/admin/login" element={<Login />} />
