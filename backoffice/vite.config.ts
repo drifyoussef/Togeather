@@ -14,7 +14,7 @@ export default defineConfig(({ mode }) => {
         // Add other environment variables here as needed
       },
     },
-    base: mode === 'production' ? '/backoffice/' : '/',
+    base: '/',
     build: {
       outDir: 'dist',
       assetsDir: 'assets',
