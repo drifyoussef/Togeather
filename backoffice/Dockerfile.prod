@@ -27,20 +27,21 @@ FROM nginx:alpine
 # Copier les fichiers buildés
 COPY --from=builder /usr/src/app/dist /usr/share/nginx/html
 
-# Configuration nginx pour SPA
+# Configuration nginx pour SPA avec base path /backoffice/
 RUN echo 'server { \
     listen 3001; \
     server_name localhost; \
     root /usr/share/nginx/html; \
     index index.html; \
     \
-    # Handle SPA routing \
+    # Handle SPA routing - all requests go to index.html \
     location / { \
         try_files $uri $uri/ /index.html; \
     } \
     \
     # Handle static assets with proper MIME types \
-    location /assets/ { \
+    location /backoffice/assets/ { \
+        alias /usr/share/nginx/html/assets/; \
         expires 1y; \
         add_header Cache-Control "public, immutable"; \
         add_header Access-Control-Allow-Origin "*"; \
