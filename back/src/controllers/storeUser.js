@@ -5,8 +5,16 @@ module.exports = async (req, res) => {
         // Création de l'utilisateur
         const user = await User.create(req.body)
         console.log(`success User created ${user}`);
-        // Redirection vers la page home
-        res.redirect('/')
+        // Return JSON response instead of redirect for API calls
+        res.status(201).json({ 
+            message: "Utilisateur créé avec succès",
+            user: {
+                id: user._id,
+                email: user.email,
+                name: user.name,
+                firstname: user.firstname
+            }
+        });
     } catch (error) {
         console.log(JSON.stringify(error));
 
@@ -26,10 +34,8 @@ module.exports = async (req, res) => {
         }
 
 
-       const validationErrors = Object.keys(error.errors || {}).map(key => error.errors[key].message)
+        const validationErrors = Object.keys(error.errors || {}).map(key => error.errors[key].message)
         res.status(400).json({ message: validationErrors.join(', ') || "Erreur lors de l'inscription." });
-        //req.session.validationErrors = validationErrors;
-        res.redirect('/auth/register');
         console.log(`Create User error ${error}`);
     }
 }
