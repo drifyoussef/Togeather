@@ -9,7 +9,7 @@ export default defineConfig({
     port: 3001,
     host: true,
     allowedHosts: ['togeather.fr', 'localhost', '127.0.0.1'],
-    hmr: {
+    hmr: process.env.NODE_ENV === 'production' ? false : {
       host: 'localhost'
     }
   },
