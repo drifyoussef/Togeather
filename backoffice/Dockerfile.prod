@@ -23,9 +23,10 @@ FROM nginx:alpine
 # Copier les fichiers buildés
 COPY --from=build /usr/src/app/build /usr/share/nginx/html
 
-# Configuration Nginx pour React Router dans le sous-dossier /backoffice
+# Configuration Nginx pour React Router dans le sous-dossier /backoffice avec limite d'upload
 RUN echo 'server { \
     listen 80; \
+    client_max_body_size 10M; \
     root /usr/share/nginx/html; \
     index index.html index.htm; \
     \
