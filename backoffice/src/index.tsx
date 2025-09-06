@@ -4,13 +4,15 @@ import './index.css';
 import App from './App';
 import { BrowserRouter } from 'react-router-dom';
 
-// Plus besoin de basename avec Vite en production
+// Détermine le basename selon l'environnement - Compatible Vite
+const basename = import.meta.env.NODE_ENV === 'production' ? '/backoffice' : '';
+
 const root = ReactDOM.createRoot(
   document.getElementById('root') as HTMLElement
 );
 root.render(
   <React.StrictMode>
-    <BrowserRouter>
+    <BrowserRouter basename={basename}>
       <App />
     </BrowserRouter>
   </React.StrictMode>
