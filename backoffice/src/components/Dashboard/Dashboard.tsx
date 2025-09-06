@@ -272,16 +272,13 @@ export default function Dashboard() {
   return (
     <div className="dashboard">
       <aside className="sidebar">
-        <h2>Togeather</h2>
+        <h2>Togeather Backoffice</h2>
         <ul>
           <li>
-            <a href="#overview">Overview</a>
+            <a href="#overview">Aperçu</a>
           </li>
           <li>
-            <a href="#reports">Reports</a>
-          </li>
-          <li>
-            <a href="#settings">Settings</a>
+            <a href="#reports">Signalements</a>
           </li>
         </ul>
       </aside>

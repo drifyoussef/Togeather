@@ -70,6 +70,12 @@ const Register: React.FC = () => {
           body: formData,
         }
       );
+      
+      if (!imageResponse.ok) {
+        const errorData = await imageResponse.json();
+        throw new Error(errorData.error || `HTTP error! status: ${imageResponse.status}`);
+      }
+      
       const result = await imageResponse.json();
       setImageUrl(result.imageUrl);
     } catch (error) {
@@ -97,24 +103,17 @@ const Register: React.FC = () => {
       return;
     }
 
-    const formData = new FormData();
-    formData.append("file", imageFile);
+    // Vérifier si on a déjà une imageUrl de la prévisualisation
+    if (!imageUrl) {
+      setError("Veuillez d'abord prévisualiser votre image");
+      return;
+    }
 
     try {
-      // Upload the image first
-      const imageResponse = await fetch(
-        `${process.env.REACT_APP_API_URL}/upload`,
-        {
-          method: "POST",
-          body: formData,
-        }
-      );
-      const result = await imageResponse.json();
-      //console.log(result, "result");
+      // Utiliser directement l'imageUrl déjà uploadée lors de la prévisualisation
+      // Pas besoin de re-uploader l'image
 
-      const imageUrl = result.imageUrl;
-
-      // Données utilisateur à envoyer au serveur pour l'incription
+      // Données utilisateur à envoyer au serveur pour l'inscription
       const userData = {
         imageUrl,
         name,
@@ -212,7 +211,7 @@ const Register: React.FC = () => {
         <div className="profileImage">
           {imageUrl ? (
             <div className="user-img-profile-container">
-              <img src={`${process.env.REACT_APP_API_URL}/${imageUrl}`} alt="User" className="user-img-register" />
+              <img src={imageUrl.startsWith('data:') ? imageUrl : `${process.env.REACT_APP_API_URL}/${imageUrl}`} alt="User" className="user-img-register" />
               <div
                 className="edit-button-container-profile"
                 onClick={handleEditClick}

@@ -679,9 +679,23 @@ let fetch;
     },
   });
 
-  // Initialisation de l'upload avec mutler (limiter la taille des fichiers à 5MB)
-  const MAX_FILE_SIZE = 5 * 1024 * 1024; // 5MB
-  const upload = multer({ storage: storage });
+  // Initialisation de l'upload avec mutler (limiter la taille des fichiers à 10MB)
+  const MAX_FILE_SIZE = 10 * 1024 * 1024; // 10MB
+  const upload = multer({ 
+    storage: storage,
+    limits: {
+      fileSize: MAX_FILE_SIZE, // Limite de taille dans Multer
+      fieldSize: MAX_FILE_SIZE // Limite pour les champs
+    },
+    fileFilter: (req, file, cb) => {
+      // Vérifier le type de fichier
+      if (file.mimetype.startsWith('image/')) {
+        cb(null, true);
+      } else {
+        cb(new Error('Seuls les fichiers image sont autorisés!'), false);
+      }
+    }
+  });
 
   // Serve static files from the uploads folder
   app.use('/api/uploads', express.static('/usr/src/uploads'));
@@ -723,38 +737,61 @@ let fetch;
    *       500:
    *         description: Error processing image
    */
-  app.post("/api/upload", upload.single("file"), async (req, res) => {
-    console.log(req.file, "Recieved file");
-    // Si pas de fichier, on renvoie une erreur 400
-    if (!req.file) {
-      return res.status(400).send("No file uploaded.");
-    }
+  app.post("/api/upload", (req, res) => {
+    upload.single("file")(req, res, async (err) => {
+      // Gestion des erreurs Multer
+      if (err instanceof multer.MulterError) {
+        if (err.code === 'LIMIT_FILE_SIZE') {
+          return res.status(400).json({ error: "Le fichier est trop volumineux (max 10MB)" });
+        }
+        return res.status(400).json({ error: `Erreur upload: ${err.message}` });
+      } else if (err) {
+        return res.status(400).json({ error: err.message });
+      }
 
-    // Si la taille du fichier dépasse la limite de 5MB, on renvoie une erreur 400
-    if (req.file.size > MAX_FILE_SIZE) {
-      return res
-        .status(400)
-        .send("File size exceeds the maximum limit of 5MB.");
-    }
+      console.log(req.file, "Recieved file");
+      // Si pas de fichier, on renvoie une erreur 400
+      if (!req.file) {
+        return res.status(400).json({ error: "Aucun fichier uploadé" });
+      }
 
-    // Redimensionner l'image pour pas qu'elle soit trop grande
-    const resizedFilePath = path.join(
-      path.dirname(req.file.path),
-      `resized-${req.file.filename}`
-    );
+      try {
+        // Obtenir les métadonnées de l'image pour vérifier ses dimensions
+        const metadata = await sharp(req.file.path).metadata();
+        console.log(`Image originale: ${metadata.width}x${metadata.height}px, taille: ${req.file.size} bytes`);
 
-    try {
-      // Sharp pour redimensionner l'image
-      await sharp(req.file.path)
-        .resize(400) // Redimensionner l'image à 400 pixels de large
-        .toFile(resizedFilePath); // Sauvegarder l'image redimensionnée avec un nouveau nom de fichier (resized- en plus)
+        // Créer le nom du fichier redimensionné (garder l'extension originale)
+        const fileExtension = path.extname(req.file.filename);
+        const fileName = path.basename(req.file.filename, fileExtension);
+        const resizedFileName = `resized-${fileName}${fileExtension}`;
+        const resizedFilePath = path.join(path.dirname(req.file.path), resizedFileName);
 
-      // Réponse avec le chemin de l'image redimensionnée
-      res.json({ imageUrl: `uploads/resized-${req.file.filename}` });
-    } catch (error) {
-      console.error("Error resizing image:", error);
-      res.status(500).send("Error processing image.");
-    }
+        // Sharp pour redimensionner l'image avec une meilleure qualité
+        await sharp(req.file.path)
+          .resize({
+            width: 400,
+            height: 400,
+            fit: 'cover', // Recadre l'image pour maintenir les proportions
+            position: 'center'
+          })
+          .jpeg({ quality: 85 }) // Convertir tout en JPEG pour standardiser
+          .toFile(resizedFilePath);
+
+        // Supprimer le fichier original pour économiser l'espace
+        fs.unlink(req.file.path, (err) => {
+          if (err) console.error("Error deleting original file:", err);
+          else console.log("Original file deleted successfully");
+        });
+
+        console.log(`Image redimensionnée et sauvegardée: ${resizedFilePath}`);
+
+        // Réponse avec le chemin de l'image redimensionnée
+        res.json({ imageUrl: `uploads/${resizedFileName}` });
+      } catch (error) {
+        console.error("Error resizing image:", error);
+        res.status(500).json({ error: "Erreur lors du traitement de l'image" });
+      }
+    });
   });
 
   // Route pour récupérer une image avec son nom de fichier
