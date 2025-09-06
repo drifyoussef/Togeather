@@ -26,10 +26,11 @@ const Navbar: React.FC = () => {
         credentials: "include",
       });
       if (response.ok) {
-        localStorage.clear();
-        // localStorage.removeItem("token");
-        // localStorage.removeItem("currentUserId");
-        // localStorage.removeItem("firstname");
+        // Supprime seulement les tokens du front, pas ceux du backoffice
+        localStorage.removeItem("token");
+        localStorage.removeItem("currentUserId");
+        localStorage.removeItem("firstname");
+        localStorage.removeItem("selectedUserId");
         navigate("/connection");
       } else {
         console.error("Failed to log out");
