@@ -7,7 +7,11 @@ export default defineConfig({
   base: process.env.NODE_ENV === 'production' ? '/backoffice/' : '/',
   server: {
     port: 3001,
-    host: true
+    host: true,
+    allowedHosts: ['togeather.fr', 'localhost', '127.0.0.1'],
+    hmr: {
+      host: 'localhost'
+    }
   },
   build: {
     outDir: 'build'
