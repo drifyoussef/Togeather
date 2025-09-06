@@ -98,6 +98,7 @@ p {
 
 label {
   margin-top: 24px;
+  align-items: flex-start;
 }
 
 #reports table {
@@ -156,4 +157,44 @@ label {
   #reports th, #reports td {
     padding: 10px 8px;
   }
+}
+
+/* Styles personnalisés pour SweetAlert2 */
+
+/* Bouton OK/Confirmer - Background AD0051 et hover 470021 */
+.swal2-confirm {
+  background-color: #AD0051 !important;
+  border: none !important;
+  color: white !important;
+  font-weight: 500 !important;
+}
+
+.swal2-confirm:hover {
+  background-color: #470021 !important;
+}
+
+/* Bouton Cancel/Annuler - Border AD0051, background transparent et hover 470021 */
+.swal2-cancel {
+  background-color: transparent !important;
+  border: 2px solid #AD0051 !important;
+  color: #AD0051 !important;
+  font-weight: 500 !important;
+}
+
+.swal2-cancel:hover {
+  background-color: #470021 !important;
+  border-color: #470021 !important;
+  color: white !important;
+}
+
+/* Styles pour s'assurer que les boutons gardent leur apparence */
+.swal2-styled.swal2-confirm,
+.swal2-styled.swal2-cancel {
+  border-radius: 4px !important;
+  padding: 8px 16px !important;
+  font-size: 14px !important;
+}
+
+.header-stats, .user-length, .reports-length {
+  place-self: flex-start;
 }

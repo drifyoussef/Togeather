@@ -2,12 +2,17 @@ FROM node:20
 
 WORKDIR /usr/src/app
 
+# Copier les fichiers de dépendances
 COPY package*.json ./
 
+# Installer les dépendances
 RUN npm install --legacy-peer-deps
 
+# Copier le code source
 COPY . .
 
+# Exposer le port 3001
 EXPOSE 3001
 
-CMD ["npm", "run", "dev"]
+# Démarrer l'application sur le port 3001
+CMD ["sh", "-c", "PORT=3001 npm start"]

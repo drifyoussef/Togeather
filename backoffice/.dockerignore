@@ -1,1 +1,7 @@
 node_modules
+build
+.git
+.env
+npm-debug.log*
+.npm
+.eslintcache

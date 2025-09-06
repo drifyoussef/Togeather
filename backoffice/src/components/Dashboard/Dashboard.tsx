@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { DataGrid, GridRenderCellParams } from "@mui/x-data-grid";
 import "./Dashboard.css";
-import { useFetchUsers } from "../../hooks/useFetchUsers.tsx";
+import useFetchUsers from "../../hooks/useFetchUsers";
 import { useNavigate } from "react-router-dom";
 import Swal from "sweetalert2";
 
@@ -40,7 +40,7 @@ export default function Dashboard() {
 
   useEffect(() => {
     if (token) {
-      fetch(`${import.meta.env.VITE_REACT_APP_API_URL}/auth/users`, {
+      fetch(`${process.env.REACT_APP_API_URL}/auth/users`, {
         headers: { Authorization: `Bearer ${token}` },
         method: "GET",
       })
@@ -69,7 +69,7 @@ export default function Dashboard() {
     banEnd: Date
   ) => {
     const token = localStorage.getItem("token");
-    fetch(`${import.meta.env.VITE_REACT_APP_API_URL}/auth/users/ban`, {
+    fetch(`${process.env.REACT_APP_API_URL}/auth/users/ban`, {
       method: "POST",
       headers: {
         Authorization: `Bearer ${token}`,
@@ -95,12 +95,17 @@ export default function Dashboard() {
           `Error ${isBanned ? "banning" : "unbanning"} user:`,
           error
         );
+        Swal.fire({
+          title: "Erreur !",
+          text: `Impossible de ${isBanned ? "bannir" : "débannir"} l'utilisateur.`,
+          icon: "error"
+        });
       });
   };
 
   useEffect(() => {
     if (token) {
-      fetch(`${import.meta.env.VITE_REACT_APP_API_URL}/messages/reports`, {
+      fetch(`${process.env.REACT_APP_API_URL}/messages/reports`, {
         headers: { Authorization: `Bearer ${token}` },
         method: "GET",
       })
@@ -164,6 +169,7 @@ export default function Dashboard() {
                 title: `Voulez-vous ${
                   params.row.isBanned ? "débannir" : "bannir"
                 } ${params.row.firstname} ?`,
+                icon: params.row.isBanned ? "info" : "warning",
                 html: !params.row.isBanned
                   ? `
                   <label for="banReason">Raison du bannissement :</label>
@@ -240,11 +246,14 @@ export default function Dashboard() {
                     banReason,
                     banEnd
                   );
-                  Swal.fire(
-                    `${params.row.firstname} a été ${
+                  Swal.fire({
+                    title: `${params.row.firstname} a été ${
                       params.row.isBanned ? "débanni" : "banni"
-                    } !`
-                  );
+                    } !`,
+                    icon: "success",
+                    timer: 2000,
+                    showConfirmButton: false
+                  });
                 }
               });
             }}
@@ -290,7 +299,7 @@ export default function Dashboard() {
             </div>
           </div>
           <div id="reports">
-            <h2>Messages signalés: {reports.length}</h2>
+            <h2 className="reports-length">Messages signalés: {reports.length}</h2>
             <table>
               <thead>
                 <tr>

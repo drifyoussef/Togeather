@@ -1,21 +1,51 @@
-import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
-import Dashboard from "./components/Dashboard/Dashboard.tsx";
-import Login from "./components/Login/Login.tsx";
-import Navbar from "./components/Navbar/Navbar.tsx";
+import React from 'react';
+import { Routes, Route, Navigate } from 'react-router-dom';
+import Login from './components/Login/Login';
+import Dashboard from './components/Dashboard/Dashboard';
+import Navbar from "./components/Navbar/Navbar";
 import './App.css';
 
-function App() {
-  // Détermine le basename selon l'environnement
-  const basename = process.env.NODE_ENV === 'production' ? '/backoffice' : '';
+// Composant pour protéger les routes admin
+const PrivateRoute: React.FC<{ children: React.ReactNode }> = ({ children }) => {
+  const token = localStorage.getItem('token');
+  const isAdmin = localStorage.getItem('isAdmin');
   
+  return token && isAdmin === 'true' ? <>{children}</> : <Navigate to="/admin/login" />;
+};
+
+function App() {
   return (
-    <Router basename={basename}>
+    <div className="App">
       <Navbar />
       <Routes>
-        <Route path="/auth/admin/login" element={<Login />} />
-        <Route path="/admin/dashboard" element={<Dashboard />} />
+        {/* Redirection de la racine vers le login admin */}
+        <Route path="/" element={<Navigate to="/admin/login" />} />
+        
+        {/* Route de login admin */}
+        <Route path="/admin/login" element={<Login />} />
+        
+        {/* Routes protégées pour l'admin */}
+        <Route 
+          path="/admin/dashboard" 
+          element={
+            <PrivateRoute>
+              <Dashboard />
+            </PrivateRoute>
+          } 
+        />
+        <Route 
+          path="/admin/users" 
+          element={
+            <PrivateRoute>
+              <Dashboard />
+            </PrivateRoute>
+          } 
+        />
+        
+        {/* Route par défaut */}
+        <Route path="*" element={<Navigate to="/admin/login" />} />
       </Routes>
-    </Router>
+    </div>
   );
 }
 

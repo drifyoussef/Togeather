@@ -1,11 +1,13 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import "./Login.css";
+import { FaEye, FaEyeSlash } from "react-icons/fa";
 
 const Login: React.FC = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
+   const [showPassword, setShowPassword] = useState(false);
 
   const navigate = useNavigate();
 
@@ -14,10 +16,10 @@ const Login: React.FC = () => {
     setError('');
   
     try {
-      console.log('Sending request to:', `${import.meta.env.VITE_REACT_APP_API_URL}/auth/admin/login`);
+      console.log('Sending request to:', `${process.env.REACT_APP_API_URL}/auth/admin/login`);
       console.log('Request body:', { email, password });
-  
-      const response = await fetch(`${import.meta.env.VITE_REACT_APP_API_URL}/auth/admin/login`, {
+
+      const response = await fetch(`${process.env.REACT_APP_API_URL}/auth/admin/login`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -71,16 +73,25 @@ const Login: React.FC = () => {
             required
           />
         </label>
-        <label htmlFor="password">
+         <label htmlFor="password">
           Mot de passe:
-          <input
-            type="password"
-            id="password"
-            name="password"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-            required
-          />
+          <div className="password-input-container">
+            <input
+              type={showPassword ? "text" : "password"}
+              id="password"
+              name="password"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              required
+            />
+            <button
+              type="button"
+              className="password-toggle-btn"
+              onClick={() => setShowPassword(!showPassword)}
+            >
+              {showPassword ? <FaEyeSlash /> : <FaEye />}
+            </button>
+          </div>
         </label>
         {error && <p className="error">{error}</p>}
         <button type="submit">Se connecter</button>

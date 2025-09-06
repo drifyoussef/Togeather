@@ -57,6 +57,41 @@ button:hover {
   background-color: #470021;
 }
 
+.password-input-container {
+  position: relative;
+  display: flex;
+  align-items: center;
+  width: 100%;
+}
+
+.password-input-container input {
+  flex: 1;
+  padding-right: 40px;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.password-toggle-btn {
+  position: absolute;
+  right: 10px;
+  background: none;
+  border: none;
+  cursor: pointer;
+  color: #AD0051;
+  padding: 0;
+  margin: 0;
+  width: auto;
+  height: auto;
+  font-size: 16px;
+  z-index: 1;
+  margin-top: 8px;
+}
+
+.password-toggle-btn:hover {
+  color: #470021;
+  background-color: transparent;
+}
+
 @media only screen and (max-width: 320px), only screen and (max-width: 375px), only screen and (max-width: 435px)  {
 
 form{

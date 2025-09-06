@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { UserModel } from "../models/User.model";
 
-export const useFetchUsers = () => {
+const useFetchUsers = () => {
   // Recupérer les utilisateurs
   const [users, setUsers] = useState<UserModel[]>([]);
   // Recupérer le genre préféré
@@ -96,3 +96,5 @@ export const useFetchUsers = () => {
 
   return { users, preferredGender, mutualMatches, filteredUsers };
 };
+
+export default useFetchUsers;
