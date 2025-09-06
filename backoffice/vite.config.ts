@@ -2,16 +2,13 @@ import { defineConfig } from 'vite'
 import react from '@vitejs/plugin-react'
 
 // https://vitejs.dev/config/
-export default defineConfig({
+export default defineConfig(({ command }) => ({
   plugins: [react()],
-  base: process.env.NODE_ENV === 'production' ? '/backoffice/' : '/',
+  base: command === 'build' ? '/backoffice/' : '/',
   server: {
     port: 3001,
     host: true,
-    allowedHosts: ['togeather.fr', 'localhost', '127.0.0.1'],
-    hmr: process.env.NODE_ENV === 'production' ? false : {
-      host: 'localhost'
-    }
+    allowedHosts: ['togeather.fr', 'localhost', '127.0.0.1']
   },
   build: {
     outDir: 'build'
@@ -19,4 +16,4 @@ export default defineConfig({
   define: {
     global: 'globalThis',
   }
-})
+}))

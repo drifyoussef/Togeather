@@ -4,8 +4,11 @@ import './index.css';
 import App from './App';
 import { BrowserRouter } from 'react-router-dom';
 
-// Détermine le basename selon l'environnement - Compatible Vite
-const basename = import.meta.env.NODE_ENV === 'production' ? '/backoffice' : '';
+// Basename seulement en production (sur togeather.fr)
+const basename = window.location.hostname === 'togeather.fr' ? '/backoffice' : '';
+
+console.log('Hostname:', window.location.hostname);
+console.log('Basename:', basename);
 
 const root = ReactDOM.createRoot(
   document.getElementById('root') as HTMLElement
