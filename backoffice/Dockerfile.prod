@@ -11,8 +11,8 @@ RUN npm install --legacy-peer-deps
 COPY . .
 
 # ✅ AJOUTER CES LIGNES AVANT LE BUILD
-ARG REACT_APP_API_URL
-ENV REACT_APP_API_URL=$REACT_APP_API_URL
+ARG VITE_API_URL
+ENV VITE_API_URL=$VITE_API_URL
 
 # Build de production avec plus de mémoire (4GB)
 RUN NODE_OPTIONS="--max-old-space-size=4096" npm run build
