@@ -16,7 +16,7 @@ const useFetchUsers = () => {
 
   useEffect(() => {
     // Récupérer le token et l'ID de l'utilisateur actuel
-    const token = localStorage.getItem("token");
+    const token = localStorage.getItem("adminToken");
     //console.log(token, 'token from useFetchUsers');
     //const currentUserId = localStorage.getItem("currentUserId");
     //console.log(currentUserId, 'currentUserId from useFetchUsers');

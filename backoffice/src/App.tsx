@@ -7,7 +7,7 @@ import './App.css';
 
 // Composant pour protéger les routes admin
 const PrivateRoute: React.FC<{ children: React.ReactNode }> = ({ children }) => {
-  const token = localStorage.getItem('token');
+  const token = localStorage.getItem('adminToken');
   const isAdmin = localStorage.getItem('isAdmin');
   
   return token && isAdmin === 'true' ? <>{children}</> : <Navigate to="/admin/login" />;

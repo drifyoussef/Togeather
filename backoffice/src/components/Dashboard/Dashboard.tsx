@@ -36,7 +36,7 @@ export default function Dashboard() {
   const [users, setUsers] = useState<User[]>([]);
   const [reports, setReports] = useState<ReportItem[]>([]);
   const navigate = useNavigate();
-  const token = localStorage.getItem("token");
+  const token = localStorage.getItem("adminToken");
 
   useEffect(() => {
     if (token) {
@@ -57,7 +57,9 @@ export default function Dashboard() {
         });
     } else {
       console.error("No token found in localStorage");
-      localStorage.clear();
+      localStorage.removeItem('adminToken');
+      localStorage.removeItem('userId');
+      localStorage.removeItem('isAdmin');
       navigate("/auth/admin/login");
     }
   }, [token, preferredGender, mutualMatches, navigate]);
@@ -68,7 +70,7 @@ export default function Dashboard() {
     banReason: string,
     banEnd: Date
   ) => {
-    const token = localStorage.getItem("token");
+    const token = localStorage.getItem("adminToken");
     fetch(`${import.meta.env.VITE_API_URL}/auth/users/ban`, {
       method: "POST",
       headers: {
@@ -122,7 +124,9 @@ export default function Dashboard() {
         });
     } else {
       console.error("No token found in localStorage");
-      localStorage.clear();
+      localStorage.removeItem('adminToken');
+      localStorage.removeItem('userId');
+      localStorage.removeItem('isAdmin');
       navigate("/auth/admin/login");
     }
   }, [token, navigate]);

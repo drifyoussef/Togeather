@@ -45,7 +45,7 @@ const Login: React.FC = () => {
         const successData = await response.json();
         console.log('Success data:', successData);
         if (successData.token) {
-          localStorage.setItem('token', successData.token);
+          localStorage.setItem('adminToken', successData.token);
           localStorage.setItem('userId', successData.userId);
           localStorage.setItem('isAdmin', successData.isAdmin);
           navigate('/admin/dashboard');

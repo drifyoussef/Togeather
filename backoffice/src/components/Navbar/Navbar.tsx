@@ -12,7 +12,7 @@ export default function Navbar() {
 
   // Vérifier si l'utilisateur est connecté
   useEffect(() => {
-    const token = localStorage.getItem("token");
+    const token = localStorage.getItem("adminToken");
     const isAdmin = localStorage.getItem("isAdmin");
     setIsLoggedIn(!!token && isAdmin === "true");
   }, [location.pathname]); // Re-vérifier quand la route change
@@ -24,7 +24,9 @@ export default function Navbar() {
         credentials: "include",
       });
       if (response.ok) {
-        localStorage.clear();
+        localStorage.removeItem('adminToken');
+        localStorage.removeItem('userId');
+        localStorage.removeItem('isAdmin');
         navigate("/auth/admin/login");
       } else {
         console.error("Failed to log out");
