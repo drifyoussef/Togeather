@@ -8,7 +8,7 @@ mongoose.connect('mongodb+srv://youssefdrif1:dDrZdxQ519mc4zMM@togeathercluster.h
 
 const createAdminUser = async () => {
   try {
-    const email = 'imredzcsgo@gmail.com';
+    const email = 'togeathercontact@gmail.com';
     const password = process.env.PASSWORD_ADMIN;
     const hashedPassword = await bcrypt.hash(password, 10);
 
