@@ -37,7 +37,7 @@ const useFetchUsers = () => {
     }
 
     // Route de l'API pour récupérer l'utilisateur actuel
-    fetch(`${process.env.REACT_APP_API_URL}/auth/user`, {
+    fetch(`${import.meta.env.VITE_API_URL}/auth/user`, {
       headers: { Authorization: `Bearer ${token}` },
       method: "GET",
     })
@@ -54,7 +54,7 @@ const useFetchUsers = () => {
       });
 
     // Route de l'API pour récupérer tous les utilisateurs
-    fetch(`${process.env.REACT_APP_API_URL}/auth/users`, {
+    fetch(`${import.meta.env.VITE_API_URL}/auth/users`, {
       headers: { Authorization: `Bearer ${token}` },
       method: "GET",
     })

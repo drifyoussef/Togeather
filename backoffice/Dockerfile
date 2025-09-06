@@ -2,6 +2,9 @@ FROM node:20
 
 WORKDIR /usr/src/app
 
+# Set memory limit for Node.js
+ENV NODE_OPTIONS="--max-old-space-size=3072"
+
 # Copier les fichiers de dépendances
 COPY package*.json ./
 

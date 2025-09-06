@@ -16,10 +16,10 @@ const Login: React.FC = () => {
     setError('');
   
     try {
-      console.log('Sending request to:', `${process.env.REACT_APP_API_URL}/auth/admin/login`);
+      console.log('Sending request to:', `${import.meta.env.VITE_API_URL}/auth/admin/login`);
       console.log('Request body:', { email, password });
 
-      const response = await fetch(`${process.env.REACT_APP_API_URL}/auth/admin/login`, {
+      const response = await fetch(`${import.meta.env.VITE_API_URL}/auth/admin/login`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

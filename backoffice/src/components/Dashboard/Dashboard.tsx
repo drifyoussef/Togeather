@@ -40,7 +40,7 @@ export default function Dashboard() {
 
   useEffect(() => {
     if (token) {
-      fetch(`${process.env.REACT_APP_API_URL}/auth/users`, {
+      fetch(`${import.meta.env.VITE_API_URL}/auth/users`, {
         headers: { Authorization: `Bearer ${token}` },
         method: "GET",
       })
@@ -69,7 +69,7 @@ export default function Dashboard() {
     banEnd: Date
   ) => {
     const token = localStorage.getItem("token");
-    fetch(`${process.env.REACT_APP_API_URL}/auth/users/ban`, {
+    fetch(`${import.meta.env.VITE_API_URL}/auth/users/ban`, {
       method: "POST",
       headers: {
         Authorization: `Bearer ${token}`,
@@ -105,7 +105,7 @@ export default function Dashboard() {
 
   useEffect(() => {
     if (token) {
-      fetch(`${process.env.REACT_APP_API_URL}/messages/reports`, {
+      fetch(`${import.meta.env.VITE_API_URL}/messages/reports`, {
         headers: { Authorization: `Bearer ${token}` },
         method: "GET",
       })
