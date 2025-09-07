@@ -10,34 +10,30 @@ import Swal from "sweetalert2";
 import { IoChatbubbleEllipsesOutline } from "react-icons/io5";
 import { useImageFallback } from "../../hooks/useImageFallback";
 
-// Configuration Socket.io avec debugging explicite
-// Utilise la même URL que l'API, Socket.io sera sur /socket.io/
-const socketUrl = process.env.REACT_APP_API_URL || "http://localhost:4000";
+// Configuration Socket.io avec WebSocket prioritaire
+const socketUrl = process.env.REACT_APP_API_URL;
 console.log("🔍 Tentative de connexion Socket à:", socketUrl);
 
 const socket = io(socketUrl, {
-  // Configuration explicite pour debugging
-  withCredentials: true,
+  // Configuration avec WebSocket en priorité
+  path: '/socket.io/',
+  transports: ['websocket', 'polling'], // WebSocket en premier, polling en fallback
   autoConnect: true,
-  transports: ['polling', 'websocket'],
-  forceNew: true,
-  path: '/socket.io/'  // Path par défaut, sera https://togeather.fr/api/socket.io/
+  reconnection: true,
 });
 console.log("🔌 Socket configuré pour:", socketUrl);
 
-// Logs détaillés pour debugging
+// Test de connexion Socket
 socket.on("connect", () => {
   console.log("✅ Socket connecté avec succès, ID:", socket.id);
-  console.log("🔗 Transport utilisé:", socket.io.engine.transport.name);
 });
 
-socket.on("disconnect", (reason) => {
-  console.log("❌ Socket déconnecté, raison:", reason);
+socket.on("disconnect", () => {
+  console.log("❌ Socket déconnecté");
 });
 
 socket.on("connect_error", (error) => {
   console.error("🚫 Erreur de connexion Socket:", error);
-  console.error("🔍 Message d'erreur:", error.message);
 });
 
 export default function UserMessages() {
@@ -126,9 +122,6 @@ export default function UserMessages() {
 
   // Utiliser le hook useEffect pour charger les messages par id
   useEffect(() => {
-    // Connexion manuelle au socket
-    socket.connect();
-    
     // S'identifier auprès du serveur socket
     if (connectedUserId) {
       console.log("🔌 Connexion socket pour utilisateur:", connectedUserId);
@@ -148,22 +141,12 @@ export default function UserMessages() {
         const data = await response.json();
         
         // CORRECTION 1: Filtrer les messages pour cette conversation seulement
-        // Fonction helper pour extraire l'ID d'un utilisateur (objet ou string)
-        const getUserId = (user: any) => {
-          if (typeof user === 'string') return user;
-          return user?._id;
-        };
-        
-        const filteredMessages = data.filter((message: Message) => {
-          const senderId = getUserId(message.sender);
-          const receiverId = getUserId(message.receiver);
-          
-          return (senderId === id && receiverId === connectedUserId) ||
-                 (senderId === connectedUserId && receiverId === id);
-        });
-        
-        console.log("🔍 Messages filtrés:", filteredMessages.length, "sur", data.length);
-        console.log("🔍 Premier message:", filteredMessages[0]);
+        const filteredMessages = data.filter((message: Message) =>
+          (message.sender && message.sender._id === id && 
+           message.receiver && message.receiver._id === connectedUserId) ||
+          (message.sender && message.sender._id === connectedUserId && 
+           message.receiver && message.receiver._id === id)
+        );
         setMessages(filteredMessages);
       } catch (error) {
         console.error("Error fetching messages:", error);
@@ -178,26 +161,19 @@ export default function UserMessages() {
       console.log("🔔 Message reçu via socket:", message);
       console.log("👥 Pour conversation entre:", connectedUserId, "et", id);
       
-      // Fonction helper pour extraire l'ID d'un utilisateur (objet ou string)
-      const getUserId = (user: any) => {
-        if (typeof user === 'string') return user;
-        return user?._id;
-      };
-      
-      const senderId = getUserId(message.sender);
-      const receiverId = getUserId(message.receiver);
-      
       // Vérifier que le message appartient à la conversation active
       const isForCurrentConversation = 
-        (senderId === id && receiverId === connectedUserId) ||
-        (senderId === connectedUserId && receiverId === id);
+        (message.sender && message.sender._id === id && 
+         message.receiver && message.receiver._id === connectedUserId) ||
+        (message.sender && message.sender._id === connectedUserId && 
+         message.receiver && message.receiver._id === id);
       
       if (isForCurrentConversation) {
         console.log("✅ Message ajouté à la conversation:", message.content);
         setMessages((prevMessages) => [...prevMessages, message]);
       } else {
         console.log("❌ Message ignoré car pas pour cette conversation");
-        console.log("   Sender:", senderId, "Receiver:", receiverId);
+        console.log("   Sender:", message.sender?._id, "Receiver:", message.receiver?._id);
       }
     });
 
@@ -313,20 +289,18 @@ export default function UserMessages() {
       return { content: "", sender: null };
     }
 
-    // Fonction helper pour extraire l'ID d'un utilisateur (objet ou string)
-    const getUserId = (user: any) => {
-      if (typeof user === 'string') return user;
-      return user?._id;
-    };
-
     // Filtrer les messages de l'utilisateur
-    const userMessages = messages.filter((message) => {
-      const senderId = getUserId(message.sender);
-      const receiverId = getUserId(message.receiver);
-      
-      return (senderId === userId && receiverId === connectedUserId) ||
-             (senderId === connectedUserId && receiverId === userId);
-    });
+    const userMessages = messages.filter(
+      (message) =>
+        (message.sender &&
+          message.sender._id === userId &&
+          message.receiver &&
+          message.receiver._id === connectedUserId) ||
+        (message.sender &&
+          message.sender._id === connectedUserId &&
+          message.receiver &&
+          message.receiver._id === userId)
+    );
 
     // Si aucun message n'est trouvé
     if (userMessages.length === 0) return { content: "", sender: null };
