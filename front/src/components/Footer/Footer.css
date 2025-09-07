@@ -36,6 +36,25 @@
   color: #ffd1e0;
 }
 
+.footer-link-button {
+  background: none;
+  border: none;
+  color: #fff;
+  text-decoration: underline;
+  margin: 0 8px;
+  transition: color 0.2s;
+  cursor: pointer;
+  font-size: inherit;
+  font-family: inherit;
+  padding: 0;
+  width: fit-content;
+}
+
+.footer-link-button:hover {
+  background: none;
+  color: #ffd1e0;
+}
+
 @media (min-width: 600px) {
   .footer .footer-content {
     flex-direction: row;
