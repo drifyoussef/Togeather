@@ -570,9 +570,11 @@ let fetch;
   app.get("/api/restaurants", async (req, res) => {
     try {
       const { location, radius, keyword } = req.query;
+      console.log(`Restaurants API called with: location=${location}, radius=${radius}, keyword=${keyword}`);
       
       // Vérifier si la clé Google API est configurée
       if (!process.env.GOOGLE_API_KEY) {
+        console.error("Google API Key not configured");
         return res.status(500).json({ 
           error: "Google API Key not configured. Please set GOOGLE_API_KEY environment variable." 
         });
@@ -583,12 +585,20 @@ let fetch;
         url += `&keyword=${keyword}`;
       }
       url += `&key=${process.env.GOOGLE_API_KEY}`;
+      
+      console.log(`Google Places API URL: ${url}`);
 
       const response = await fetch(url);
       const data = await response.json();
+      
+      console.log(`Google Places API response status: ${data.status}`);
+      if (data.error_message) {
+        console.error(`Google Places API error message: ${data.error_message}`);
+      }
 
       // Vérifier si l'API Google a retourné une erreur
       if (data.status !== "OK") {
+        console.error(`Google Places API error: ${data.status}, details: ${data.error_message || "Unknown error"}`);
         return res.status(400).json({ 
           error: `Google Places API error: ${data.status}`,
           details: data.error_message || "Unknown error"
@@ -597,9 +607,11 @@ let fetch;
 
       // Limiter les résultats à 4 restaurants
       const limitedResults = data.results.slice(0, 4);
+      console.log(`Returning ${limitedResults.length} restaurants`);
 
       res.json({ results: limitedResults });
     } catch (error) {
+      console.error(`Restaurants API error: ${error.message}`);
       res.status(500).json({ error: error.message });
     }
   });
