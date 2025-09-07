@@ -109,7 +109,15 @@ export default function UserMessages() {
           }
         );
         const data = await response.json();
-        setMessages(data);
+        
+        // CORRECTION 1: Filtrer les messages pour cette conversation seulement
+        const filteredMessages = data.filter((message: Message) =>
+          (message.sender && message.sender._id === id && 
+           message.receiver && message.receiver._id === connectedUserId) ||
+          (message.sender && message.sender._id === connectedUserId && 
+           message.receiver && message.receiver._id === id)
+        );
+        setMessages(filteredMessages);
       } catch (error) {
         console.error("Error fetching messages:", error);
       }
@@ -118,16 +126,30 @@ export default function UserMessages() {
     // Charger les messages de l'utilisateur
     fetchUserMessages();
 
-    // WebSocket pour recevoir les messages
+    // CORRECTION 2: WebSocket pour recevoir les messages avec filtrage
     socket.on("receiveMessage", (message: any) => {
-      setMessages((prevMessages) => [...prevMessages, message]);
+      //console.log("Message reçu via socket:", message);
+      
+      // Vérifier que le message appartient à la conversation active
+      const isForCurrentConversation = 
+        (message.sender && message.sender._id === id && 
+         message.receiver && message.receiver._id === connectedUserId) ||
+        (message.sender && message.sender._id === connectedUserId && 
+         message.receiver && message.receiver._id === id);
+      
+      if (isForCurrentConversation) {
+        //console.log("Message ajouté à la conversation:", message);
+        setMessages((prevMessages) => [...prevMessages, message]);
+      } else {
+        console.log("Message ignoré car pas pour cette conversation");
+      }
     });
 
     // Nettoyer le socket
     return () => {
       socket.off("receiveMessage");
     };
-  }, [id]);
+  }, [id, connectedUserId]); // CORRECTION 3: Ajouter connectedUserId aux dépendances
 
   // Utiliser le hook useEffect pour charger l'utilisateur sélectionné
   useEffect(() => {
@@ -151,6 +173,7 @@ export default function UserMessages() {
       senderId: connectedUserId,
       sender: { _id: connectedUserId },
       receiverId: id,
+      receiver: { _id: id }, // CORRECTION 4: Ajouter le receiver
     };
 
     try {
@@ -167,8 +190,23 @@ export default function UserMessages() {
       );
 
       if (response.ok) {
+        const sentMessage = await response.json();
+        
+        // CORRECTION 7: S'assurer que le sender est bien défini avec l'ID correct
+        const messageToAdd = {
+          ...sentMessage,
+          sender: { _id: connectedUserId },
+          receiver: { _id: id }
+        };
+        
+        // CORRECTION 5: Ajouter immédiatement le message envoyé avec les bonnes infos
+        setMessages((prevMessages) => [...prevMessages, messageToAdd]);
+        
+        // CORRECTION 6: Émettre le message via socket pour le destinataire
+        socket.emit("sendMessage", messageToAdd);
+        
         setNewMessage("");
-        setReload(true); // Rafraîchis la liste des messages
+        // Supprimer setReload(true) car on met à jour directement
       } else {
         console.error("Failed to send message");
       }
@@ -488,7 +526,11 @@ export default function UserMessages() {
                     new Date(a.createdAt).getTime() -
                     new Date(b.createdAt).getTime()
                 )
-                .map((message, index) => (
+                .map((message, index) => {
+                  // Debug pour identifier le problème
+                  //console.log(`Message ${index}: "${message.content}" - Sender: ${message.sender?._id} - Connected: ${connectedUserId} - Position: ${message.sender && message.sender._id === connectedUserId ? "right" : "left"}`);
+                  
+                  return (
                   <div
                     key={`${message._id}-${index}`}
                     className={`message ${
@@ -535,7 +577,8 @@ export default function UserMessages() {
                       </span>
                     </div>
                   </div>
-                ))
+                  );
+                })
             )}
           </div>
           <div className="bubble-type-div">
@@ -548,7 +591,7 @@ export default function UserMessages() {
               onKeyDown={(e) => {
                 if (e.key === "Enter") {
                   handleSendMessage();
-                  setReload(true);
+                  // Supprimer setReload(true) car mise à jour directe
                 }
               }}
             />
@@ -556,7 +599,7 @@ export default function UserMessages() {
               className="send-message"
               onClick={(e) => {
                 handleSendMessage();
-                setReload(true);
+                // Supprimer setReload(true) car mise à jour directe
               }}
             >
               Envoyer
