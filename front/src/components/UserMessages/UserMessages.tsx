@@ -10,17 +10,15 @@ import Swal from "sweetalert2";
 import { IoChatbubbleEllipsesOutline } from "react-icons/io5";
 import { useImageFallback } from "../../hooks/useImageFallback";
 
-// Test temporaire avec différentes configurations
+// Configuration Socket.io simplifiée pour corriger l'erreur Invalid namespace
 const socketUrl = process.env.REACT_APP_API_URL;
 console.log("🔍 Tentative de connexion Socket à:", socketUrl);
 
 const socket = io(socketUrl, {
-  transports: ['websocket', 'polling'], // Force les transports
-  timeout: 20000, // Timeout plus long
-  forceNew: true, // Force une nouvelle connexion
-  autoConnect: true, // Auto-connexion
-  reconnection: true, // Reconnexion automatique
-  reconnectionAttempts: 5,
+  // Configuration minimale pour éviter les conflits de namespace
+  autoConnect: true,
+  reconnection: true,
+  reconnectionAttempts: 3,
   reconnectionDelay: 1000,
 });
 console.log("🔌 Socket configuré pour:", socketUrl);
