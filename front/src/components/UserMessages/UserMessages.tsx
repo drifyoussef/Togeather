@@ -13,6 +13,19 @@ import { useImageFallback } from "../../hooks/useImageFallback";
 const socket = io(process.env.REACT_APP_API_URL);
 console.log("🔌 Socket connecté à:", process.env.REACT_APP_API_URL);
 
+// Test de connexion Socket
+socket.on("connect", () => {
+  console.log("✅ Socket connecté avec succès, ID:", socket.id);
+});
+
+socket.on("disconnect", () => {
+  console.log("❌ Socket déconnecté");
+});
+
+socket.on("connect_error", (error) => {
+  console.error("🚫 Erreur de connexion Socket:", error);
+});
+
 export default function UserMessages() {
   // Récupérer l'ID de l'utilisateur
   const { id } = useParams();
