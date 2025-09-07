@@ -19,9 +19,9 @@ console.log("🔍 Tentative de connexion Socket à:", socketUrl);
 const socket = io(socketUrl, {
   withCredentials: true,
   autoConnect: true,
-  transports: ['polling', 'websocket'],
+  transports: ["polling", "websocket"],
   forceNew: true,
-  path: '/socket.io' // IMPORTANT : correspond à l'URL proxy Nginx
+  path: "/socket.io", // IMPORTANT : correspond à l'URL proxy Nginx
 });
 console.log("🔌 Socket configuré pour:", socketUrl);
 
@@ -95,9 +95,9 @@ export default function UserMessages() {
     const handleResize = () => {
       setIsMobile(window.innerWidth <= 768);
     };
-    
-    window.addEventListener('resize', handleResize);
-    return () => window.removeEventListener('resize', handleResize);
+
+    window.addEventListener("resize", handleResize);
+    return () => window.removeEventListener("resize", handleResize);
   }, []);
 
   // Fonction pour récupérer les messages globaux
@@ -130,7 +130,7 @@ export default function UserMessages() {
   useEffect(() => {
     // Connexion manuelle au socket
     socket.connect();
-    
+
     // S'identifier auprès du serveur socket
     if (connectedUserId) {
       console.log("🔌 Connexion socket pour utilisateur:", connectedUserId);
@@ -149,13 +149,18 @@ export default function UserMessages() {
           }
         );
         const data = await response.json();
-        
+
         // CORRECTION 1: Filtrer les messages pour cette conversation seulement
-        const filteredMessages = data.filter((message: Message) =>
-          (message.sender && message.sender._id === id && 
-           message.receiver && message.receiver._id === connectedUserId) ||
-          (message.sender && message.sender._id === connectedUserId && 
-           message.receiver && message.receiver._id === id)
+        const filteredMessages = data.filter(
+          (message: Message) =>
+            (message.sender &&
+              message.sender._id === id &&
+              message.receiver &&
+              message.receiver._id === connectedUserId) ||
+            (message.sender &&
+              message.sender._id === connectedUserId &&
+              message.receiver &&
+              message.receiver._id === id)
         );
         setMessages(filteredMessages);
       } catch (error) {
@@ -172,20 +177,29 @@ export default function UserMessages() {
     socket.on("receiveMessage", (message: any) => {
       console.log("🔔 Message reçu via socket:", message);
       console.log("👥 Pour conversation entre:", connectedUserId, "et", id);
-      
+
       // Vérifier que le message appartient à la conversation active
-      const isForCurrentConversation = 
-        (message.sender && message.sender._id === id && 
-         message.receiver && message.receiver._id === connectedUserId) ||
-        (message.sender && message.sender._id === connectedUserId && 
-         message.receiver && message.receiver._id === id);
-      
+      const isForCurrentConversation =
+        (message.sender &&
+          message.sender._id === id &&
+          message.receiver &&
+          message.receiver._id === connectedUserId) ||
+        (message.sender &&
+          message.sender._id === connectedUserId &&
+          message.receiver &&
+          message.receiver._id === id);
+
       if (isForCurrentConversation) {
         console.log("✅ Message ajouté à la conversation:", message.content);
         setMessages((prevMessages) => [...prevMessages, message]);
       } else {
         console.log("❌ Message ignoré car pas pour cette conversation");
-        console.log("   Sender:", message.sender?._id, "Receiver:", message.receiver?._id);
+        console.log(
+          "   Sender:",
+          message.sender?._id,
+          "Receiver:",
+          message.receiver?._id
+        );
       }
     });
 
@@ -235,22 +249,22 @@ export default function UserMessages() {
 
       if (response.ok) {
         const sentMessage = await response.json();
-        
+
         // CORRECTION 7: S'assurer que le sender est bien défini avec l'ID correct
         const messageToAdd = {
           ...sentMessage,
           sender: { _id: connectedUserId },
-          receiver: { _id: id }
+          receiver: { _id: id },
         };
-        
+
         // CORRECTION 5: Ajouter immédiatement le message envoyé avec les bonnes infos
         setMessages((prevMessages) => [...prevMessages, messageToAdd]);
-        
+
         // CORRECTION 6: Émettre le message via socket pour le destinataire
         console.log("📤 Émission du message via socket:", messageToAdd);
         console.log("👤 Vers utilisateur:", id);
         socket.emit("sendMessage", messageToAdd);
-        
+
         setNewMessage("");
         // Supprimer setReload(true) car on met à jour directement
       } else {
@@ -279,7 +293,7 @@ export default function UserMessages() {
     if (selectedUser) {
       navigate(`/messages/${selectedUser._id}`);
     } else {
-      navigate('/messages');
+      navigate("/messages");
     }
   };
 
@@ -341,17 +355,24 @@ export default function UserMessages() {
         }
       );
       if (response.ok) {
-        // Mets à jour la liste des matchs affichés (retire le match supprimé)
-        setDisplayedMatches((prev) =>
-          prev.filter((user) => user._id !== userId)
-        );
-        // Met à jour le state des matchs mutuels
-        setSelectedUser(null);
-        // Met à jour le state des matchs mutuels
-        setIsChatVisible(false);
-        localStorage.removeItem("selectedUserId");
-        // Met à jour les matchs mutuels
-        //console.log(setDisplayedMatches, "UPDATED MATCHES AFTER DELETION");
+        setDisplayedMatches((prev) => {
+          const updated = prev.filter((user) => user._id !== userId);
+          // Sélection automatique du match au-dessus
+          if (updated.length > 0) {
+            const oldIndex = prev.findIndex((user) => user._id === userId);
+            const newIndex = oldIndex > 0 ? oldIndex - 1 : 0;
+            const newSelected = updated[newIndex];
+            setSelectedUser(newSelected);
+            setIsChatVisible(true);
+            localStorage.setItem("selectedUserId", newSelected._id);
+            navigate(`/messages/${newSelected._id}`);
+          } else {
+            setSelectedUser(null);
+            setIsChatVisible(false);
+            localStorage.removeItem("selectedUserId");
+          }
+          return updated;
+        });
         // Mets à jour les messages (retire ceux liés à ce user)
         setMessages((prev) =>
           prev.filter(
@@ -362,12 +383,6 @@ export default function UserMessages() {
               )
           )
         );
-        // Si la conversation était ouverte, ferme-la
-        if (selectedUser && selectedUser._id === userId) {
-          setSelectedUser(null);
-          setIsChatVisible(false);
-          localStorage.removeItem("selectedUserId");
-        }
         // Eventuel event pour UserProfile
         if (window.location.pathname === `/profile/${userId}`) {
           window.dispatchEvent(new CustomEvent("forceUnlike"));
@@ -439,27 +454,27 @@ export default function UserMessages() {
   };
 
   useEffect(() => {
-  // Lance le timer seulement si displayedMatches est vide
-  if (displayedMatches.length === 0) {
-    const timer = setTimeout(() => {
-      // Vérifie à nouveau après 1000ms (ou plus si besoin)
-      if (displayedMatches.length === 0) {
-        Swal.fire({
-          icon: "info",
-          title: "Aucun match à afficher",
-          text: "Vous allez être redirigé vers l'accueil.",
-          confirmButtonColor: "#AD0051",
-          confirmButtonText: "OK",
-        }).then(() => {
-          navigate("/");
-        });
-      }
-    }, 1000); // 1000ms d'attente, ajuste si besoin
+    // Lance le timer seulement si displayedMatches est vide
+    if (displayedMatches.length === 0) {
+      const timer = setTimeout(() => {
+        // Vérifie à nouveau après 1000ms (ou plus si besoin)
+        if (displayedMatches.length === 0) {
+          Swal.fire({
+            icon: "info",
+            title: "Aucun match à afficher",
+            text: "Vous allez être redirigé vers l'accueil.",
+            confirmButtonColor: "#AD0051",
+            confirmButtonText: "OK",
+          }).then(() => {
+            navigate("/");
+          });
+        }
+      }, 1000); // 1000ms d'attente, ajuste si besoin
 
-    // Nettoyage du timer si le composant se démonte ou si displayedMatches change
-    return () => clearTimeout(timer);
-  }
-}, [displayedMatches, navigate]);
+      // Nettoyage du timer si le composant se démonte ou si displayedMatches change
+      return () => clearTimeout(timer);
+    }
+  }, [displayedMatches, navigate]);
 
   return (
     <div className="div-matches">
@@ -484,28 +499,28 @@ export default function UserMessages() {
                 <div className="header-text">
                   <p className="match-name">{user.firstname}</p>
                   <p className="latest-message">
-  {latestMessage.sender ? (
-    latestMessage.sender._id === connectedUserId ? (
-      // Si c'est l'utilisateur connecté qui a envoyé
-      <>
-        <strong>Vous :</strong>{" "}
-        {latestMessage.content.length > 10
-          ? `${latestMessage.content.slice(0, 15)}...`
-          : latestMessage.content}
-      </>
-    ) : (
-      // Sinon, c'est le match qui a envoyé
-      <>
-        <strong>{user.firstname} :</strong>{" "}
-        {latestMessage.content.length > 10
-          ? `${latestMessage.content.slice(0, 15)}...`
-          : latestMessage.content}
-      </>
-    )
-  ) : (
-    "Nouveau match !"
-  )}
-</p>
+                    {latestMessage.sender ? (
+                      latestMessage.sender._id === connectedUserId ? (
+                        // Si c'est l'utilisateur connecté qui a envoyé
+                        <>
+                          <strong>Vous :</strong>{" "}
+                          {latestMessage.content.length > 10
+                            ? `${latestMessage.content.slice(0, 15)}...`
+                            : latestMessage.content}
+                        </>
+                      ) : (
+                        // Sinon, c'est le match qui a envoyé
+                        <>
+                          <strong>{user.firstname} :</strong>{" "}
+                          {latestMessage.content.length > 10
+                            ? `${latestMessage.content.slice(0, 15)}...`
+                            : latestMessage.content}
+                        </>
+                      )
+                    ) : (
+                      "Nouveau match !"
+                    )}
+                  </p>
                 </div>
               </div>
               <div
@@ -553,8 +568,8 @@ export default function UserMessages() {
           {selectedUser && (
             <div className="header-messages">
               {isMobile && (
-                <IoArrowBack 
-                  className="back-arrow" 
+                <IoArrowBack
+                  className="back-arrow"
                   onClick={handleBackToMatches}
                   size={24}
                 />
@@ -596,54 +611,56 @@ export default function UserMessages() {
                 .map((message, index) => {
                   // Debug pour identifier le problème
                   //console.log(`Message ${index}: "${message.content}" - Sender: ${message.sender?._id} - Connected: ${connectedUserId} - Position: ${message.sender && message.sender._id === connectedUserId ? "right" : "left"}`);
-                  
+
                   return (
-                  <div
-                    key={`${message._id}-${index}`}
-                    className={`message ${
-                      message.sender && message.sender._id === connectedUserId
-                        ? "right"
-                        : "left"
-                    }`}
-                    onMouseEnter={() => setHoveredMessage(message._id)}
-                    onMouseLeave={() => setHoveredMessage(null)}
-                  >
-                    {!(
-                      message.sender && message.sender._id === connectedUserId
-                    ) && (
-                      <div className="avatar">
-                        {selectedUser ? selectedUser.firstname.charAt(0) : "U"}
+                    <div
+                      key={`${message._id}-${index}`}
+                      className={`message ${
+                        message.sender && message.sender._id === connectedUserId
+                          ? "right"
+                          : "left"
+                      }`}
+                      onMouseEnter={() => setHoveredMessage(message._id)}
+                      onMouseLeave={() => setHoveredMessage(null)}
+                    >
+                      {!(
+                        message.sender && message.sender._id === connectedUserId
+                      ) && (
+                        <div className="avatar">
+                          {selectedUser
+                            ? selectedUser.firstname.charAt(0)
+                            : "U"}
+                        </div>
+                      )}
+                      <div>
+                        <div className="bubble">
+                          <p className="user-message">{message.content}</p>
+                          {hoveredMessage === message._id &&
+                            message.sender &&
+                            message.sender._id !== connectedUserId && (
+                              <button
+                                className="report-btn"
+                                onClick={() => handleReportMessage(message._id)}
+                              >
+                                Signaler
+                              </button>
+                            )}
+                        </div>
+                        <span
+                          className={`time ${
+                            message.sender &&
+                            message.sender._id === connectedUserId
+                              ? "time-right"
+                              : "time-left"
+                          }`}
+                        >
+                          {new Date(message.createdAt).toLocaleTimeString([], {
+                            hour: "2-digit",
+                            minute: "2-digit",
+                          })}
+                        </span>
                       </div>
-                    )}
-                    <div>
-                      <div className="bubble">
-                        <p className="user-message">{message.content}</p>
-                        {hoveredMessage === message._id &&
-                          message.sender &&
-                          message.sender._id !== connectedUserId && (
-                            <button
-                              className="report-btn"
-                              onClick={() => handleReportMessage(message._id)}
-                            >
-                              Signaler
-                            </button>
-                          )}
-                      </div>
-                      <span
-                        className={`time ${
-                          message.sender &&
-                          message.sender._id === connectedUserId
-                            ? "time-right"
-                            : "time-left"
-                        }`}
-                      >
-                        {new Date(message.createdAt).toLocaleTimeString([], {
-                          hour: "2-digit",
-                          minute: "2-digit",
-                        })}
-                      </span>
                     </div>
-                  </div>
                   );
                 })
             )}
