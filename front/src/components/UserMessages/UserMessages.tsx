@@ -15,13 +15,13 @@ import { useImageFallback } from "../../hooks/useImageFallback";
 const socketUrl = process.env.REACT_APP_API_URL || "http://localhost:4000";
 console.log("🔍 Tentative de connexion Socket à:", socketUrl);
 
-// Correction : path doit être '/api/socket.io' pour https://togeather.fr/api
+// Correction : path doit être '/socket.io' pour https://togeather.fr/api si Nginx redirige /socket.io/
 const socket = io(socketUrl, {
   withCredentials: true,
   autoConnect: true,
   transports: ['polling', 'websocket'],
   forceNew: true,
-  path: '/api/socket.io' // IMPORTANT : correspond à l'URL proxy en prod
+  path: '/socket.io' // IMPORTANT : correspond à l'URL proxy Nginx
 });
 console.log("🔌 Socket configuré pour:", socketUrl);
 
