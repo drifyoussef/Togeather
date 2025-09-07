@@ -10,30 +10,34 @@ import Swal from "sweetalert2";
 import { IoChatbubbleEllipsesOutline } from "react-icons/io5";
 import { useImageFallback } from "../../hooks/useImageFallback";
 
-// Configuration Socket.io avec WebSocket prioritaire
-const socketUrl = process.env.REACT_APP_API_URL;
+// Configuration Socket.io avec debugging explicite
+// Utilise la même URL que l'API, Socket.io sera sur /socket.io/
+const socketUrl = process.env.REACT_APP_API_URL || "http://localhost:4000";
 console.log("🔍 Tentative de connexion Socket à:", socketUrl);
 
 const socket = io(socketUrl, {
-  // Configuration avec WebSocket en priorité
-  path: '/socket.io/',
-  transports: ['websocket', 'polling'], // WebSocket en premier, polling en fallback
+  // Configuration explicite pour debugging
+  withCredentials: true,
   autoConnect: true,
-  reconnection: true,
+  transports: ['polling', 'websocket'],
+  forceNew: true,
+  path: '/socket.io/'  // Path par défaut, sera https://togeather.fr/api/socket.io/
 });
 console.log("🔌 Socket configuré pour:", socketUrl);
 
-// Test de connexion Socket
+// Logs détaillés pour debugging
 socket.on("connect", () => {
   console.log("✅ Socket connecté avec succès, ID:", socket.id);
+  console.log("🔗 Transport utilisé:", socket.io.engine.transport.name);
 });
 
-socket.on("disconnect", () => {
-  console.log("❌ Socket déconnecté");
+socket.on("disconnect", (reason) => {
+  console.log("❌ Socket déconnecté, raison:", reason);
 });
 
 socket.on("connect_error", (error) => {
   console.error("🚫 Erreur de connexion Socket:", error);
+  console.error("🔍 Message d'erreur:", error.message);
 });
 
 export default function UserMessages() {
@@ -122,6 +126,9 @@ export default function UserMessages() {
 
   // Utiliser le hook useEffect pour charger les messages par id
   useEffect(() => {
+    // Connexion manuelle au socket
+    socket.connect();
+    
     // S'identifier auprès du serveur socket
     if (connectedUserId) {
       console.log("🔌 Connexion socket pour utilisateur:", connectedUserId);

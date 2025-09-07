@@ -54,7 +54,10 @@ let fetch;
     cors: {
       origin: "*", // Allow all origins
       methods: ["GET", "HEAD", "PUT", "PATCH", "POST", "DELETE"],
+      credentials: true
     },
+    path: '/socket.io/',  // Path par défaut de Socket.io
+    transports: ['polling', 'websocket']
   });
 
   // Configuration de socket.io
