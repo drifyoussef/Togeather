@@ -484,12 +484,28 @@ export default function UserMessages() {
                 <div className="header-text">
                   <p className="match-name">{user.firstname}</p>
                   <p className="latest-message">
-                    {latestMessage.sender
-                      ? latestMessage.content.length > 10
-                        ? `${latestMessage.content.slice(0, 15)}...`
-                        : latestMessage.content
-                      : "Nouveau match !"}
-                  </p>
+  {latestMessage.sender ? (
+    latestMessage.sender._id === connectedUserId ? (
+      // Si c'est l'utilisateur connecté qui a envoyé
+      <>
+        <strong>Vous :</strong>{" "}
+        {latestMessage.content.length > 10
+          ? `${latestMessage.content.slice(0, 15)}...`
+          : latestMessage.content}
+      </>
+    ) : (
+      // Sinon, c'est le match qui a envoyé
+      <>
+        <strong>{user.firstname} :</strong>{" "}
+        {latestMessage.content.length > 10
+          ? `${latestMessage.content.slice(0, 15)}...`
+          : latestMessage.content}
+      </>
+    )
+  ) : (
+    "Nouveau match !"
+  )}
+</p>
                 </div>
               </div>
               <div
