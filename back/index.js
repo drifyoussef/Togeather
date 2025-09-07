@@ -58,15 +58,43 @@ let fetch;
   });
 
   // Configuration de socket.io
+  const userSocketMap = new Map(); // Map pour associer userId -> socketId
+  
   io.on("connection", (socket) => {
-    console.log("New client connected");
+    console.log("New client connected:", socket.id);
+
+    // Événement pour associer un utilisateur à son socket
+    socket.on("join", (userId) => {
+      userSocketMap.set(userId, socket.id);
+      socket.userId = userId;
+      console.log(`User ${userId} joined with socket ${socket.id}`);
+    });
 
     socket.on("sendMessage", (message) => {
-      io.emit("receiveMessage", message);
+      console.log("📤 Message reçu côté serveur:", message);
+      console.log("👤 Pour destinataire:", message.receiver?._id);
+      
+      // Trouver le socket du destinataire
+      const receiverSocketId = userSocketMap.get(message.receiver?._id);
+      
+      if (receiverSocketId) {
+        console.log("✅ Envoi vers socket:", receiverSocketId);
+        io.to(receiverSocketId).emit("receiveMessage", message);
+      } else {
+        console.log("❌ Destinataire non connecté ou socket introuvable");
+      }
+      
+      // Optionnel : envoyer aussi à l'expéditeur pour synchronisation
+      // io.to(socket.id).emit("receiveMessage", message);
     });
 
     socket.on("disconnect", () => {
-      console.log("Client disconnected");
+      console.log("Client disconnected:", socket.id);
+      // Supprimer l'utilisateur de la map
+      if (socket.userId) {
+        userSocketMap.delete(socket.userId);
+        console.log(`User ${socket.userId} removed from socket map`);
+      }
     });
   });
 

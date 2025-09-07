@@ -11,6 +11,7 @@ import { IoChatbubbleEllipsesOutline } from "react-icons/io5";
 import { useImageFallback } from "../../hooks/useImageFallback";
 
 const socket = io(process.env.REACT_APP_API_URL);
+console.log("🔌 Socket connecté à:", process.env.REACT_APP_API_URL);
 
 export default function UserMessages() {
   // Récupérer l'ID de l'utilisateur
@@ -98,6 +99,12 @@ export default function UserMessages() {
 
   // Utiliser le hook useEffect pour charger les messages par id
   useEffect(() => {
+    // S'identifier auprès du serveur socket
+    if (connectedUserId) {
+      console.log("🔌 Connexion socket pour utilisateur:", connectedUserId);
+      socket.emit("join", connectedUserId);
+    }
+
     const fetchUserMessages = async () => {
       try {
         const response = await fetch(
@@ -128,7 +135,8 @@ export default function UserMessages() {
 
     // CORRECTION 2: WebSocket pour recevoir les messages avec filtrage
     socket.on("receiveMessage", (message: any) => {
-      //console.log("Message reçu via socket:", message);
+      console.log("🔔 Message reçu via socket:", message);
+      console.log("👥 Pour conversation entre:", connectedUserId, "et", id);
       
       // Vérifier que le message appartient à la conversation active
       const isForCurrentConversation = 
@@ -138,10 +146,11 @@ export default function UserMessages() {
          message.receiver && message.receiver._id === id);
       
       if (isForCurrentConversation) {
-        //console.log("Message ajouté à la conversation:", message);
+        console.log("✅ Message ajouté à la conversation:", message.content);
         setMessages((prevMessages) => [...prevMessages, message]);
       } else {
-        console.log("Message ignoré car pas pour cette conversation");
+        console.log("❌ Message ignoré car pas pour cette conversation");
+        console.log("   Sender:", message.sender?._id, "Receiver:", message.receiver?._id);
       }
     });
 
@@ -203,6 +212,8 @@ export default function UserMessages() {
         setMessages((prevMessages) => [...prevMessages, messageToAdd]);
         
         // CORRECTION 6: Émettre le message via socket pour le destinataire
+        console.log("📤 Émission du message via socket:", messageToAdd);
+        console.log("👤 Vers utilisateur:", id);
         socket.emit("sendMessage", messageToAdd);
         
         setNewMessage("");
