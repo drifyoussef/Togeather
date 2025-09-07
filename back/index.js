@@ -524,7 +524,7 @@ let fetch;
       const response = await fetch(url, {
         headers: {
           'X-Goog-Api-Key': process.env.GOOGLE_API_KEY,
-          'X-Goog-FieldMask': 'id,displayName,formattedAddress,rating,photos,location,reviews,internationalPhoneNumber,websiteUri,regularOpeningHours'
+          'X-Goog-FieldMask': 'id,displayName,formattedAddress,rating,photos,location,reviews,internationalPhoneNumber,websiteUri,regularOpeningHours,userRatingCount'
         }
       });
 
@@ -536,6 +536,9 @@ let fetch;
 
       const data = await response.json();
       
+      console.log("Google API response data:", JSON.stringify(data, null, 2)); // Debug log complet
+      console.log("userRatingCount from Google:", data.userRatingCount); // Debug spécifique
+      
       // Transformer pour être compatible avec l'ancien format
       const transformedData = {
         result: {
@@ -543,6 +546,7 @@ let fetch;
           name: data.displayName?.text || '',
           formatted_address: data.formattedAddress || '',
           rating: data.rating || 0,
+          user_ratings_total: data.userRatingCount || (data.reviews ? data.reviews.length : 0), // Utilise reviews.length si userRatingCount n'est pas disponible
           photos: data.photos ? data.photos.map(photo => ({
             photo_reference: photo.name
           })) : [],
@@ -555,9 +559,15 @@ let fetch;
           reviews: data.reviews || [],
           formatted_phone_number: data.internationalPhoneNumber || '',
           website: data.websiteUri || '',
-          opening_hours: data.regularOpeningHours || null
+          opening_hours: data.regularOpeningHours ? {
+            openNow: data.regularOpeningHours.openNow || false,
+            weekdayDescriptions: data.regularOpeningHours.weekdayDescriptions || [],
+            periods: data.regularOpeningHours.periods || []
+          } : null
         }
       };
+      
+      console.log("Transformed user_ratings_total:", transformedData.result.user_ratings_total); // Debug transformation
       
       res.json(transformedData);
     } catch (error) {
@@ -642,19 +652,8 @@ let fetch;
       const data = await response.json();
       
       console.log(`Google Places API (New) response status: ${response.status}`);
-      if (data.error) {
-        console.error(`Google Places API (New) error:`, data.error);
-      }
-
-      // Vérifier si l'API a retourné une erreur
-      if (!response.ok) {
-        console.error(`Google Places API (New) error: ${response.status}, details: ${data.error?.message || "Unknown error"}`);
-        return res.status(400).json({ 
-          error: `Google Places API error: ${response.status}`,
-          details: data.error?.message || "Unknown error"
-        });
-      }
-
+      console.log(`Number of places returned: ${data.places ? data.places.length : 0}`);
+      
       // Transformer les résultats pour être compatibles avec l'ancien format
       const transformedResults = (data.places || []).map(place => ({
         place_id: place.id,

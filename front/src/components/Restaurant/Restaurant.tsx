@@ -4,18 +4,32 @@ import { PiStarFill } from "react-icons/pi";
 import { FaHome, FaPhoneAlt } from "react-icons/fa";
 import "./Restaurant.css";
 
-// Propriétés du composant RestaurantDetails
+// Propriétés du composant RestaurantDetails - Mis à jour pour la nouvelle API Places
 interface RestaurantDetailsProps {
   opening_hours?: {
-    open_now?: boolean; // Marqué comme optionnel pour éviter les erreurs
-    weekday_text?: string[]; // Marqué comme optionnel
+    openNow?: boolean; // Format réel de l'API
+    open_now?: boolean; // Format legacy pour compatibilité
+    weekday_text?: string[];
+    weekdayDescriptions?: string[]; // Format réel de l'API
+    periods?: Array<{
+      open: { day: number; time: string };
+      close?: { day: number; time: string };
+    }>;
   };
   name: string;
   rating: number;
   formatted_address: string;
-  formatted_phone_number: string;
-  website?: string; // Marqué comme optionnel
-  user_ratings_total: string;
+  formatted_phone_number?: string;
+  website?: string;
+  user_ratings_total?: number;
+  reviews?: Array<{
+    rating: number;
+    text: any;
+    author_name?: string;
+    authorAttribution?: any;
+    time?: number;
+    publishTime?: string;
+  }>;
 }
 
 const Restaurant: React.FC = () => {
@@ -46,7 +60,9 @@ const Restaurant: React.FC = () => {
         const data = await response.json();
         setRestaurant(data.result);
 
-        //console.log("data:", data);
+        console.log("Restaurant data:", data.result); // Debug pour voir la structure
+        console.log("User rating count:", data.result.user_ratings_total); // Debug spécifique pour les avis
+        console.log("Opening hours:", data.result.opening_hours); // Debug pour les horaires
       } catch (error) {
         console.error("Error fetching restaurant details:", error);
       }
@@ -64,13 +80,13 @@ const Restaurant: React.FC = () => {
       <div className="restaurant-informations">
         <h1 className="restaurant-name">{restaurant.name}</h1>
         <p className="restaurant-status">
-          {restaurant.opening_hours?.open_now ? "Ouvert" : "Fermé"}
+          {restaurant.opening_hours?.openNow || restaurant.opening_hours?.open_now ? "Ouvert" : "Fermé"}
         </p>
-        {/* Vérifiez si opening_hours et weekday_text sont définis */}
-        {restaurant.opening_hours && restaurant.opening_hours.weekday_text && (
+        {/* Vérifiez si opening_hours et weekday_text/weekdayDescriptions sont définis */}
+        {restaurant.opening_hours && (restaurant.opening_hours.weekday_text || restaurant.opening_hours.weekdayDescriptions) && (
           <>
             <ul className="weekday-text">
-              {restaurant.opening_hours.weekday_text.map((text, index) => (
+              {(restaurant.opening_hours.weekdayDescriptions || restaurant.opening_hours.weekday_text || []).map((text, index) => (
                 <li key={index} className="weekday-item">
                   {text}
                 </li>
@@ -80,16 +96,18 @@ const Restaurant: React.FC = () => {
         )}
         <p className="restaurant-rating">
           <PiStarFill className="restaurant-rating-icon" />
-          {restaurant.rating} ({restaurant.user_ratings_total} avis)
+          {restaurant.rating}
         </p>
         <p className="restaurant-address">
           <FaHome className="restaurant-address-icon" />
           {restaurant.formatted_address}
         </p>
-        <p className="restaurant-number">
-          <FaPhoneAlt className="restaurant-number-icon" />
-          {restaurant.formatted_phone_number}
-        </p>
+        {restaurant.formatted_phone_number && (
+          <p className="restaurant-number">
+            <FaPhoneAlt className="restaurant-number-icon" />
+            {restaurant.formatted_phone_number}
+          </p>
+        )}
         {/* Afficher le bouton en fonction de la disponibilité du site web */}
         {restaurant.website && (
           <button

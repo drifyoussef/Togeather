@@ -21,9 +21,6 @@ interface Restaurant {
   place_id: string;
   name: string;
   rating: number;
-  opening_hours?: {
-    open_now: boolean;
-  };
 }
 
 const Browse: React.FC = () => {
@@ -71,12 +68,13 @@ const Browse: React.FC = () => {
       }
 
       const data: { results: Restaurant[] } = await response.json();
-      console.log(`API response data:`, data);
 
       // Trier les restaurants par note décroissante et limiter les résultats à 4 restaurants
       const sortedRestaurants = data.results.sort((a, b) => b.rating - a.rating).slice(0, 4);
       setRestaurants(sortedRestaurants);
       console.log(`Nombre de restaurants affichés pour la catégorie ${category}: ${sortedRestaurants.length}`);
+      //log les restaurants
+      console.log("Restaurants affichés:", sortedRestaurants);
     } catch (error) {
       console.error("Error fetching restaurants: ", error);
     }
@@ -160,9 +158,6 @@ const Browse: React.FC = () => {
                 <div className="browse-h2">
                   <div>
                     <h2 className="browse-name">{restaurant.name}</h2>
-                    <p className="open-status">
-                      {restaurant.opening_hours?.open_now ? "Ouvert" : "Fermé"}
-                    </p>
                   </div>
                   <p className="browse-restaurant-review">{restaurant.rating}</p>
                 </div>
