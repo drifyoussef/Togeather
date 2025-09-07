@@ -391,14 +391,12 @@ export default function UserMessages() {
               onClick={() => handleUserClick(user)}
             >
               <div className="header-match-box">
-                {selectedUser && (
-                  <img
-                    className="profile-picture"
-                    src={`${process.env.REACT_APP_API_URL}/${selectedUser.imageUrl}`}
-                    alt={`${selectedUser.firstname} ${selectedUser.name}`}
-                    onError={handleImageError}
-                  />
-                )}
+                <img
+                  className="profile-picture"
+                  src={`${process.env.REACT_APP_API_URL}/${user.imageUrl}`}
+                  alt={`${user.firstname} ${user.name}`}
+                  onError={handleImageError}
+                />
                 <div className="header-text">
                   <p className="match-name">{user.firstname}</p>
                   <p className="latest-message">
