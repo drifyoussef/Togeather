@@ -212,6 +212,11 @@
     margin-right: auto;
 }
 
+.no-users-home {
+    place-self: center;
+    margin-top: 32px;
+}
+
 
 @media only screen and (max-width: 320px), only screen and (max-width: 375px), only screen and (max-width: 435px)  {
     .parent {

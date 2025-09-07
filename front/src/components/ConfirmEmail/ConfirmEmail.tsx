@@ -41,6 +41,7 @@ const ConfirmEmail: React.FC<{ data: { message: string } }> = ({ data }) => {
                 icon: 'success',
                 title: 'Succès',
                 text: 'Votre email a été confirmé avec succès',
+                confirmButtonColor: "#AD0051",
               });
               navigate('/auth/login');
           } else {
@@ -50,6 +51,7 @@ const ConfirmEmail: React.FC<{ data: { message: string } }> = ({ data }) => {
               icon: 'error',
               title: 'Erreur',
               text: data.message,
+              confirmButtonColor: "#AD0051",
             });
           }
         })
@@ -60,6 +62,7 @@ const ConfirmEmail: React.FC<{ data: { message: string } }> = ({ data }) => {
             icon: 'error',
             title: 'Erreur',
             text: 'Une erreur est survenue lors de la confirmation de l\'email',
+            confirmButtonColor: "#AD0051",
           });
         });
     } else {
@@ -73,7 +76,7 @@ const ConfirmEmail: React.FC<{ data: { message: string } }> = ({ data }) => {
     <div className='confirm-email'>
       <IoIosMail className='confirm-icon' />
       <h1 className='header-confirm-text'>Mail de confirmation envoyé</h1>
-      <p>Veuillez regarder votre boite mail <br /> et cliquez sur le lien de confirmation pour activer votre compte
+      <p className='confirm-text'>Veuillez regarder votre boite mail <br /> et cliquez sur le lien de confirmation pour activer votre compte
       </p>
       <p className='text-spam'>Si vous ne le voyez pas veuillez vérifier vos spams</p>
     </div>

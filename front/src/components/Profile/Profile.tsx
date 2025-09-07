@@ -156,6 +156,7 @@ const Profile: React.FC = () => {
             icon: 'success',
             title: 'Succès',
             text: 'Votre compte a été supprimé avec succès',
+            confirmButtonColor: "#AD0051",
           });
   
           // Supprimer le token et l'ID de l'utilisateur connecté du localStorage

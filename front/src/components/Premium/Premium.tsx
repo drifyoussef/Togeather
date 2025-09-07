@@ -42,6 +42,7 @@ export default function Premium() {
       icon: "warning",
       showCancelButton: true,
       confirmButtonText: "Oui, me désinscrire",
+      confirmButtonColor: "#AD0051",
       cancelButtonText: "Annuler",
     }).then((result) => {
       if (result.isConfirmed) {
@@ -76,6 +77,7 @@ export default function Premium() {
             title: "Succès",
             text: "Vous avez été désinscrit du premium.",
             icon: "success",
+            confirmButtonColor: "#AD0051",
           });
         })
         .catch((error) => {
@@ -84,6 +86,7 @@ export default function Premium() {
             title: "Erreur",
             text: "Une erreur s'est produite lors de la désinscription du premium.",
             icon: "error",
+            confirmButtonColor: "#AD0051",
           });
         });
     } catch (error) {
@@ -92,6 +95,7 @@ export default function Premium() {
         title: "Erreur",
         text: "Une erreur s'est produite lors de la désinscription du premium.",
         icon: "error",
+        confirmButtonColor: "#AD0051",
       });
     }
   };

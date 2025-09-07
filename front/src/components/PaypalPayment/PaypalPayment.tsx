@@ -81,6 +81,7 @@ export default function PaypalPayment({ onSuccess }: PaypalPaymentProps) {
           icon: "success",
           title: "Paiement réussi",
           text: "Votre paiement a été effectué avec succès!",
+          confirmButtonColor: "#AD0051",
         });
       }
       // Vérifier si la réponse est OK
@@ -95,6 +96,7 @@ export default function PaypalPayment({ onSuccess }: PaypalPaymentProps) {
         icon: "success",
         title: "Paiement réussi",
         text: "Votre paiement a été effectué avec succès!",
+        confirmButtonColor: "#AD0051",
       });
       // Afficher un message de succès
       return result;

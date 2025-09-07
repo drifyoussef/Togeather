@@ -243,7 +243,7 @@ export default function Home() {
               />
             ))
           ) : (
-            <p>Il n'y a pas d'utilisateur disponible.</p>
+            <p className="no-users-home">Il n'y a pas d'utilisateur disponible.</p>
           )}
         </div>
       </div>
