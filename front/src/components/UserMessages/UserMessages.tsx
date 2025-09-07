@@ -80,6 +80,8 @@ export default function UserMessages() {
 
   // State local pour les matchs affichés
   const [displayedMatches, setDisplayedMatches] = useState<UserModel[]>([]);
+  //etat chargement des messages
+  const [isFetchingMessages, setIsisFetchingMessages] = useState(true);
 
   const { handleImageError } = useImageFallback();
 
@@ -136,6 +138,7 @@ export default function UserMessages() {
     }
 
     const fetchUserMessages = async () => {
+      setIsisFetchingMessages(true);
       try {
         const response = await fetch(
           `${process.env.REACT_APP_API_URL}/messages/${id}`,
@@ -157,6 +160,8 @@ export default function UserMessages() {
         setMessages(filteredMessages);
       } catch (error) {
         console.error("Error fetching messages:", error);
+      } finally {
+        setIsisFetchingMessages(false);
       }
     };
 
@@ -552,13 +557,18 @@ export default function UserMessages() {
             </div>
           )}
           <div className="chat-container">
-            {messages.length === 0 ? (
-              <div
-                className="no-messages"
-              >
+            {isFetchingMessages ? (
+              <div className="no-messages">
+                <p>Chargement des messages...</p>
+              </div>
+            ) : messages.length === 0 ? (
+              <div className="no-messages">
                 <IoChatbubbleEllipsesOutline size={48} color="#AD0051" />
                 <p>Aucun message pour le moment</p>
-                <p>Commencez la conversation en envoyant votre premier message à {selectedUser?.firstname}!</p>
+                <p>
+                  Commencez la conversation en envoyant votre premier message à{" "}
+                  {selectedUser?.firstname}!
+                </p>
               </div>
             ) : (
               messages
