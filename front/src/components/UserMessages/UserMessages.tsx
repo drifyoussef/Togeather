@@ -10,8 +10,20 @@ import Swal from "sweetalert2";
 import { IoChatbubbleEllipsesOutline } from "react-icons/io5";
 import { useImageFallback } from "../../hooks/useImageFallback";
 
-const socket = io(process.env.REACT_APP_API_URL);
-console.log("🔌 Socket connecté à:", process.env.REACT_APP_API_URL);
+// Test temporaire avec différentes configurations
+const socketUrl = process.env.REACT_APP_API_URL;
+console.log("🔍 Tentative de connexion Socket à:", socketUrl);
+
+const socket = io(socketUrl, {
+  transports: ['websocket', 'polling'], // Force les transports
+  timeout: 20000, // Timeout plus long
+  forceNew: true, // Force une nouvelle connexion
+  autoConnect: true, // Auto-connexion
+  reconnection: true, // Reconnexion automatique
+  reconnectionAttempts: 5,
+  reconnectionDelay: 1000,
+});
+console.log("🔌 Socket configuré pour:", socketUrl);
 
 // Test de connexion Socket
 socket.on("connect", () => {
