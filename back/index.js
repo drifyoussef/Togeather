@@ -56,7 +56,7 @@ let fetch;
       methods: ["GET", "HEAD", "PUT", "PATCH", "POST", "DELETE"],
       credentials: true
     },
-    path: '/api/socket.io/',  // Socket.io sera accessible via /api/socket.io/
+    path: '/socket.io/',  // Path par défaut de Socket.io
     transports: ['polling', 'websocket']
   });
 
