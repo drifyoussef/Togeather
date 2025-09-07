@@ -68,27 +68,29 @@ let fetch;
 
     // Événement pour associer un utilisateur à son socket
     socket.on("join", (userId) => {
+      // Met à jour le mapping userId -> socketId
       userSocketMap.set(userId, socket.id);
       socket.userId = userId;
       console.log(`User ${userId} joined with socket ${socket.id}`);
+
+      // Log l'état actuel du mapping pour debug
+      console.log("🔗 État actuel de userSocketMap:", Array.from(userSocketMap.entries()));
     });
 
     socket.on("sendMessage", (message) => {
       console.log("📤 Message reçu côté serveur:", message);
-      console.log("👤 Pour destinataire:", message.receiver?._id);
-      
-      // Trouver le socket du destinataire
-      const receiverSocketId = userSocketMap.get(message.receiver?._id);
-      
+      const receiverSocketId = userSocketMap.get(message.receiver?._id || message.receiverId);
+      console.log("👤 Socket du destinataire:", receiverSocketId);
+
       if (receiverSocketId) {
-        console.log("✅ Envoi vers socket:", receiverSocketId);
+        console.log("✅ Envoi du message en temps réel au socket:", receiverSocketId);
         io.to(receiverSocketId).emit("receiveMessage", message);
       } else {
         console.log("❌ Destinataire non connecté ou socket introuvable");
       }
-      
+
       // Optionnel : envoyer aussi à l'expéditeur pour synchronisation
-      // io.to(socket.id).emit("receiveMessage", message);
+      io.to(socket.id).emit("receiveMessage", message);
     });
 
     socket.on("disconnect", () => {
