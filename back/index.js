@@ -518,9 +518,16 @@ let fetch;
   app.get("/api/restaurant/:place_id", async (req, res) => {
     try {
       const { place_id } = req.params;
-      const url = `https://maps.googleapis.com/maps/api/place/details/json?place_id=${place_id}&key=${process.env.GOOGLE_API_KEY}`;
+      // Nouvelle API Places pour les détails
+      const url = `https://places.googleapis.com/v1/places/${place_id}`;
 
-      const response = await fetch(url);
+      const response = await fetch(url, {
+        headers: {
+          'X-Goog-Api-Key': process.env.GOOGLE_API_KEY,
+          'X-Goog-FieldMask': 'id,displayName,formattedAddress,rating,photos,location,reviews,internationalPhoneNumber,websiteUri,regularOpeningHours'
+        }
+      });
+
       if (!response.ok) {
         throw new Error(
           `Failed to fetch restaurant details: ${response.statusText}`
@@ -528,7 +535,31 @@ let fetch;
       }
 
       const data = await response.json();
-      res.json(data);
+      
+      // Transformer pour être compatible avec l'ancien format
+      const transformedData = {
+        result: {
+          place_id: data.id,
+          name: data.displayName?.text || '',
+          formatted_address: data.formattedAddress || '',
+          rating: data.rating || 0,
+          photos: data.photos ? data.photos.map(photo => ({
+            photo_reference: photo.name
+          })) : [],
+          geometry: {
+            location: {
+              lat: data.location?.latitude || 0,
+              lng: data.location?.longitude || 0
+            }
+          },
+          reviews: data.reviews || [],
+          formatted_phone_number: data.internationalPhoneNumber || '',
+          website: data.websiteUri || '',
+          opening_hours: data.regularOpeningHours || null
+        }
+      };
+      
+      res.json(transformedData);
     } catch (error) {
       console.error(error);
       res.status(500).json({ error: error.message });
@@ -580,36 +611,70 @@ let fetch;
         });
       }
 
-      let url = `https://maps.googleapis.com/maps/api/place/nearbysearch/json?location=${location}&radius=${radius}&type=restaurant`;
-      if (keyword) {
-        url += `&keyword=${keyword}`;
-      }
-      url += `&key=${process.env.GOOGLE_API_KEY}`;
+      // NOUVELLE API Places (Text Search)
+      const requestBody = {
+        textQuery: keyword ? `${keyword} restaurant` : "restaurant",
+        locationBias: {
+          circle: {
+            center: {
+              latitude: parseFloat(location.split(',')[0]),
+              longitude: parseFloat(location.split(',')[1])
+            },
+            radius: parseInt(radius)
+          }
+        },
+        maxResultCount: 4,
+        includedType: "restaurant"
+      };
       
-      console.log(`Google Places API URL: ${url}`);
+      console.log(`Google Places API (New) request body:`, JSON.stringify(requestBody, null, 2));
 
-      const response = await fetch(url);
+      const response = await fetch('https://places.googleapis.com/v1/places:searchText', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'X-Goog-Api-Key': process.env.GOOGLE_API_KEY,
+          'X-Goog-FieldMask': 'places.id,places.displayName,places.formattedAddress,places.rating,places.photos,places.location'
+        },
+        body: JSON.stringify(requestBody)
+      });
+
       const data = await response.json();
       
-      console.log(`Google Places API response status: ${data.status}`);
-      if (data.error_message) {
-        console.error(`Google Places API error message: ${data.error_message}`);
+      console.log(`Google Places API (New) response status: ${response.status}`);
+      if (data.error) {
+        console.error(`Google Places API (New) error:`, data.error);
       }
 
-      // Vérifier si l'API Google a retourné une erreur
-      if (data.status !== "OK") {
-        console.error(`Google Places API error: ${data.status}, details: ${data.error_message || "Unknown error"}`);
+      // Vérifier si l'API a retourné une erreur
+      if (!response.ok) {
+        console.error(`Google Places API (New) error: ${response.status}, details: ${data.error?.message || "Unknown error"}`);
         return res.status(400).json({ 
-          error: `Google Places API error: ${data.status}`,
-          details: data.error_message || "Unknown error"
+          error: `Google Places API error: ${response.status}`,
+          details: data.error?.message || "Unknown error"
         });
       }
 
-      // Limiter les résultats à 4 restaurants
-      const limitedResults = data.results.slice(0, 4);
-      console.log(`Returning ${limitedResults.length} restaurants`);
+      // Transformer les résultats pour être compatibles avec l'ancien format
+      const transformedResults = (data.places || []).map(place => ({
+        place_id: place.id,
+        name: place.displayName?.text || '',
+        vicinity: place.formattedAddress || '',
+        rating: place.rating || 0,
+        photos: place.photos ? place.photos.map(photo => ({
+          photo_reference: photo.name
+        })) : [],
+        geometry: {
+          location: {
+            lat: place.location?.latitude || 0,
+            lng: place.location?.longitude || 0
+          }
+        }
+      }));
 
-      res.json({ results: limitedResults });
+      console.log(`Returning ${transformedResults.length} restaurants`);
+
+      res.json({ results: transformedResults });
     } catch (error) {
       console.error(`Restaurants API error: ${error.message}`);
       res.status(500).json({ error: error.message });
@@ -620,7 +685,8 @@ let fetch;
   app.get("/api/restaurant/photo/:photo_reference", async (req, res) => {
     try {
       const { photo_reference } = req.params;
-      const url = `https://maps.googleapis.com/maps/api/place/photo?maxwidth=400&photoreference=${photo_reference}&key=${process.env.GOOGLE_API_KEY}`;
+      // Nouvelle API Places pour les photos
+      const url = `https://places.googleapis.com/v1/${photo_reference}/media?maxHeightPx=400&key=${process.env.GOOGLE_API_KEY}`;
 
       const response = await fetch(url);
       if (!response.ok) {
