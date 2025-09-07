@@ -10,13 +10,14 @@ import Swal from "sweetalert2";
 import { IoChatbubbleEllipsesOutline } from "react-icons/io5";
 import { useImageFallback } from "../../hooks/useImageFallback";
 
-// Configuration Socket.io directe sans path personnalisé
+// Configuration Socket.io avec WebSocket prioritaire
 const socketUrl = process.env.REACT_APP_API_URL;
 console.log("🔍 Tentative de connexion Socket à:", socketUrl);
 
 const socket = io(socketUrl, {
-  // Configuration ultra-simple
-  transports: ['polling'], // Polling seulement au début
+  // Configuration avec WebSocket en priorité
+  path: '/socket.io/',
+  transports: ['websocket', 'polling'], // WebSocket en premier, polling en fallback
   autoConnect: true,
   reconnection: true,
 });
