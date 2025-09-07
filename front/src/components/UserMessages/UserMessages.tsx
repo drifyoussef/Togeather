@@ -148,12 +148,22 @@ export default function UserMessages() {
         const data = await response.json();
         
         // CORRECTION 1: Filtrer les messages pour cette conversation seulement
-        const filteredMessages = data.filter((message: Message) =>
-          (message.sender && message.sender._id === id && 
-           message.receiver && message.receiver._id === connectedUserId) ||
-          (message.sender && message.sender._id === connectedUserId && 
-           message.receiver && message.receiver._id === id)
-        );
+        // Fonction helper pour extraire l'ID d'un utilisateur (objet ou string)
+        const getUserId = (user: any) => {
+          if (typeof user === 'string') return user;
+          return user?._id;
+        };
+        
+        const filteredMessages = data.filter((message: Message) => {
+          const senderId = getUserId(message.sender);
+          const receiverId = getUserId(message.receiver);
+          
+          return (senderId === id && receiverId === connectedUserId) ||
+                 (senderId === connectedUserId && receiverId === id);
+        });
+        
+        console.log("🔍 Messages filtrés:", filteredMessages.length, "sur", data.length);
+        console.log("🔍 Premier message:", filteredMessages[0]);
         setMessages(filteredMessages);
       } catch (error) {
         console.error("Error fetching messages:", error);
@@ -168,19 +178,26 @@ export default function UserMessages() {
       console.log("🔔 Message reçu via socket:", message);
       console.log("👥 Pour conversation entre:", connectedUserId, "et", id);
       
+      // Fonction helper pour extraire l'ID d'un utilisateur (objet ou string)
+      const getUserId = (user: any) => {
+        if (typeof user === 'string') return user;
+        return user?._id;
+      };
+      
+      const senderId = getUserId(message.sender);
+      const receiverId = getUserId(message.receiver);
+      
       // Vérifier que le message appartient à la conversation active
       const isForCurrentConversation = 
-        (message.sender && message.sender._id === id && 
-         message.receiver && message.receiver._id === connectedUserId) ||
-        (message.sender && message.sender._id === connectedUserId && 
-         message.receiver && message.receiver._id === id);
+        (senderId === id && receiverId === connectedUserId) ||
+        (senderId === connectedUserId && receiverId === id);
       
       if (isForCurrentConversation) {
         console.log("✅ Message ajouté à la conversation:", message.content);
         setMessages((prevMessages) => [...prevMessages, message]);
       } else {
         console.log("❌ Message ignoré car pas pour cette conversation");
-        console.log("   Sender:", message.sender?._id, "Receiver:", message.receiver?._id);
+        console.log("   Sender:", senderId, "Receiver:", receiverId);
       }
     });
 
@@ -296,18 +313,20 @@ export default function UserMessages() {
       return { content: "", sender: null };
     }
 
+    // Fonction helper pour extraire l'ID d'un utilisateur (objet ou string)
+    const getUserId = (user: any) => {
+      if (typeof user === 'string') return user;
+      return user?._id;
+    };
+
     // Filtrer les messages de l'utilisateur
-    const userMessages = messages.filter(
-      (message) =>
-        (message.sender &&
-          message.sender._id === userId &&
-          message.receiver &&
-          message.receiver._id === connectedUserId) ||
-        (message.sender &&
-          message.sender._id === connectedUserId &&
-          message.receiver &&
-          message.receiver._id === userId)
-    );
+    const userMessages = messages.filter((message) => {
+      const senderId = getUserId(message.sender);
+      const receiverId = getUserId(message.receiver);
+      
+      return (senderId === userId && receiverId === connectedUserId) ||
+             (senderId === connectedUserId && receiverId === userId);
+    });
 
     // Si aucun message n'est trouvé
     if (userMessages.length === 0) return { content: "", sender: null };
